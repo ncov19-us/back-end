@@ -1,16 +1,18 @@
 import os
 from fastapi import APIRouter
 from pydantic import BaseModel
-from api.config import DevelopmentConfig as conf
+from api.config import DevelopmentConfig as dev_config
+from api.config import ProductionConfig as prod_config
+from api.utils.twitter_mongo import TwitterMongo
+import api
 
-VERSION = "VERSION"
-
-with open(VERSION) as file_io:
-    version = [line.rstrip() for line in file_io]
+# Starts the FastAPI Router to be used by the FastAPI app.
+router = APIRouter()
 
 
-async def root():
+@router.get("/")
+def root():
     """
     Root URL, for version checking.
     """
-    return f"REST API, Model {version[0]}"
+    return f"COVID19 US Data API, Model {api.__version__}"

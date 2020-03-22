@@ -3,6 +3,8 @@ from logging.handlers import TimedRotatingFileHandler
 import pathlib
 import os
 import sys
+from decouple import config
+import tweepy
 
 PACKAGE_ROOT = pathlib.Path(__file__).resolve().parent.parent
 
@@ -46,17 +48,29 @@ class Config:
     TESTING = False
     CSRF_ENABLED = True
     SERVER_PORT = 8000
+    COLLECTION_STATE = "state"
+    COLLECTION_COUNTY = "county"
+    COLLECTION_TWITTER = "twitter"
+    # JHU CSSE Daily Reports
+    BASE_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/"
+    # JHU CSSE time series reports
+    TIME_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
+    # Tweepy
+    TWITTER_AUTH = tweepy.OAuthHandler(
+        config("TWITTER_CONSUMER_KEY"), config("TWITTER_CONSUMER_SECRET_KEY")
+    )
+    TWITTER_AUTH.set_access_token(
+        config("TWITTER_ACCESS_TOKEN"), config("TWITTER_ACCESS_TOKEN_SECRET")
+    )
+    TWITTER = tweepy.API(TWITTER_AUTH)
 
 
 class ProductionConfig(Config):
     DEBUG = False
-    SERVER_PORT = os.environ.get("PORT", 8000)
+    DB_NAME = "covid"
 
 
 class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
-
-
-class TestingConfig(Config):
-    TESTING = True
+    DB_NAME = "covid-staging"

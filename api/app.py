@@ -4,7 +4,7 @@ from starlette.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from api import endpoints
 from api.config import get_logger
-
+import api
 
 _logger = get_logger(logger_name=__name__)
 
@@ -17,8 +17,8 @@ def create_app(*, config_object) -> FastAPI:
     _logger.info(f"[INFO]: config_object is {config_object}")
     config = dict(
         {
-            "title": "Memefly API",
-            "description": "Initial release of Memefly API",
+            "title": "COID19 US API",
+            "description": "Initial release of COID19 US API",
             "version": api.__version__,
         }
     )

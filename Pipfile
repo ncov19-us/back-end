@@ -6,7 +6,11 @@ name = "pypi"
 [packages]
 fastapi = "*"
 uvicorn = "*"
-cd = "*"
+python-decouple = "*"
+tweepy = "*"
+pymongo = "*"
+pandas = "*"
+requests = "*"
 
 [dev-packages]
 black = "*"
