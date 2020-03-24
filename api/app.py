@@ -4,7 +4,6 @@ from starlette.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from api import endpoints
 from api.config import get_logger
-import api
 
 _logger = get_logger(logger_name=__name__)
 
@@ -13,13 +12,13 @@ def create_app(*, config_object) -> FastAPI:
     """
     Creates a FastAPI app to be used by ../run.py
     """
-    _logger.info(f"[INFO]: Endpoint Version {api.__version__}")
+    _logger.info(f"[INFO]: Endpoint Version ")
     _logger.info(f"[INFO]: config_object is {config_object}")
     config = dict(
         {
             "title": "COID19 US API",
             "description": "Initial release of COID19 US API",
-            "version": api.__version__,
+            "version": "0.0",
         }
     )
 
