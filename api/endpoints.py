@@ -1,13 +1,9 @@
 import os
 from fastapi import APIRouter
 from pydantic import BaseModel
-from .config import DevelopmentConfig as dev_config
-from .config import ProductionConfig as prod_config
-from .utils.twitter_mongo import TwitterMongo
-
-# from api.config import DevelopmentConfig as dev_config
-# from api.config import ProductionConfig as prod_config
-# from api.utils.twitter_mongo import TwitterMongo
+from api.config import DevelopmentConfig as dev_config
+from api.config import ProductionConfig as prod_config
+from api.utils.twitter_mongo import TwitterMongo
 
 # Starts the FastAPI Router to be used by the FastAPI app.
 router = APIRouter()
