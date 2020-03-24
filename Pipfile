@@ -11,6 +11,7 @@ tweepy = "*"
 pymongo = "*"
 pandas = "*"
 requests = "*"
+beautifulsoup4 = "*"
 
 [dev-packages]
 black = "*"
