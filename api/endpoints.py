@@ -148,7 +148,13 @@ def get_country() -> JSONResponse:
     """Fetch country level data time series for Italy, US, and South Korea
 
     :param: none. Two letter state abbreviation.
-    :return: str
+    :return: json.  Schema:
+    
+    {"success": boolean
+     "message": "[{"Italy": int, "US", int, "Korea, South", int},
+                  {"Italy": int, "US", int, "Korea, South", int},
+                 ]"
+    }
     """
     try:
         data = read_country_data()
