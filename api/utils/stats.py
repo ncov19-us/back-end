@@ -6,7 +6,7 @@ from typing import Dict
 def get_daily_stats() -> Dict:
     # initialize the variables so it doesnt crash if both api call failed
 
-    confirmed, todays_confirmed, deaths, todays_deaths, recovered = 0, 0, 0, 0, 0
+    confirmed, todays_confirmed, deaths, todays_deaths = 0, 0, 0, 0
 
     try:
         data1 = requests.get(url=Config.CVTRACK_URL).json()[0]
@@ -27,7 +27,7 @@ def get_daily_stats() -> Dict:
         critical = data2["critical"]
         active = data2["active"]
     except:
-        confirmed, todays_confirmed, deaths, todays_deaths, recovered = (0, 0, 0, 0, 0)
+        confirmed, todays_confirmed, deaths, todays_deaths = 0, 0, 0, 0
 
     stats = {
         "tested": tested,
