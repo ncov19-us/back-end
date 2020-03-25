@@ -10,6 +10,7 @@ from api.utils import get_state_topic_google_news, get_us_news
 from api.utils import reverse_states_map
 from api.utils import get_daily_stats
 from api.utils import read_county_data
+from cachetools import cached, TTLCache
 
 # Starts the FastAPI Router to be used by the FastAPI app.
 router = APIRouter()
@@ -71,10 +72,13 @@ def post_gnews(news: News) -> JSONResponse:
     return json_data
 
 
+@cached(cache=TTLCache(maxsize=1, ttl=3600))
 @router.get("/county")
-def get_data() -> JSONResponse:
-    """Get all US county data and return it as a big fat json string.
-
+def get_county_data() -> JSONResponse:
+    """
+    Get all US county data and return it as a big fat json string.
+    - Retrieves county locations, cached for 1 hour.
+    
     :param: none.
     :return: JSONResponse
     """
