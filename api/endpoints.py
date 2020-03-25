@@ -1,4 +1,5 @@
 import os
+from typing import List
 from fastapi import APIRouter
 from pydantic import BaseModel
 from starlette.responses import JSONResponse
@@ -10,7 +11,9 @@ from api.utils import get_state_topic_google_news, get_us_news
 from api.utils import reverse_states_map
 from api.utils import get_daily_stats
 from api.utils import read_county_data
+from api.utils import read_country_data
 from cachetools import cached, TTLCache
+
 
 # Starts the FastAPI Router to be used by the FastAPI app.
 router = APIRouter()
@@ -59,10 +62,6 @@ def post_gnews(news: News) -> JSONResponse:
     :param: News object, with state and topic attribute string
     :return: JSONResponse of the topics fetched
     """
-
-    # if news.state == "US":
-    #     json_data = get_us_news()
-    #     return json_data
     try:
         state = reverse_states_map[news.state]
         data = get_state_topic_google_news(state, news.topic)
@@ -114,7 +113,6 @@ def get_twitter() -> JSONResponse:
     full_name = doc["full_name"]
     tweets = doc["tweets"]
 
-    # 2020-03-19 triage. lots of empty list at the end of tweets, filtering them out
     tweets = [*filter(None, tweets)]
     tweets = sorted(tweets, key=lambda i: i["created_at"], reverse=True)
     return tweets
@@ -122,7 +120,6 @@ def get_twitter() -> JSONResponse:
 
 class TwitterUser(BaseModel):
     state: str
-
 
 @router.post("/twitter")
 def post_twitter(twyuser: TwitterUser) -> JSONResponse:
@@ -140,3 +137,22 @@ def post_twitter(twyuser: TwitterUser) -> JSONResponse:
     tweets = [*filter(None, tweets)]
     tweets = sorted(tweets, key=lambda i: i["created_at"], reverse=True)
     return tweets
+
+
+class CountryData(BaseModel):
+    state: List
+
+@cached(cache=TTLCache(maxsize=1, ttl=3600))
+@router.get("/country")
+def get_country() -> JSONResponse:
+    """Fetch country level data time series for Italy, US, and South Korea
+
+    :param: none. Two letter state abbreviation.
+    :return: str
+    """
+    try:
+        data = read_country_data()
+        json_data = {"success": True, "message": data}
+    except Exception as ex:
+        json_data = {"sucess": False, "message": f"Error occured {ex}"}
+    return json_data
