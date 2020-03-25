@@ -9,6 +9,7 @@ from api.utils.twitter_mongo import TwitterMongo
 from api.utils import get_state_topic_google_news, get_us_news
 from api.utils import reverse_states_map
 from api.utils import get_daily_stats
+from api.utils import read_county_data
 
 # Starts the FastAPI Router to be used by the FastAPI app.
 router = APIRouter()
@@ -63,8 +64,8 @@ def post_gnews(news: News) -> JSONResponse:
     #     return json_data
     try:
         state = reverse_states_map[news.state]
-        json_data = get_state_topic_google_news(state, news.topic)
-        json_data = {"sucess": True, "message": json_data}
+        data = get_state_topic_google_news(state, news.topic)
+        json_data = {"sucess": True, "message": data}
     except Exception as ex:
         json_data = {"sucess": False, "message": f"Error occured {ex}"}
     return json_data
@@ -77,7 +78,12 @@ def get_data() -> JSONResponse:
     :param: none.
     :return: JSONResponse
     """
-    pass
+    try:
+        data = read_county_data()
+        json_data = {"success": True, "message": data}
+    except Exception as ex:
+        json_data = {"sucess": False, "message": f"Error occured {ex}"}
+    return json_data
 
 
 @router.get("/stats")
@@ -92,7 +98,7 @@ def get_stats() -> JSONResponse:
 
 
 @router.get("/twitter")
-def get_twitter() -> str:
+def get_twitter() -> JSONResponse:
     """Fetch and return Twitter data from MongoDB connection.
 
     :param: none
@@ -115,7 +121,7 @@ class TwitterUser(BaseModel):
 
 
 @router.post("/twitter")
-def post_twitter(twyuser: TwitterUser) -> str:
+def post_twitter(twyuser: TwitterUser) -> JSONResponse:
     """Fetch and return Twitter data from MongoDB connection.
 
     :param: none. Two letter state abbreviation.
