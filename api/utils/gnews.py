@@ -41,7 +41,8 @@ def get_state_topic_google_news(state, topic, max_rows=10):
 
 
 def convert_df_to_json(df):
-    return pd.DataFrame.to_json(df, orient="records")
+    data = json.loads(pd.DataFrame.to_json(df, orient="records"))
+    return json.dumps(data)
 
 
 def get_us_news(max_rows=50):
