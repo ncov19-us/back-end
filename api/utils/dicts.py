@@ -1,3 +1,10 @@
+#############################################################################
+#
+# State name and state abbreviation dictionary, with longitude and latitude
+#
+#############################################################################
+
+
 states = [
     {
         "state": "Alabama",
@@ -310,3 +317,4 @@ states = [
 reverse_states_map = {}
 for row in states:
     reverse_states_map[row["state_abbrv"]] = row["state"]
+# print(reverse_states_map)

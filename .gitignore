@@ -2,7 +2,7 @@
 .DS_Store
 
 # Ignore logs folder
-logs
+logs/
 
 # Load Testing stuff
 

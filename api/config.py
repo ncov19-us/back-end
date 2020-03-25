@@ -55,20 +55,16 @@ class Config:
     BASE_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/"
     # JHU CSSE time series reports
     TIME_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
-    # Tweepy
-    TWITTER_AUTH = tweepy.OAuthHandler(
-        config("TWITTER_CONSUMER_KEY"), config("TWITTER_CONSUMER_SECRET_KEY")
-    )
-    TWITTER_AUTH.set_access_token(
-        config("TWITTER_ACCESS_TOKEN"), config("TWITTER_ACCESS_TOKEN_SECRET")
-    )
-    TWITTER = tweepy.API(TWITTER_AUTH)
     NEWS_API_KEY = config("NEWS_API_KEY")
     NEWS_API_URL = (
         f"https://newsapi.org/v2/top-headlines?country=us&apiKey={NEWS_API_KEY}"
     )
-    CVTRACK_URL = "https://covidtracking.com/api/us"
-    TMP_URL = "https://coronavirus-19-api.herokuapp.com/countries/US"
+    CVTRACK_URL = "https://covidtracking.com/api/us/daily"
+    CVTRACK_STATES_URL = "https://covidtracking.com/api/states"
+    TMP_URL = "https://coronavirus-19-api.herokuapp.com/countries/USA"
+    COUNTY_URL = config("COUNTY_URL")
+    STATE_CONFIRMED = config("STATE_CONFIRMED")
+    STATE_DEATH = config("STATE_DEATH")
 
 
 class ProductionConfig(Config):

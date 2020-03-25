@@ -1,32 +1,36 @@
-from fastapi import Depends, FastAPI, Header, HTTPException
 import uvicorn
-from starlette.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
+from fastapi import Depends, FastAPI, Header, HTTPException
+from starlette.middleware.cors import CORSMiddleware
+
+import api
 import api.endpoints
 from api.config import get_logger
+from api.config import Config
 
 _logger = get_logger(logger_name=__name__)
 
 
 def create_app(*, config_object) -> FastAPI:
-    """
-    Creates a FastAPI app to be used by ../run.py
+    """Creates a FastAPI app.
+
+    :param: :Config: config_object. app config.
     """
     _logger.info(f"[INFO]: Endpoint Version ")
     _logger.info(f"[INFO]: config_object is {config_object}")
     config = dict(
         {
-            "title": "COID19 US API",
-            "description": "Initial release of COID19 US API",
-            "version": "0.0",
+            "title": "ncov19.us API",
+            "version": f"{api.__version__}",
+            "description": """API Support: ncov19us@gmail.com | URL: https://github.com/ncov19-us/back-end | [GNU GENERAL PUBLIC LICENSE](https://github.com/ncov19-us/back-end/blob/master/LICENSE)""",
         }
     )
 
     app = FastAPI(
-        title=config["title"],  # "COVID19 US API",
-        description=config["description"],  #: "Initial release of COVID19 US API",
+        title=config["title"],
         version=config["version"],
-    )  #: api.__version__)#config)
+        description=config["description"],
+    )
 
     # All the API Routers are stored in endpoints.py, so we import them
     # to the app here.
