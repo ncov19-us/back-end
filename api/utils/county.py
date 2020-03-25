@@ -10,7 +10,7 @@ base_url = "https://facts.csbs.org/covid-19/covid19_county.csv"
 def read_county_data() -> pd.DataFrame:
     df = pd.read_csv(base_url)
     df = df.apply(lambda x: x.astype(str).str.lower())
-    df = df[~(df["County Name"] == "unassigned")]
+    df = df[~(df["County Name"].isin(["unassigned", "unknown"]))]
     return convert_df_to_json(df)
 
 

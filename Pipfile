@@ -13,6 +13,8 @@ pandas = "*"
 requests = "*"
 beautifulsoup4 = "*"
 lxml = "*"
+cachetools = "*"
+gunicorn = "*"
 
 [dev-packages]
 black = "*"
