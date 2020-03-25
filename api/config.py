@@ -63,6 +63,12 @@ class Config:
         config("TWITTER_ACCESS_TOKEN"), config("TWITTER_ACCESS_TOKEN_SECRET")
     )
     TWITTER = tweepy.API(TWITTER_AUTH)
+    NEWS_API_KEY = config("NEWS_API_KEY")
+    NEWS_API_URL = (
+        f"https://newsapi.org/v2/top-headlines?country=us&apiKey={NEWS_API_KEY}"
+    )
+    CVTRACK_URL = "https://covidtracking.com/api/us"
+    TMP_URL = "https://coronavirus-19-api.herokuapp.com/countries/US"
 
 
 class ProductionConfig(Config):

@@ -60,12 +60,12 @@ class TwitterMongo:
             print("-------- MongoDB Data Dump Result --------")
             print(f"Total records inserted: {len(status.inserted_ids)}")
 
-    def get_data_by_user(self, username: str, verbose=False):
+    def get_tweet_by_user(self, username: str, verbose=False):
         """Get stored user data by username
         :param: username: username to be added
         :param: verbose: Default False.
         
-        :return: none
+        :return: JSON Object
         """
         if not username:
             raise ValueError(
@@ -78,6 +78,25 @@ class TwitterMongo:
             )
         if verbose and result is not None:
             pprint.pprint(result)
+        return result
+
+    def get_tweet_by_state(self, state: str, verbose=False):
+        """Get state document
+        :param: state: state 2-char identifier
+        :param: verbose: Default False.
+        
+        :return: JSON object
+        """
+        if not state:
+            raise ValueError(
+                f"The parameter username: {state} must be non-nill reference."
+            )
+        result = self.collection.find_one({"state": state})
+        if result is None:
+            print(f"Can't find state:{state} in the collection {self.collection_name}.")
+        if verbose and result is not None:
+            pprint.pprint(result)
+            print(type(result))
         return result
 
     def update_user_tweets(self, username: str, tweet: List):

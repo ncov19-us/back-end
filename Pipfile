@@ -12,6 +12,7 @@ pymongo = "*"
 pandas = "*"
 requests = "*"
 beautifulsoup4 = "*"
+lxml = "*"
 
 [dev-packages]
 black = "*"

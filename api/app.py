@@ -2,8 +2,6 @@ from fastapi import Depends, FastAPI, Header, HTTPException
 import uvicorn
 from starlette.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
-# from api import endpoints
-# from api.config import get_logger
 import api.endpoints
 from api.config import get_logger
 
