@@ -107,19 +107,26 @@ def get_twitter() -> JSONResponse:
     :param: none
     :return: str
     """
-
-    doc = tm.get_tweet_by_state("US", verbose=True)
-    username = doc["username"]
-    full_name = doc["full_name"]
-    tweets = doc["tweets"]
-
-    tweets = [*filter(None, tweets)]
-    tweets = sorted(tweets, key=lambda i: i["created_at"], reverse=True)
-    return tweets
+    try:
+        doc = tm.get_tweet_by_state("US")
+        username = doc["username"]
+        full_name = doc["full_name"]
+        tweets = doc["tweets"]
+        # 2020-03-19 triage. lots of empty list at the end of tweets, filtering them out
+        tweets = [*filter(None, tweets)]
+        tweets = sorted(tweets, key=lambda i: i["created_at"], reverse=True)
+        json_data = {
+            "sucess": True,
+            "message": {"username": username, "full_name": full_name, "tweets": tweets},
+        }
+    except Exception as ex:
+        json_data = {"sucess": False, "message": f"Error occured {ex}"}
+    return json_data
 
 
 class TwitterUser(BaseModel):
     state: str
+
 
 @router.post("/twitter")
 def post_twitter(twyuser: TwitterUser) -> JSONResponse:
@@ -128,19 +135,26 @@ def post_twitter(twyuser: TwitterUser) -> JSONResponse:
     :param: none. Two letter state abbreviation.
     :return: str
     """
-    doc = tm.get_tweet_by_state(twyuser.state)
-    username = doc["username"]
-    full_name = doc["full_name"]
-    tweets = doc["tweets"]
-
-    # 2020-03-19 triage. lots of empty list at the end of tweets, filtering them out
-    tweets = [*filter(None, tweets)]
-    tweets = sorted(tweets, key=lambda i: i["created_at"], reverse=True)
-    return tweets
+    try:
+        doc = tm.get_tweet_by_state(twyuser.state)
+        username = doc["username"]
+        full_name = doc["full_name"]
+        tweets = doc["tweets"]
+        # 2020-03-19 triage. lots of empty list at the end of tweets, filtering them out
+        tweets = [*filter(None, tweets)]
+        tweets = sorted(tweets, key=lambda i: i["created_at"], reverse=True)
+        json_data = {
+            "sucess": True,
+            "message": {"username": username, "full_name": full_name, "tweets": tweets},
+        }
+    except Exception as ex:
+        json_data = {"sucess": False, "message": f"Error occured {ex}"}
+    return json_data
 
 
 class CountryData(BaseModel):
     state: List
+
 
 @cached(cache=TTLCache(maxsize=1, ttl=3600))
 @router.get("/country")
