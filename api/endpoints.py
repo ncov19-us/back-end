@@ -41,9 +41,9 @@ def get_gnews() -> JSONResponse:
     """
     try:
         data = get_us_news()
-        json_data = {"sucess": True, "message": data}
+        json_data = {"success": True, "message": data}
     except Exception as ex:
-        json_data = {"sucess": False, "message": f"Error occurred: {ex}"}
+        json_data = {"success": False, "message": f"Error occurred: {ex}"}
     return json_data
 
 
@@ -65,9 +65,9 @@ def post_gnews(news: News) -> JSONResponse:
     try:
         state = reverse_states_map[news.state]
         data = get_state_topic_google_news(state, news.topic)
-        json_data = {"sucess": True, "message": data}
+        json_data = {"success": True, "message": data}
     except Exception as ex:
-        json_data = {"sucess": False, "message": f"Error occured {ex}"}
+        json_data = {"success": False, "message": f"Error occured {ex}"}
     return json_data
 
 
@@ -85,7 +85,7 @@ def get_county_data() -> JSONResponse:
         data = read_county_data()
         json_data = {"success": True, "message": data}
     except Exception as ex:
-        json_data = {"sucess": False, "message": f"Error occured {ex}"}
+        json_data = {"success": False, "message": f"Error occured {ex}"}
     return json_data
 
 
@@ -116,11 +116,11 @@ def get_twitter() -> JSONResponse:
         tweets = [*filter(None, tweets)]
         tweets = sorted(tweets, key=lambda i: i["created_at"], reverse=True)
         json_data = {
-            "sucess": True,
+            "success": True,
             "message": {"username": username, "full_name": full_name, "tweets": tweets},
         }
     except Exception as ex:
-        json_data = {"sucess": False, "message": f"Error occured {ex}"}
+        json_data = {"success": False, "message": f"Error occured {ex}"}
     return json_data
 
 
@@ -144,11 +144,11 @@ def post_twitter(twyuser: TwitterUser) -> JSONResponse:
         tweets = [*filter(None, tweets)]
         tweets = sorted(tweets, key=lambda i: i["created_at"], reverse=True)
         json_data = {
-            "sucess": True,
+            "success": True,
             "message": {"username": username, "full_name": full_name, "tweets": tweets},
         }
     except Exception as ex:
-        json_data = {"sucess": False, "message": f"Error occured {ex}"}
+        json_data = {"success": False, "message": f"Error occured {ex}"}
     return json_data
 
 
@@ -174,5 +174,5 @@ def get_country() -> JSONResponse:
         data = read_country_data()
         json_data = {"success": True, "message": data}
     except Exception as ex:
-        json_data = {"sucess": False, "message": f"Error occured {ex}"}
+        json_data = {"success": False, "message": f"Error occured {ex}"}
     return json_data
