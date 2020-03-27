@@ -12,7 +12,7 @@ from api.utils import reverse_states_map
 from api.utils import get_daily_stats
 from api.utils import read_county_data
 from api.utils import read_country_data
-from cachetools import cached, TTLCache, LRUCache
+from cachetools import cached, TTLCache
 
 
 # Starts the FastAPI Router to be used by the FastAPI app.
@@ -156,7 +156,7 @@ class Country(BaseModel):
     alpha2Code: str
 
 
-@cached(cache=LRUCache(maxsize=4))
+@cached(cache=TTLCache(maxsize=3, ttl=3600))
 @router.post("/country")
 def get_country(country: Country) -> JSONResponse:
     """Fetch country level data time series for Italy, US, and South Korea
