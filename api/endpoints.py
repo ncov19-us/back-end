@@ -12,7 +12,7 @@ from api.utils import reverse_states_map
 from api.utils import get_daily_stats
 from api.utils import read_county_data
 from api.utils import read_country_data
-from cachetools import cached, TTLCache
+from cachetools import cached, TTLCache, LRUCache
 
 
 # Starts the FastAPI Router to be used by the FastAPI app.
@@ -152,13 +152,13 @@ def post_twitter(twyuser: TwitterUser) -> JSONResponse:
     return json_data
 
 
-class CountryData(BaseModel):
-    state: List
+class Country(BaseModel):
+    alpha2Code: str
 
 
-@cached(cache=TTLCache(maxsize=1, ttl=3600))
-@router.get("/country")
-def get_country() -> JSONResponse:
+@cached(cache=LRUCache(maxsize=4))
+@router.post("/country")
+def get_country(country: Country) -> JSONResponse:
     """Fetch country level data time series for Italy, US, and South Korea
 
     :param: none. Two letter state abbreviation.
@@ -170,8 +170,9 @@ def get_country() -> JSONResponse:
                  ]"
     }
     """
+    cc = country.alpha2Code.upper()
     try:
-        data = read_country_data()
+        data = read_country_data(cc)
         json_data = {"success": True, "message": data}
     except Exception as ex:
         json_data = {"success": False, "message": f"Error occured {ex}"}

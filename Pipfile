@@ -15,6 +15,7 @@ beautifulsoup4 = "*"
 lxml = "*"
 cachetools = "*"
 gunicorn = "*"
+pycountry = "*"
 
 [dev-packages]
 black = "*"

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "b628681129bbf63fc881257421577619eaca4a245b3d213af0feaee383688373"
+            "sha256": "dd64e73b36e989ae3d72461bb7db683ccb1b54f79905fc4767c79d75ac34e128"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -189,6 +189,13 @@
             ],
             "index": "pypi",
             "version": "==1.0.3"
+        },
+        "pycountry": {
+            "hashes": [
+                "sha256:3c57aa40adcf293d59bebaffbe60d8c39976fba78d846a018dc0c2ec9c6cb3cb"
+            ],
+            "index": "pypi",
+            "version": "==19.8.18"
         },
         "pydantic": {
             "hashes": [
@@ -560,7 +567,6 @@
                 "sha256:fc0fea399acb12edbf8a628ba8d2312f583bdbdb3335635db062fa98cf71fca4",
                 "sha256:fe460b922ec15dd205595c9b5b99e2f056fd98ae8f9f56b888e7a17dc2b757e7"
             ],
-            "markers": "implementation_name == 'cpython' and python_version < '3.8'",
             "version": "==1.4.1"
         },
         "wrapt": {
