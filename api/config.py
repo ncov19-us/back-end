@@ -68,7 +68,7 @@ class Config:
         f"https://newsapi.org/v2/top-headlines?country=us&apiKey={NEWS_API_KEY}"
     )
     CVTRACK_URL = "https://covidtracking.com/api/us"
-    TMP_URL = "https://coronavirus-19-api.herokuapp.com/countries/US"
+    TMP_URL = "https://coronavirus-19-api.herokuapp.com/countries/USA"
 
 
 class ProductionConfig(Config):
