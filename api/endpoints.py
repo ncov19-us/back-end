@@ -98,7 +98,12 @@ def get_stats() -> JSONResponse:
     :param: none.
     :return: JSONResponse
     """
-    return get_daily_stats()
+    try:
+        data = get_daily_stats()
+        json_data = {"success": True, "message": data}
+    except Exception as ex:
+        json_data = {"success": False, "message": f"Error occured {ex}"}
+    return json_data
 
 
 class Stats(BaseModel):
