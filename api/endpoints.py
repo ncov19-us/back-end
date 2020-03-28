@@ -104,6 +104,7 @@ def get_stats() -> JSONResponse:
 class Stats(BaseModel):
     state: str = "CA"
 
+
 @router.post("/stats")
 def post_stats(stats: Stats) -> JSONResponse:
     """Get overall tested, confirmed, and deaths stats from the database
@@ -112,8 +113,12 @@ def post_stats(stats: Stats) -> JSONResponse:
     :param: none.
     :return: JSONResponse
     """
-    print("[DEBUG]: inside post_stats")
-    return get_daily_state_stats(stats.state)
+    try:
+        data = get_daily_state_stats(stats.state)
+        json_data = {"success": True, "message": data}
+    except Exception as ex:
+        json_data = {"success": False, "message": f"Error occured {ex}"}
+    return json_data
 
 
 @router.get("/twitter")
