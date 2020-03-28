@@ -50,10 +50,11 @@ def get_us_news(max_rows=50):
     json_data = news_requests.json()["articles"]
     df = pd.DataFrame(json_data)
     df = pd.DataFrame(df[["title", "url", "publishedAt"]])
+    df = df.rename(columns={"publishedAt": "published"})
     # Infer datetime
-    df["publishedAt"] = pd.to_datetime(df["publishedAt"], infer_datetime_format=True)
+    df["published"] = pd.to_datetime(df["published"], infer_datetime_format=True)
     # Assuming timedelta of 5 hours based on what i compared from CNN articles from API.
-    df["publishedAt"] = df["publishedAt"] - pd.Timedelta("5 hours")
+    df["published"] = df["published"] - pd.Timedelta("5 hours")
     """
     # Format date time way you want to display, https://strftime.org/
     """
@@ -62,7 +63,7 @@ def get_us_news(max_rows=50):
         return val.strftime("%a %d, %Y, %I: %M %p ET")
 
     # Apply pandas function to format news published date
-    df["publishedAt"] = df["publishedAt"].apply(dt_fmt)
+    df["published"] = df["published"].apply(dt_fmt)
     df = df.iloc[: min(len(df), max_rows)]
     return convert_df_to_json(df)
 

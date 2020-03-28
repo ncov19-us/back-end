@@ -17,7 +17,7 @@ from cachetools import cached, TTLCache
 
 # Starts the FastAPI Router to be used by the FastAPI app.
 router = APIRouter()
-tm = TwitterMongo("covid", "twitter", verbose=True)
+tm = TwitterMongo("covid", "twitter", verbose=False)
 
 
 @router.get("/")
