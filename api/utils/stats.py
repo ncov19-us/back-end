@@ -38,3 +38,38 @@ def get_daily_stats() -> Dict:
     }
 
     return stats
+
+
+def get_daily_state_stats(state: str) -> Dict:
+    # initialize the variables so it doesnt crash if both api call failed
+
+    tested, confirmed, todays_confirmed, deaths, todays_deaths = 0, 0, 0, 0, 0
+    URL = Config.CVTRACK_STATES_URL+f"/daily?state={state}"
+
+    response = requests.get(url=URL)
+    # print(response.json())
+    if response.status_code == 200:
+        # covidtracking api throws error json if request error {'error': }
+        if type(response.json()) is list:
+            try:
+                data = response.json()
+                curr = data[0]
+                prev = data[1]
+                tested = curr['totalTestResults']
+                confirmed = curr['positive']
+                todays_confirmed = curr['positive'] - prev['positive']
+                deaths = curr['death']
+                todays_deaths = curr['death'] - prev['death']
+
+            except:
+                return {"error": "get_daily_state_stats API parsing error."}
+
+    stats = {
+        "tested": tested,
+        "confirmed": confirmed,
+        "todays_confirmed": todays_confirmed,
+        "deaths": deaths,
+        "todays_deaths": todays_deaths,
+    }
+
+    return stats
