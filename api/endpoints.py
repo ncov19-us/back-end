@@ -10,6 +10,7 @@ from api.utils.twitter_mongo import TwitterMongo
 from api.utils import get_state_topic_google_news, get_us_news
 from api.utils import reverse_states_map
 from api.utils import get_daily_stats
+from api.utils import get_daily_state_stats
 from api.utils import read_county_data
 from api.utils import read_country_data
 from cachetools import cached, TTLCache
@@ -98,6 +99,21 @@ def get_stats() -> JSONResponse:
     :return: JSONResponse
     """
     return get_daily_stats()
+
+
+class Stats(BaseModel):
+    state: str = "CA"
+
+@router.post("/stats")
+def post_stats(stats: Stats) -> JSONResponse:
+    """Get overall tested, confirmed, and deaths stats from the database
+    and return it as a json string. For the top bar.
+
+    :param: none.
+    :return: JSONResponse
+    """
+    print("[DEBUG]: inside post_stats")
+    return get_daily_state_stats(stats.state)
 
 
 @router.get("/twitter")
