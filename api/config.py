@@ -67,7 +67,7 @@ class Config:
     NEWS_API_URL = (
         f"https://newsapi.org/v2/top-headlines?country=us&apiKey={NEWS_API_KEY}"
     )
-    CVTRACK_URL = "https://covidtracking.com/api/us"
+    CVTRACK_URL = "https://covidtracking.com/api/us/daily"
     CVTRACK_STATES_URL = "https://covidtracking.com/api/states"
     TMP_URL = "https://coronavirus-19-api.herokuapp.com/countries/USA"
 
