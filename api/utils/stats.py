@@ -1,6 +1,9 @@
 import requests
 from api.config import Config
 from typing import Dict
+from api.utils import reverse_states_map
+import pandas as pd
+import json
 
 
 def get_daily_stats() -> Dict:
@@ -44,7 +47,7 @@ def get_daily_state_stats(state: str) -> Dict:
     # initialize the variables so it doesnt crash if both api call failed
 
     tested, confirmed, todays_confirmed, deaths, todays_deaths = 0, 0, 0, 0, 0
-    URL = Config.CVTRACK_STATES_URL+f"/daily?state={state}"
+    URL = Config.CVTRACK_STATES_URL + f"/daily?state={state}"
 
     response = requests.get(url=URL)
     # print(response.json())
@@ -54,15 +57,18 @@ def get_daily_state_stats(state: str) -> Dict:
             try:
                 data = response.json()
                 curr = data[0]
-                prev = data[1]
-                tested = curr['totalTestResults']
-                confirmed = curr['positive']
-                todays_confirmed = curr['positive'] - prev['positive']
-                deaths = curr['death']
-                todays_deaths = curr['death'] - prev['death']
-
+                tested = curr["totalTestResults"]
             except:
                 return {"error": "get_daily_state_stats API parsing error."}
+
+        base_url = "https://facts.csbs.org/covid-19/covid19_county.csv"
+        df = pd.read_csv(base_url)
+        df = df[df["State Name"] == reverse_states_map[state]]
+        grouped = df.groupby(["State Name"])
+        confirmed = grouped["Confirmed"].sum().values[0].astype(str)
+        todays_confirmed = grouped["New"].sum().values[0].astype(str)
+        death = grouped["Death"].sum().values[0].astype(str)
+        todays_death = grouped["New Death"].sum().values[0].astype(str)
 
     stats = {
         "tested": tested,
