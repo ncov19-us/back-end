@@ -57,7 +57,9 @@ def get_daily_state_stats(state: str) -> Dict:
             try:
                 data = response.json()
                 curr = data[0]
+                prev = data[1]
                 tested = curr["totalTestResults"]
+                todays_deaths = curr["deathIncrease"]
             except:
                 return {"error": "get_daily_state_stats API parsing error."}
 
@@ -67,8 +69,8 @@ def get_daily_state_stats(state: str) -> Dict:
         grouped = df.groupby(["State Name"])
         confirmed = grouped["Confirmed"].sum().values[0].astype(str)
         todays_confirmed = grouped["New"].sum().values[0].astype(str)
-        death = grouped["Death"].sum().values[0].astype(str)
-        todays_death = grouped["New Death"].sum().values[0].astype(str)
+        deaths = grouped["Death"].sum().values[0].astype(str)
+        # todays_deaths = grouped["New Death"].sum().values[0].astype(str)
 
     stats = {
         "tested": tested,
