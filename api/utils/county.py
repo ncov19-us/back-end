@@ -8,8 +8,8 @@ base_url = "https://facts.csbs.org/covid-19/covid19_county.csv"
 
 def read_county() -> pd.DataFrame:
     df = pd.read_csv(base_url)
-    df = df.apply(lambda x: x.astype(str).str.lower())
-    df = df[~(df["County Name"].isin(["unassigned", "unknown"]))]
+    # df = df.apply(lambda x: x.astype(str).str.lower())
+    # df = df[~(df["County Name"].isin(["unassigned", "unknown"]))]
     return df
 
 
