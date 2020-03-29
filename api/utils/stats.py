@@ -67,6 +67,7 @@ def get_daily_state_stats(state: str) -> Dict:
                 data = response.json()
                 curr = data[0]
                 prev = data[1]
+                todays_tested = curr["totalTestResults"] - prev["totalTestResults"]
                 tested = curr["totalTestResults"]
                 todays_deaths = curr["deathIncrease"]
             except:
