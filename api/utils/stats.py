@@ -1,9 +1,9 @@
-import requests
-from api.config import Config
-from typing import Dict
-from api.utils import reverse_states_map
-import pandas as pd
 import json
+import requests
+import pandas as pd
+from typing import Dict
+from api.config import Config
+from api.utils import reverse_states_map
 
 
 def get_daily_stats() -> Dict:
@@ -73,7 +73,7 @@ def get_daily_state_stats(state: str) -> Dict:
             except:
                 return {"error": "get_daily_state_stats API parsing error."}
 
-        base_url = "https://facts.csbs.org/covid-19/covid19_county.csv"
+        base_url = Config.COUNTY_URL
         df = pd.read_csv(base_url)
         df = df[df["State Name"] == reverse_states_map[state]]
         grouped = df.groupby(["State Name"])
