@@ -1,10 +1,10 @@
+import os
+import json
+import pprint
+from typing import List
+from decouple import config
 import pymongo
 from pymongo.errors import DuplicateKeyError
-from decouple import config
-from typing import List
-import pprint
-import json
-import os
 import pandas as pd
 
 
