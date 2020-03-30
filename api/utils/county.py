@@ -1,13 +1,10 @@
 import pandas as pd
 from api.utils import convert_df_to_json
-
-
-# Base URL for fetching data
-base_url = "https://facts.csbs.org/covid-19/covid19_county.csv"
+from api.config import Config
 
 
 def read_county() -> pd.DataFrame:
-    df = pd.read_csv(base_url)
+    df = pd.read_csv(Config.COUNTY_URL)
     # df = df.apply(lambda x: x.astype(str).str.lower())
     # df = df[~(df["County Name"].isin(["unassigned", "unknown"]))]
     return df

@@ -70,6 +70,7 @@ class Config:
     CVTRACK_URL = "https://covidtracking.com/api/us/daily"
     CVTRACK_STATES_URL = "https://covidtracking.com/api/states"
     TMP_URL = "https://coronavirus-19-api.herokuapp.com/countries/USA"
+    COUNTY_URL = config("COUNTY_URL")
 
 
 class ProductionConfig(Config):
