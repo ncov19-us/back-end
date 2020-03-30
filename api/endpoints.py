@@ -35,8 +35,6 @@ def root() -> str:
 def get_gnews() -> JSONResponse:
     """Fetch US news from Google News API and return it as a json string.
 
-    TODO: Need to return the string of a pyhton dictionary
-
     :param: News object, with state and topic attribute string
     :return: JSONResponse of the topics fetched
     """
@@ -57,8 +55,6 @@ class News(BaseModel):
 def post_gnews(news: News) -> JSONResponse:
     """Fetch specific state and topic news from Google News API and return it
     as a json string.
-
-    TODO: Need to return the string of a pyhton dictionary
 
     :param: News object, with state and topic attribute string
     :return: JSONResponse of the topics fetched
@@ -109,13 +105,12 @@ def get_stats() -> JSONResponse:
 class Stats(BaseModel):
     state: str = "CA"
 
-
 @router.post("/stats")
 def post_stats(stats: Stats) -> JSONResponse:
     """Get overall tested, confirmed, and deaths stats from the database
     and return it as a json string. For the top bar.
 
-    :param: none.
+    :param: Stats
     :return: JSONResponse
     """
     try:
