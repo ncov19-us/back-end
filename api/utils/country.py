@@ -236,6 +236,7 @@ def read_country_data(country_alpha: str) -> Dict:
     df2 = get_country_stats(country_alpha, metric_type="deaths")
     merge = pd.merge(df1, df2, on="Date")
 
+    del df1, df2
     # return convert_df_to_json(merge)
     # return pd.DataFrame.to_json(merge, orient="records")
     return pd.DataFrame.to_dict(merge, orient="records")
