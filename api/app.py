@@ -22,7 +22,7 @@ def create_app(*, config_object) -> FastAPI:
         {
             "title": "ncov19.us API",
             "version": f"{api.__version__}",
-            "description": """API Support: ncov19us@gmail.com | URL: https://github.com/ncov19-us/back-end | [License](https://github.com/ncov19-us/back-end/blob/master/LICENSE)""",
+            "description": """API Support: ncov19us@gmail.com | URL: https://github.com/ncov19-us/back-end | [GNU GENERAL PUBLIC LICENSE](https://github.com/ncov19-us/back-end/blob/master/LICENSE)""",
         }
     )
 

@@ -1,7 +1,7 @@
 from typing import Any, Dict
 import pandas as pd
 import pycountry
-from api.utils import convert_df_to_json
+# from api.utils import convert_df_to_json
 
 
 # Country dictionary
@@ -236,7 +236,9 @@ def read_country_data(country_alpha: str) -> Dict:
     df2 = get_country_stats(country_alpha, metric_type="deaths")
     merge = pd.merge(df1, df2, on="Date")
 
-    return convert_df_to_json(merge)
+    # return convert_df_to_json(merge)
+    # return pd.DataFrame.to_json(merge, orient="records")
+    return pd.DataFrame.to_dict(merge, orient="records")
 
 
 if __name__ == "__main__":
