@@ -1,3 +1,10 @@
+#############################################################################
+#
+# State name and state abbreviation dictionary, with longitude and latitude
+#
+#############################################################################
+
+
 states = [
     {
         "state": "Alabama",

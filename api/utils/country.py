@@ -1,8 +1,10 @@
-import pandas as pd
 from typing import Any, Dict
-from api.utils import convert_df_to_json
+import pandas as pd
 import pycountry
+# from api.utils import convert_df_to_json
 
+
+# Country dictionary
 country_dict = {
     "TD": "Chad",
     "AT": "Austria",
@@ -176,7 +178,13 @@ country_dict = {
 }
 
 
-def parse_df(metric_type):
+def parse_df(metric_type: str) -> pd.DataFrame:
+    """ Parse data in Johns Hopkins github csv file for the supported metric_type
+    and return the dataframe to people.
+
+    :param: :str: :metric_type: Currently only confirmed or death supported
+    :return: :pd.DataFrame: dataframe of the queried data.
+    """
     if metric_type.startswith("confirmed"):
         metric_type = "confirmed"
     elif metric_type.startswith("death"):
@@ -189,7 +197,14 @@ def parse_df(metric_type):
     return df
 
 
-def get_country_stats(country_alpha, metric_type):
+def get_country_stats(country_alpha: str, metric_type: str) -> pd.DataFrame:
+    """ Find the metric type data from the Johns Hopkins github csv file for
+    a specific country and returns to the dataframe.
+
+    :param: :country_alpha: :str: country alpha2 code.
+    :param: :metric_type: :str: currently only confirmed or death supported
+    :return: :pd.DataFrame: dataframe of the queried data.
+    """
 
     country_alpha = country_alpha.upper()
     metric_type = metric_type.lower()
@@ -206,15 +221,25 @@ def get_country_stats(country_alpha, metric_type):
     df = df.rename(columns={0: metric_type.title()})
     df = df.reset_index(drop=True)
     df = df.rename(columns={"index": "Date"})
+
     return df
 
 
-def read_country_data(country_alpha):
+def read_country_data(country_alpha: str) -> Dict:
+    """ Find both confirmed and deaths data from the Johns Hopkins github csv 
+    file and returns to people.
+
+    :param: :country_alpha: :str: country alpha2 code.
+    :return: :Dict: json file.
+    """
     df1 = get_country_stats(country_alpha, metric_type="confirmed")
     df2 = get_country_stats(country_alpha, metric_type="deaths")
     merge = pd.merge(df1, df2, on="Date")
-    return convert_df_to_json(merge)
-    # return merge
+
+    del df1, df2
+    # return convert_df_to_json(merge)
+    # return pd.DataFrame.to_json(merge, orient="records")
+    return pd.DataFrame.to_dict(merge, orient="records")
 
 
 if __name__ == "__main__":

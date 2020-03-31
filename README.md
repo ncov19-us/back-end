@@ -39,8 +39,10 @@ To get the server running locally:
 
 ### Refer to API Documentation 📖
 
-[API Doc](https://covid19-us-api-staging.herokuapp.com/docs)
-[API Doc](https://covid19-us-api-staging.herokuapp.com/redoc)
+[API Doc ReDoc](https://covid19-us-api-staging.herokuapp.com/redoc)
+
+[API Doc Swagger](https://covid19-us-api-staging.herokuapp.com/docs)
+
 
 
 ## 3️⃣ Environment Variables
