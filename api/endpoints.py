@@ -40,10 +40,9 @@ class RootOutput(BaseModel):
 def root() -> JSONResponse:
     """Root URL, reporting version and status.
     """
-    root_output = RootOutput(
-                    True,
-                    f"ncov19.us API, Version {api.__version__}, Model. Status OK."
-                )
+    root_output = JSONResponse(status_code=200,
+            content={"success": True,
+                     "message": f"ncov19.us API, Version {api.__version__}, Model. Status OK."})
     return root_output
 
 
