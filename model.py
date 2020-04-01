@@ -14,7 +14,7 @@ class Country(Document):
     lon = FloatField(required=True)
     population = IntField(required=False)
     area = IntField(required=False)
-    stats = EmbeddedDocumentField(Stats, required=False)
+    stats = ListField(EmbeddedDocumentField(Stats, required=False))
 
 
 class State(Document):
@@ -24,11 +24,11 @@ class State(Document):
     lon = FloatField(required=True)
     population = IntField(required=False)
     area = IntField(required=False)
-    stats = EmbeddedDocumentField(Stats, required=False)
+    stats = ListField(EmbeddedDocumentField(Stats, required=False))
 
 
 class County(Document):
-    state = StringField(max_length=15, required=True)
+    state = StringField(max_length=50, required=True)
     stateAbbr = StringField(max_length=2, required=True)
     county = StringField(max_length=100, require=True)
     fips = IntField(max_length=6, required=True)
@@ -39,7 +39,7 @@ class County(Document):
     hospitals = IntField(required=False)
     hospital_beds = IntField(required=False)
     medium_income = IntField(required=False)
-    stats = EmbeddedDocumentField(Stats, required=False)
+    stats = ListField(EmbeddedDocumentField(Stats, required=False))
 
 
 
