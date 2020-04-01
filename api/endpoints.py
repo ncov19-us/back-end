@@ -14,7 +14,7 @@ from api.utils import reverse_states_map
 from api.utils import get_daily_stats
 from api.utils import get_daily_state_stats
 from api.utils import read_county_data
-from api.utils import read_county_data
+from api.utils import read_country_data
 from api.utils import read_county_stats
 from cachetools import cached, TTLCache
 
