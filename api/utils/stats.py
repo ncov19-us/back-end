@@ -81,7 +81,7 @@ def get_daily_state_stats(state: str) -> Dict:
 
     tested, todays_tested, confirmed = 0, 0, 0
     todays_confirmed, deaths, todays_deaths = 0, 0, 0
-    
+
     URL = Config.CVTRACK_STATES_URL + f"/daily?state={state}"
 
     response = requests.get(url=URL)

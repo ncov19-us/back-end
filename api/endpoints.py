@@ -2,7 +2,7 @@ import os
 from typing import List
 from datetime import datetime
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel,  ValidationError, validator, Field
+from pydantic import BaseModel, ValidationError, validator, Field
 from pydantic.dataclasses import dataclass
 from starlette.responses import JSONResponse
 import api
@@ -15,6 +15,7 @@ from api.utils import get_daily_stats
 from api.utils import get_daily_state_stats
 from api.utils import read_county_data
 from api.utils import read_country_data
+from api.utils import read_county_stats
 from cachetools import cached, TTLCache
 
 
@@ -29,20 +30,27 @@ tm = TwitterMongo("covid", "twitter", verbose=False)
 #
 ################################################################################
 
+
 class Message(BaseModel):
     message: str
+
 
 class RootOutput(BaseModel):
     success: bool
     message: str
 
+
 @router.get("/", response_model=RootOutput)
 def root() -> JSONResponse:
     """Root URL, reporting version and status.
     """
-    root_output = JSONResponse(status_code=200,
-            content={"success": True,
-                     "message": f"ncov19.us API, Version {api.__version__}, Model. Status OK."})
+    root_output = JSONResponse(
+        status_code=200,
+        content={
+            "success": True,
+            "message": f"ncov19.us API, Version {api.__version__}, Status OK.",
+        },
+    )
     return root_output
 
 
@@ -55,14 +63,17 @@ class NewsInput(BaseModel):
     state: str = "CA"
     topic: str = "Coronavirus"
 
+
 class News(BaseModel):
     title: str
     url: str
     published: str
 
+
 class NewsOut(BaseModel):
     success: bool
     message: List[News]
+
 
 @router.get("/news", response_model=NewsOut, responses={404: {"model": Message}})
 def get_gnews() -> JSONResponse:
@@ -72,10 +83,12 @@ def get_gnews() -> JSONResponse:
         data = get_us_news()
         json_data = {"success": True, "message": data}
     except Exception as ex:
-        return JSONResponse(status_code=404,
-                            content={"message": f"[Error] get /News API: {ex}"})
+        return JSONResponse(
+            status_code=404, content={"message": f"[Error] get /News API: {ex}"}
+        )
 
     return json_data
+
 
 @router.post("/news", response_model=NewsOut, responses={404: {"model": Message}})
 def post_gnews(news: NewsInput) -> JSONResponse:
@@ -90,8 +103,9 @@ def post_gnews(news: NewsInput) -> JSONResponse:
         data = get_state_topic_google_news(state, news.topic)
         json_data = {"success": True, "message": data}
     except Exception as ex:
-        return JSONResponse(status_code=404,
-                            content={"message": f"[Error] post /News API: {ex}"})
+        return JSONResponse(
+            status_code=404, content={"message": f"[Error] post /News API: {ex}"}
+        )
 
     return json_data
 
@@ -103,6 +117,8 @@ def post_gnews(news: NewsInput) -> JSONResponse:
 ################################################################################
 class CountyInput(BaseModel):
     state: str = "CA"
+    county: str = "Orange"
+
 
 class County(BaseModel):
     county_name: str = "New York"
@@ -116,9 +132,11 @@ class County(BaseModel):
     longitude: float
     last_update: str = "2020-03-30 22:53 EDT"
 
+
 class CountyOut(BaseModel):
     success: bool
     message: List[County]
+
 
 @cached(cache=TTLCache(maxsize=1, ttl=3600))
 @router.get("/county", response_model=CountyOut, responses={404: {"model": Message}})
@@ -135,11 +153,30 @@ def get_county_data() -> JSONResponse:
         data = read_county_data()
         json_data = {"success": True, "message": data}
     except Exception as ex:
-        raise HTTPException(status_code=404,
-                            detail=f"[Error] get '/county' API: {ex}")
+        raise HTTPException(status_code=404, detail=f"[Error] get '/county' API: {ex}")
 
     return json_data
 
+
+@router.post("/county", response_model=CountyOut, responses={404: {"model": Message}})
+def post_county(county: CountyInput) -> JSONResponse:
+    """
+    Get all US county data and return it as a big fat json string. Respond with
+    404 if run into error.
+    - Retrieves county locations, cached for 1 hour.
+    
+    :param: none.
+    :return: JSONResponse
+    """
+    try:
+        data = read_county_stats(county.state, county.county)
+        json_data = {"success": True, "message": data}
+    except Exception as ex:
+        raise HTTPException(status_code=404, detail=f"[Error] get '/county' API: {ex}")
+
+    return json_data
+
+<<<<<<< HEAD
 # @cached(cache=TTLCache(maxsize=1, ttl=3600))
 @router.post("/county", response_model=CountyOut, responses={404: {"model": Message}})
 def post_county_data() -> JSONResponse:
@@ -159,6 +196,8 @@ def post_county_data() -> JSONResponse:
                             detail=f"[Error] get '/county' API: {ex}")
 
     return json_data
+=======
+>>>>>>> staging
 
 ###############################################################################
 #
@@ -168,6 +207,7 @@ def post_county_data() -> JSONResponse:
 class StatsInput(BaseModel):
     state: str = "CA"
 
+
 class Stats(BaseModel):
     tested: int
     todays_tested: int
@@ -176,9 +216,11 @@ class Stats(BaseModel):
     deaths: int
     todays_deaths: int
 
+
 class StatsOutput(BaseModel):
     success: bool
     message: Stats
+
 
 @router.get("/stats", response_model=StatsOutput, responses={404: {"model": Message}})
 def get_stats() -> JSONResponse:
@@ -192,9 +234,9 @@ def get_stats() -> JSONResponse:
         data = get_daily_stats()
         json_data = {"success": True, "message": data}
     except Exception as ex:
-        raise HTTPException(status_code=404,
-                            detail=f"[Error] get /stats API: {ex}")
+        raise HTTPException(status_code=404, detail=f"[Error] get /stats API: {ex}")
     return json_data
+
 
 @router.post("/stats", response_model=StatsOutput, responses={404: {"model": Message}})
 def post_stats(stats: StatsInput) -> JSONResponse:
@@ -208,8 +250,7 @@ def post_stats(stats: StatsInput) -> JSONResponse:
         data = get_daily_state_stats(stats.state)
         json_data = {"success": True, "message": data}
     except Exception as ex:
-        raise HTTPException(status_code=404,
-                            detail=f"[Error] post /stats API: {ex}")
+        raise HTTPException(status_code=404, detail=f"[Error] post /stats API: {ex}")
     return json_data
 
 
@@ -221,21 +262,27 @@ def post_stats(stats: StatsInput) -> JSONResponse:
 class TwitterInput(BaseModel):
     state: str = "CA"
 
+
 class Tweets(BaseModel):
     tweet_id: int
     full_text: str
     created_at: datetime
+
 
 class UserTweets(BaseModel):
     username: str
     full_name: str
     tweets: List[Tweets] = None
 
+
 class TwitterOutput(BaseModel):
     success: bool
     message: UserTweets
 
-@router.get("/twitter", response_model=TwitterOutput, responses={404: {"model": Message}})
+
+@router.get(
+    "/twitter", response_model=TwitterOutput, responses={404: {"model": Message}}
+)
 def get_twitter() -> JSONResponse:
     """Fetch and return Twitter data from MongoDB connection.
 
@@ -247,7 +294,7 @@ def get_twitter() -> JSONResponse:
         username = doc["username"]
         full_name = doc["full_name"]
         tweets = doc["tweets"]
-        
+
         # 2020-03-19 triage. lots of empty list at the end of tweets, filtering them out
         tweets = [*filter(None, tweets)]
         tweets = sorted(tweets, key=lambda i: i["created_at"], reverse=True)
@@ -257,12 +304,14 @@ def get_twitter() -> JSONResponse:
             "message": {"username": username, "full_name": full_name, "tweets": tweets},
         }
     except Exception as ex:
-        raise HTTPException(status_code=404,
-                            detail=f"[Error] get /twitter API: {ex}")
+        raise HTTPException(status_code=404, detail=f"[Error] get /twitter API: {ex}")
 
     return json_data
 
-@router.post("/twitter", response_model=TwitterOutput, responses={404: {"model": Message}})
+
+@router.post(
+    "/twitter", response_model=TwitterOutput, responses={404: {"model": Message}}
+)
 def post_twitter(twyuser: TwitterInput) -> JSONResponse:
     """Fetch and return Twitter data from MongoDB connection.
 
@@ -282,8 +331,7 @@ def post_twitter(twyuser: TwitterInput) -> JSONResponse:
             "message": {"username": username, "full_name": full_name, "tweets": tweets},
         }
     except Exception as ex:
-        raise HTTPException(status_code=404,
-                            detail=f"[Error] post /twitter API: {ex}")
+        raise HTTPException(status_code=404, detail=f"[Error] post /twitter API: {ex}")
 
     return json_data
 
@@ -296,17 +344,22 @@ def post_twitter(twyuser: TwitterInput) -> JSONResponse:
 class CountryInput(BaseModel):
     alpha2Code: str
 
+
 class Country(BaseModel):
     Date: str
     Confirmed: int
     Deaths: int
 
+
 class CountryOutput(BaseModel):
     success: bool
     message: List[Country]
 
+
 @cached(cache=TTLCache(maxsize=3, ttl=3600))
-@router.post("/country", response_model=CountryOutput, responses={404: {"model": Message}})
+@router.post(
+    "/country", response_model=CountryOutput, responses={404: {"model": Message}}
+)
 def get_country(country: CountryInput) -> JSONResponse:
     """Fetch country level data time series for a single country
 
@@ -317,8 +370,7 @@ def get_country(country: CountryInput) -> JSONResponse:
         data = read_country_data(cc)
         json_data = {"success": True, "message": data}
     except Exception as ex:
-        raise HTTPException(status_code=404,
-                            detail=f"[Error] get /country API: {ex}")
+        raise HTTPException(status_code=404, detail=f"[Error] get /country API: {ex}")
 
     return json_data
 
