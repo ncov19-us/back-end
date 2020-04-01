@@ -127,7 +127,7 @@ class County(BaseModel):
     new: int
     death: int
     new_death: int
-    fatality_rate: str
+    fatality_rate: str = "1.2%"
     latitude: float
     longitude: float
     last_update: str = "2020-03-30 22:53 EDT"
@@ -351,3 +351,26 @@ def get_country(country: CountryInput) -> JSONResponse:
         raise HTTPException(status_code=404, detail=f"[Error] get /country API: {ex}")
 
     return json_data
+
+
+
+# get:
+# /daily
+# US daily?
+# /timeseries
+# US time series?
+# /info
+# US info?
+
+# post:
+# /daily
+#  {country, state, county} + {alpha2Code, stateabbrv, county name}
+
+
+
+# /timeseries
+#  {country, state, county} + {alpha2Code, stateabbrv, county name}
+# # US time series?
+# /info
+# # US info?
+#  {country, state, county} + {alpha2Code, stateabbrv, county name}

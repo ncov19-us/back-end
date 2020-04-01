@@ -16,6 +16,8 @@ lxml = "*"
 cachetools = "*"
 gunicorn = "*"
 pycountry = "*"
+mongoengine = "*"
+tqdm = "*"
 
 [dev-packages]
 black = "*"
