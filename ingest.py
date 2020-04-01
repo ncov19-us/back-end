@@ -2,6 +2,7 @@ from datetime import datetime
 from decouple import config
 import pandas as pd
 from mongoengine import *
+from tqdm import tqdm
 
 # from api.config import MONGODB_CONNECTION_URI
 import pymongo
@@ -540,7 +541,7 @@ class State(Document):
 
 
 class County(Document):
-    state = StringField(max_length=15, required=True)
+    state = StringField(max_length=50, required=True)
     stateAbbr = StringField(max_length=2, required=True)
     county = StringField(max_length=100, require=True)
     fips = IntField(max_length=6, required=True)
@@ -588,7 +589,7 @@ def ingest_country():
     
     connect(host=config("MONGODB_CONNECTION_URI"))
     
-    for i in range(num_countries):
+    for i in tqdm(range(num_countries)):
         # print(confirmed['Country/Region'][i], confirmed['Lat'][i], confirmed['Long'][i])
 
         stats = []
@@ -633,23 +634,27 @@ def ingest_county():
     confirmed = confirmed[confirmed['Province_State'].isin(reverse_states_map.values())]
     deaths = deaths[deaths['Province_State'].isin(reverse_states_map.values())]
 
-    print(f"Total Number of counties confirmed {confirmed['Admin2'].unique().shape}")
-    print(f"Total Number of counties deaths {deaths['Admin2'].unique().shape}")
+    print(f"Total Number of counties confirmed {confirmed['FIPS'].unique().shape}")
+    print(f"Total Number of counties deaths {deaths['FIPS'].unique().shape}")
 
     # Admin2,Province_State,Country_Region
     dates = confirmed.columns.to_list()[11:]
 
-    assert confirmed['Admin2'][37] == deaths['Admin2'][37]
-    assert confirmed['Admin2'][1115] == deaths['Admin2'][1115]
-    assert confirmed['Admin2'][1715] == deaths['Admin2'][1715]
+    confirmed = confirmed.dropna(subset=['FIPS'])
+    deaths = deaths.dropna(subset=['FIPS'])
+
+    assert confirmed['FIPS'][37] == deaths['FIPS'][37]
+    assert confirmed['FIPS'][1115] == deaths['FIPS'][1115]
+    assert confirmed['FIPS'][1715] == deaths['FIPS'][1715]
     
     num_counties = confirmed.shape[0]
     # dates = confirmed.columns.to_list()[3:]
 
+    print(f"Ingesting {num_counties}...")
     connect(host=config("MONGODB_CONNECTION_URI"))
 
     # have to use iloc otherwise code breaks by straight indexing.
-    for i in range(num_counties):
+    for i in tqdm(range(num_counties)):
 
         stats = []
         for j in range(len(dates)):
@@ -676,7 +681,8 @@ def ingest_county():
         )
         
         county.save()
-        
+
+    print(f"Ingesting finished, verifying...")
     count = 0
     for county in County.objects:
         print(county.county)

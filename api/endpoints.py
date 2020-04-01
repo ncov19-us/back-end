@@ -176,28 +176,6 @@ def post_county(county: CountyInput) -> JSONResponse:
 
     return json_data
 
-<<<<<<< HEAD
-# @cached(cache=TTLCache(maxsize=1, ttl=3600))
-@router.post("/county", response_model=CountyOut, responses={404: {"model": Message}})
-def post_county_data() -> JSONResponse:
-    """
-    Get all US county data and return it as a big fat json string. Respond with
-    404 if run into error.
-    - Retrieves county locations, cached for 1 hour.
-    
-    :param: none.
-    :return: JSONResponse
-    """
-    try:
-        data = read_county_data()
-        json_data = {"success": True, "message": data}
-    except Exception as ex:
-        raise HTTPException(status_code=404,
-                            detail=f"[Error] get '/county' API: {ex}")
-
-    return json_data
-=======
->>>>>>> staging
 
 ###############################################################################
 #
