@@ -111,7 +111,7 @@ class County(BaseModel):
     new: int
     death: int
     new_death: int
-    fatality_rate: str
+    fatality_rate: str = "1.2%"
     latitude: float
     longitude: float
     last_update: str = "2020-03-30 22:53 EDT"
@@ -123,6 +123,26 @@ class CountyOut(BaseModel):
 @cached(cache=TTLCache(maxsize=1, ttl=3600))
 @router.get("/county", response_model=CountyOut, responses={404: {"model": Message}})
 def get_county_data() -> JSONResponse:
+    """
+    Get all US county data and return it as a big fat json string. Respond with
+    404 if run into error.
+    - Retrieves county locations, cached for 1 hour.
+    
+    :param: none.
+    :return: JSONResponse
+    """
+    try:
+        data = read_county_data()
+        json_data = {"success": True, "message": data}
+    except Exception as ex:
+        raise HTTPException(status_code=404,
+                            detail=f"[Error] get '/county' API: {ex}")
+
+    return json_data
+
+# @cached(cache=TTLCache(maxsize=1, ttl=3600))
+@router.post("/county", response_model=CountyOut, responses={404: {"model": Message}})
+def post_county_data() -> JSONResponse:
     """
     Get all US county data and return it as a big fat json string. Respond with
     404 if run into error.
@@ -301,3 +321,26 @@ def get_country(country: CountryInput) -> JSONResponse:
                             detail=f"[Error] get /country API: {ex}")
 
     return json_data
+
+
+
+# get:
+# /daily
+# US daily?
+# /timeseries
+# US time series?
+# /info
+# US info?
+
+# post:
+# /daily
+#  {country, state, county} + {alpha2Code, stateabbrv, county name}
+
+
+
+# /timeseries
+#  {country, state, county} + {alpha2Code, stateabbrv, county name}
+# # US time series?
+# /info
+# # US info?
+#  {country, state, county} + {alpha2Code, stateabbrv, county name}
