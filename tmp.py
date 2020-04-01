@@ -1,3 +1,4 @@
+from datetime import datetime
 from decouple import config
 import pandas as pd
 from mongoengine import *
@@ -21,7 +22,7 @@ class Country(Document):
     lon = FloatField(required=True)
     population = IntField(required=False)
     area = IntField(required=False)
-    stats = EmbeddedDocumentField(Stats, required=False)
+    stats = ListField(EmbeddedDocumentField(Stats, required=False))
 
 
 class State(Document):
@@ -31,7 +32,7 @@ class State(Document):
     lon = FloatField(required=True)
     population = IntField(required=False)
     area = IntField(required=False)
-    stats = EmbeddedDocumentField(Stats, required=False)
+    stats = ListField(EmbeddedDocumentField(Stats, required=False))
 
 
 class County(Document):
@@ -46,12 +47,11 @@ class County(Document):
     hospitals = IntField(required=False)
     hospital_beds = IntField(required=False)
     medium_income = IntField(required=False)
-    stats = EmbeddedDocumentField(Stats, required=False)
+    stats = ListField(EmbeddedDocumentField(Stats, required=False))
 
 
-
-def main():
-    
+def ingest_country():
+    """ingestion script for country level data"""
     confirmed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
     deaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
 
@@ -72,36 +72,65 @@ def main():
     assert confirmed['Country/Region'][115] == deaths['Country/Region'][115]
     assert confirmed['Country/Region'][175] == deaths['Country/Region'][175]
     
-
-    # print(confirmed.sample(5))
-
+    num_countries = confirmed.shape[0]
+    dates = confirmed.columns.to_list()[3:]
+    
     connect(host=config("MONGODB_CONNECTION_URI"))
     
-    for i in range(5):
-        print(confirmed.iloc[i])
-        country = Country(confirmed[i])
+    for i in range(num_countries):
+        # print(confirmed['Country/Region'][i], confirmed['Lat'][i], confirmed['Long'][i])
+
+        stats = []
+        for j in range(len(dates)):
+            s = Stats(
+                last_updated = datetime.strptime(dates[j], "%m/%d/%y"),
+                confirmed = confirmed[dates[j]][i],
+                deaths = deaths[dates[j]][i],
+            )
+            stats.append(s)
+            
         country = Country(
-                    country=confirmed.iloc['Contry/Region']
-                    # alpha2Code=
+                    country = confirmed['Country/Region'][i],
+                    alpha2Code = 'NA',
+                    lat = confirmed['Lat'][i],
+                    lon = confirmed['Long'][i],
+                    stats = stats,
         )
+        
+        country.save()
+        
+    count = 0
+    for country in Country.objects:
+        print(country.country)
+        count += 1
+
+    print(f'Numbers of countries in dataset {num_countries}, ingested {count}')
+
+    disconnect()
+
+    pass
+
+
+def ingest_county():
+    """ingestion script for county level data"""
+    confirmed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
+    deaths = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
+
+    confirmed = pd.read_csv(confirmed)
+    deaths = pd.read_csv(deaths)
+    info = confirmed.columns[:10]
+    print(info)
     
-    # country = Country(country="South Korea",
-    #             alpha2Code="SK",
-    #             lat=12.34567,
-    #             lon=89.01234,
-    #             stats=Stats(
-    #                 last_updated="2020-03-31",
-    #                 confirmed=12345,
-    #                 deaths=67890,
-    #                 )
-    #             )
-    # country.save()
+    print(f"Total Number of counties confirmed {confirmed['Country/Region'].unique().shape}")
+    print(f"Total Number of counties deaths {deaths['Country/Region'].unique().shape}")
 
-    # for country in Country.objects:
-    #     print(country.state)
+    # confirmed = confirmed.groupby('Country/Region').sum()
+    # deaths = deaths.groupby('Country/Region').sum()
+    # confirmed = confirmed.sort_index().reset_index()
+    # deaths = deaths.sort_index().reset_index()
 
-    # disconnect()
-
+    dates = confirmed.columns[11:]
+    print(dates)
 
     # for county in County.objects:
     #     print(county.state)
@@ -123,7 +152,11 @@ def main():
 
     # # tm = TestMongo(db_name="covid-staging", collection_name="county")
     # print(tm.collection.find())
+    pass
 
+
+def main():
+    ingest_county()
 
 
 if __name__ == "__main__":
