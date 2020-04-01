@@ -13,7 +13,9 @@ from api.utils import get_state_topic_google_news, get_us_news
 from api.utils import reverse_states_map
 from api.utils import get_daily_stats
 from api.utils import get_daily_state_stats
-from api.utils import read_county_data, read_county_data, read_county_stats
+from api.utils import read_county_data
+from api.utils import read_county_data
+from api.utils import read_county_stats
 from cachetools import cached, TTLCache
 
 
