@@ -16,6 +16,7 @@ from api.utils import get_daily_state_stats
 from api.utils import read_county_data
 from api.utils import read_country_data
 from api.utils import read_county_stats
+from api.utils import read_states
 from cachetools import cached, TTLCache
 
 
@@ -82,6 +83,7 @@ def get_gnews() -> JSONResponse:
     try:
         data = get_us_news()
         json_data = {"success": True, "message": data}
+        del data
     except Exception as ex:
         return JSONResponse(
             status_code=404, content={"message": f"[Error] get /News API: {ex}"}
@@ -102,10 +104,96 @@ def post_gnews(news: NewsInput) -> JSONResponse:
         state = reverse_states_map[news.state]
         data = get_state_topic_google_news(state, news.topic)
         json_data = {"success": True, "message": data}
+        del data
     except Exception as ex:
         return JSONResponse(
             status_code=404, content={"message": f"[Error] post /News API: {ex}"}
         )
+
+    return json_data
+
+
+###############################################################################
+#
+# Twitter Feed Endpoints
+#
+################################################################################
+class TwitterInput(BaseModel):
+    state: str = "CA"
+
+
+class Tweets(BaseModel):
+    tweet_id: int
+    full_text: str
+    created_at: datetime
+
+
+class UserTweets(BaseModel):
+    username: str
+    full_name: str
+    tweets: List[Tweets] = None
+
+
+class TwitterOutput(BaseModel):
+    success: bool
+    message: UserTweets
+
+
+@router.get(
+    "/twitter", response_model=TwitterOutput, responses={404: {"model": Message}}
+)
+def get_twitter() -> JSONResponse:
+    """Fetch and return Twitter data from MongoDB connection.
+
+    :param: none
+    :return: str
+    """
+    try:
+        doc = tm.get_tweet_by_state("US")
+        username = doc["username"]
+        full_name = doc["full_name"]
+        tweets = doc["tweets"]
+
+        # 2020-03-19 triage. lots of empty list at the end of tweets, filtering them out
+        tweets = [*filter(None, tweets)]
+        tweets = sorted(tweets, key=lambda i: i["created_at"], reverse=True)
+
+        json_data = {
+            "success": True,
+            "message": {"username": username, "full_name": full_name, "tweets": tweets},
+        }
+        del tweets
+    except Exception as ex:
+        raise HTTPException(status_code=404, detail=f"[Error] get /twitter API: {ex}")
+
+    return json_data
+
+
+@router.post(
+    "/twitter", response_model=TwitterOutput, responses={404: {"model": Message}}
+)
+def post_twitter(twyuser: TwitterInput) -> JSONResponse:
+    """Fetch and return Twitter data from MongoDB connection.
+
+    :param: none. Two letter state abbreviation.
+    :return: str
+    """
+    try:
+        doc = tm.get_tweet_by_state(twyuser.state)
+        username = doc["username"]
+        full_name = doc["full_name"]
+        tweets = doc["tweets"]
+        # 2020-03-19 triage. lots of empty list at the end of tweets, filtering them out
+        tweets = [*filter(None, tweets)]
+        tweets = sorted(tweets, key=lambda i: i["created_at"], reverse=True)
+        json_data = {
+            "success": True,
+            "message": {"username": username, "full_name": full_name, "tweets": tweets},
+        }
+
+        del tweets
+    except Exception as ex:
+        raise HTTPException(status_code=404, detail=f"[Error] post /twitter API: {ex}")
 
     return json_data
 
@@ -152,6 +240,7 @@ def get_county_data() -> JSONResponse:
     try:
         data = read_county_data()
         json_data = {"success": True, "message": data}
+        del data
     except Exception as ex:
         raise HTTPException(status_code=404, detail=f"[Error] get '/county' API: {ex}")
 
@@ -171,11 +260,91 @@ def post_county(county: CountyInput) -> JSONResponse:
     try:
         data = read_county_stats(county.state, county.county)
         json_data = {"success": True, "message": data}
+        del data
     except Exception as ex:
         raise HTTPException(status_code=404, detail=f"[Error] get '/county' API: {ex}")
 
     return json_data
 
+
+###############################################################################
+#
+# State Endpoint
+#
+################################################################################
+class StateInput(BaseModel):
+    stateAbbr: str
+
+
+class State(BaseModel):
+    Date: str
+    Confirmed: int
+    Deaths: int
+
+
+class StateOutput(BaseModel):
+    success: bool
+    message: List[State]
+
+
+@cached(cache=TTLCache(maxsize=3, ttl=3600))
+@router.post(
+    "/state", response_model=StateOutput, responses={404: {"model": Message}}
+)
+def post_state(state: StateInput) -> JSONResponse:
+    """Fetch state level data time series for a single state, ignoring the 
+    unattributed and out of state cases.
+
+    Input: two letter states code
+    """
+
+    try:
+        data = read_states(state.stateAbbr)
+        json_data = {"success": True, "message": data}
+        del data
+    except Exception as ex:
+        raise HTTPException(status_code=404, detail=f"[Error] get /country API: {ex}")
+
+    return json_data
+
+
+###############################################################################
+#
+# Country Endpoint
+#
+################################################################################
+class CountryInput(BaseModel):
+    alpha2Code: str
+
+
+class Country(BaseModel):
+    Date: str
+    Confirmed: int
+    Deaths: int
+
+
+class CountryOutput(BaseModel):
+    success: bool
+    message: List[Country]
+
+
+@cached(cache=TTLCache(maxsize=3, ttl=3600))
+@router.post(
+    "/country", response_model=CountryOutput, responses={404: {"model": Message}}
+)
+def get_country(country: CountryInput) -> JSONResponse:
+    """Fetch country level data time series for a single country
+
+    Input: Two letter country alpha2Code
+    """
+    cc = country.alpha2Code.upper()
+    try:
+        data = read_country_data(cc)
+        json_data = {"success": True, "message": data}
+    except Exception as ex:
+        raise HTTPException(status_code=404, detail=f"[Error] get /country API: {ex}")
+
+    return json_data
 
 ###############################################################################
 #
@@ -232,125 +401,7 @@ def post_stats(stats: StatsInput) -> JSONResponse:
     return json_data
 
 
-###############################################################################
-#
-# Twitter Feed Endpoints
-#
-################################################################################
-class TwitterInput(BaseModel):
-    state: str = "CA"
 
-
-class Tweets(BaseModel):
-    tweet_id: int
-    full_text: str
-    created_at: datetime
-
-
-class UserTweets(BaseModel):
-    username: str
-    full_name: str
-    tweets: List[Tweets] = None
-
-
-class TwitterOutput(BaseModel):
-    success: bool
-    message: UserTweets
-
-
-@router.get(
-    "/twitter", response_model=TwitterOutput, responses={404: {"model": Message}}
-)
-def get_twitter() -> JSONResponse:
-    """Fetch and return Twitter data from MongoDB connection.
-
-    :param: none
-    :return: str
-    """
-    try:
-        doc = tm.get_tweet_by_state("US")
-        username = doc["username"]
-        full_name = doc["full_name"]
-        tweets = doc["tweets"]
-
-        # 2020-03-19 triage. lots of empty list at the end of tweets, filtering them out
-        tweets = [*filter(None, tweets)]
-        tweets = sorted(tweets, key=lambda i: i["created_at"], reverse=True)
-
-        json_data = {
-            "success": True,
-            "message": {"username": username, "full_name": full_name, "tweets": tweets},
-        }
-    except Exception as ex:
-        raise HTTPException(status_code=404, detail=f"[Error] get /twitter API: {ex}")
-
-    return json_data
-
-
-@router.post(
-    "/twitter", response_model=TwitterOutput, responses={404: {"model": Message}}
-)
-def post_twitter(twyuser: TwitterInput) -> JSONResponse:
-    """Fetch and return Twitter data from MongoDB connection.
-
-    :param: none. Two letter state abbreviation.
-    :return: str
-    """
-    try:
-        doc = tm.get_tweet_by_state(twyuser.state)
-        username = doc["username"]
-        full_name = doc["full_name"]
-        tweets = doc["tweets"]
-        # 2020-03-19 triage. lots of empty list at the end of tweets, filtering them out
-        tweets = [*filter(None, tweets)]
-        tweets = sorted(tweets, key=lambda i: i["created_at"], reverse=True)
-        json_data = {
-            "success": True,
-            "message": {"username": username, "full_name": full_name, "tweets": tweets},
-        }
-    except Exception as ex:
-        raise HTTPException(status_code=404, detail=f"[Error] post /twitter API: {ex}")
-
-    return json_data
-
-
-###############################################################################
-#
-# Country Endpoint
-#
-################################################################################
-class CountryInput(BaseModel):
-    alpha2Code: str
-
-
-class Country(BaseModel):
-    Date: str
-    Confirmed: int
-    Deaths: int
-
-
-class CountryOutput(BaseModel):
-    success: bool
-    message: List[Country]
-
-
-@cached(cache=TTLCache(maxsize=3, ttl=3600))
-@router.post(
-    "/country", response_model=CountryOutput, responses={404: {"model": Message}}
-)
-def get_country(country: CountryInput) -> JSONResponse:
-    """Fetch country level data time series for a single country
-
-    Input: Two letter country alpha2Code
-    """
-    cc = country.alpha2Code.upper()
-    try:
-        data = read_country_data(cc)
-        json_data = {"success": True, "message": data}
-    except Exception as ex:
-        raise HTTPException(status_code=404, detail=f"[Error] get /country API: {ex}")
-
-    return json_data
 
 
 
