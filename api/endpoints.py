@@ -16,6 +16,7 @@ from api.utils import get_daily_state_stats
 from api.utils import read_county_data
 from api.utils import read_country_data
 from api.utils import read_county_stats
+from api.utils import read_states
 from cachetools import cached, TTLCache
 
 
@@ -112,128 +113,6 @@ def post_gnews(news: NewsInput) -> JSONResponse:
 
 ###############################################################################
 #
-# County Endpoints
-#
-################################################################################
-class CountyInput(BaseModel):
-    state: str = "CA"
-    county: str = "Orange"
-
-
-class County(BaseModel):
-    county_name: str = "New York"
-    state_name: str = "New York"
-    confirmed: int
-    new: int
-    death: int
-    new_death: int
-    fatality_rate: str = "1.2%"
-    latitude: float
-    longitude: float
-    last_update: str = "2020-03-30 22:53 EDT"
-
-
-class CountyOut(BaseModel):
-    success: bool
-    message: List[County]
-
-
-@cached(cache=TTLCache(maxsize=1, ttl=3600))
-@router.get("/county", response_model=CountyOut, responses={404: {"model": Message}})
-def get_county_data() -> JSONResponse:
-    """
-    Get all US county data and return it as a big fat json string. Respond with
-    404 if run into error.
-    - Retrieves county locations, cached for 1 hour.
-    
-    :param: none.
-    :return: JSONResponse
-    """
-    try:
-        data = read_county_data()
-        json_data = {"success": True, "message": data}
-    except Exception as ex:
-        raise HTTPException(status_code=404, detail=f"[Error] get '/county' API: {ex}")
-
-    return json_data
-
-
-@router.post("/county", response_model=CountyOut, responses={404: {"model": Message}})
-def post_county(county: CountyInput) -> JSONResponse:
-    """
-    Get all US county data and return it as a big fat json string. Respond with
-    404 if run into error.
-    - Retrieves county locations, cached for 1 hour.
-    
-    :param: none.
-    :return: JSONResponse
-    """
-    try:
-        data = read_county_stats(county.state, county.county)
-        json_data = {"success": True, "message": data}
-    except Exception as ex:
-        raise HTTPException(status_code=404, detail=f"[Error] get '/county' API: {ex}")
-
-    return json_data
-
-
-###############################################################################
-#
-# Stats Endpoints
-#
-################################################################################
-class StatsInput(BaseModel):
-    state: str = "CA"
-
-
-class Stats(BaseModel):
-    tested: int
-    todays_tested: int
-    confirmed: int
-    todays_confirmed: int
-    deaths: int
-    todays_deaths: int
-
-
-class StatsOutput(BaseModel):
-    success: bool
-    message: Stats
-
-
-@router.get("/stats", response_model=StatsOutput, responses={404: {"model": Message}})
-def get_stats() -> JSONResponse:
-    """Get overall tested, confirmed, and deaths stats from the database
-    and return it as a json string. For the top bar.
-
-    :param: none.
-    :return: JSONResponse
-    """
-    try:
-        data = get_daily_stats()
-        json_data = {"success": True, "message": data}
-    except Exception as ex:
-        raise HTTPException(status_code=404, detail=f"[Error] get /stats API: {ex}")
-    return json_data
-
-
-@router.post("/stats", response_model=StatsOutput, responses={404: {"model": Message}})
-def post_stats(stats: StatsInput) -> JSONResponse:
-    """Get overall tested, confirmed, and deaths stats from the database
-    and return it as a json string. For the top bar.
-
-    :param: Stats
-    :return: JSONResponse
-    """
-    try:
-        data = get_daily_state_stats(stats.state)
-        json_data = {"success": True, "message": data}
-    except Exception as ex:
-        raise HTTPException(status_code=404, detail=f"[Error] post /stats API: {ex}")
-    return json_data
-
-
-###############################################################################
-#
 # Twitter Feed Endpoints
 #
 ################################################################################
@@ -316,6 +195,113 @@ def post_twitter(twyuser: TwitterInput) -> JSONResponse:
 
 ###############################################################################
 #
+# County Endpoints
+#
+################################################################################
+class CountyInput(BaseModel):
+    state: str = "CA"
+    county: str = "Orange"
+
+
+class County(BaseModel):
+    county_name: str = "New York"
+    state_name: str = "New York"
+    confirmed: int
+    new: int
+    death: int
+    new_death: int
+    fatality_rate: str = "1.2%"
+    latitude: float
+    longitude: float
+    last_update: str = "2020-03-30 22:53 EDT"
+
+
+class CountyOut(BaseModel):
+    success: bool
+    message: List[County]
+
+
+@cached(cache=TTLCache(maxsize=1, ttl=3600))
+@router.get("/county", response_model=CountyOut, responses={404: {"model": Message}})
+def get_county_data() -> JSONResponse:
+    """
+    Get all US county data and return it as a big fat json string. Respond with
+    404 if run into error.
+    - Retrieves county locations, cached for 1 hour.
+    
+    :param: none.
+    :return: JSONResponse
+    """
+    try:
+        data = read_county_data()
+        json_data = {"success": True, "message": data}
+    except Exception as ex:
+        raise HTTPException(status_code=404, detail=f"[Error] get '/county' API: {ex}")
+
+    return json_data
+
+
+@router.post("/county", response_model=CountyOut, responses={404: {"model": Message}})
+def post_county(county: CountyInput) -> JSONResponse:
+    """
+    Get all US county data and return it as a big fat json string. Respond with
+    404 if run into error.
+    - Retrieves county locations, cached for 1 hour.
+    
+    :param: none.
+    :return: JSONResponse
+    """
+    try:
+        data = read_county_stats(county.state, county.county)
+        json_data = {"success": True, "message": data}
+    except Exception as ex:
+        raise HTTPException(status_code=404, detail=f"[Error] get '/county' API: {ex}")
+
+    return json_data
+
+
+###############################################################################
+#
+# State Endpoint
+#
+################################################################################
+class StateInput(BaseModel):
+    stateAbbr: str
+
+
+class State(BaseModel):
+    Date: str
+    Confirmed: int
+    Deaths: int
+
+
+class StateOutput(BaseModel):
+    success: bool
+    message: List[State]
+
+
+@cached(cache=TTLCache(maxsize=3, ttl=3600))
+@router.post(
+    "/state", response_model=StateOutput, responses={404: {"model": Message}}
+)
+def post_state(state: StateInput) -> JSONResponse:
+    """Fetch state level data time series for a single state, ignoring the 
+    unattributed and out of state cases.
+
+    Input: two letter states code
+    """
+
+    try:
+        data = read_states(state.stateAbbr)
+        json_data = {"success": True, "message": data}
+    except Exception as ex:
+        raise HTTPException(status_code=404, detail=f"[Error] get /country API: {ex}")
+
+    return json_data
+
+
+###############################################################################
+#
 # Country Endpoint
 #
 ################################################################################
@@ -351,6 +337,63 @@ def get_country(country: CountryInput) -> JSONResponse:
         raise HTTPException(status_code=404, detail=f"[Error] get /country API: {ex}")
 
     return json_data
+
+###############################################################################
+#
+# Stats Endpoints
+#
+################################################################################
+class StatsInput(BaseModel):
+    state: str = "CA"
+
+
+class Stats(BaseModel):
+    tested: int
+    todays_tested: int
+    confirmed: int
+    todays_confirmed: int
+    deaths: int
+    todays_deaths: int
+
+
+class StatsOutput(BaseModel):
+    success: bool
+    message: Stats
+
+
+@router.get("/stats", response_model=StatsOutput, responses={404: {"model": Message}})
+def get_stats() -> JSONResponse:
+    """Get overall tested, confirmed, and deaths stats from the database
+    and return it as a json string. For the top bar.
+
+    :param: none.
+    :return: JSONResponse
+    """
+    try:
+        data = get_daily_stats()
+        json_data = {"success": True, "message": data}
+    except Exception as ex:
+        raise HTTPException(status_code=404, detail=f"[Error] get /stats API: {ex}")
+    return json_data
+
+
+@router.post("/stats", response_model=StatsOutput, responses={404: {"model": Message}})
+def post_stats(stats: StatsInput) -> JSONResponse:
+    """Get overall tested, confirmed, and deaths stats from the database
+    and return it as a json string. For the top bar.
+
+    :param: Stats
+    :return: JSONResponse
+    """
+    try:
+        data = get_daily_state_stats(stats.state)
+        json_data = {"success": True, "message": data}
+    except Exception as ex:
+        raise HTTPException(status_code=404, detail=f"[Error] post /stats API: {ex}")
+    return json_data
+
+
+
 
 
 
