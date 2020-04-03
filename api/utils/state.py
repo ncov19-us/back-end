@@ -23,11 +23,13 @@ def read_states(state:str) -> pd.DataFrame:
     deaths = pd.DataFrame(deaths.aggregate('sum')[12:])
 
     data['Deaths'] = deaths
+    del deaths
+
     data = data.reset_index()
     data.columns = ['Date', 'Confirmed', 'Deaths']
     data = data.fillna(0)
-    print(data.head())
-    print(data.tail())
+    # print(data.head())
+    # print(data.tail())
     data = pd.DataFrame.to_dict(data, orient="records")
 
     return data

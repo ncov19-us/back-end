@@ -83,6 +83,7 @@ def get_gnews() -> JSONResponse:
     try:
         data = get_us_news()
         json_data = {"success": True, "message": data}
+        del data
     except Exception as ex:
         return JSONResponse(
             status_code=404, content={"message": f"[Error] get /News API: {ex}"}
@@ -103,6 +104,7 @@ def post_gnews(news: NewsInput) -> JSONResponse:
         state = reverse_states_map[news.state]
         data = get_state_topic_google_news(state, news.topic)
         json_data = {"success": True, "message": data}
+        del data
     except Exception as ex:
         return JSONResponse(
             status_code=404, content={"message": f"[Error] post /News API: {ex}"}
@@ -160,6 +162,7 @@ def get_twitter() -> JSONResponse:
             "success": True,
             "message": {"username": username, "full_name": full_name, "tweets": tweets},
         }
+        del tweets
     except Exception as ex:
         raise HTTPException(status_code=404, detail=f"[Error] get /twitter API: {ex}")
 
@@ -187,6 +190,8 @@ def post_twitter(twyuser: TwitterInput) -> JSONResponse:
             "success": True,
             "message": {"username": username, "full_name": full_name, "tweets": tweets},
         }
+
+        del tweets
     except Exception as ex:
         raise HTTPException(status_code=404, detail=f"[Error] post /twitter API: {ex}")
 
@@ -235,6 +240,7 @@ def get_county_data() -> JSONResponse:
     try:
         data = read_county_data()
         json_data = {"success": True, "message": data}
+        del data
     except Exception as ex:
         raise HTTPException(status_code=404, detail=f"[Error] get '/county' API: {ex}")
 
@@ -254,6 +260,7 @@ def post_county(county: CountyInput) -> JSONResponse:
     try:
         data = read_county_stats(county.state, county.county)
         json_data = {"success": True, "message": data}
+        del data
     except Exception as ex:
         raise HTTPException(status_code=404, detail=f"[Error] get '/county' API: {ex}")
 
@@ -294,6 +301,7 @@ def post_state(state: StateInput) -> JSONResponse:
     try:
         data = read_states(state.stateAbbr)
         json_data = {"success": True, "message": data}
+        del data
     except Exception as ex:
         raise HTTPException(status_code=404, detail=f"[Error] get /country API: {ex}")
 

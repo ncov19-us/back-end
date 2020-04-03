@@ -61,6 +61,8 @@ def get_daily_stats() -> Dict:
         "todays_deaths": todays_deaths,
     }
 
+    del data, data2
+
     return stats
 
 
@@ -116,5 +118,7 @@ def get_daily_state_stats(state: str) -> Dict:
         "deaths": deaths,
         "todays_deaths": todays_deaths,
     }
+
+    del df, data
 
     return stats
