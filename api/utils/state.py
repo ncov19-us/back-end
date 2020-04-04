@@ -1,3 +1,4 @@
+import gc
 from typing import Dict
 import pandas as pd
 from api.config import Config
@@ -23,7 +24,6 @@ def read_states(state:str) -> pd.DataFrame:
     deaths = pd.DataFrame(deaths.aggregate('sum')[12:])
 
     data['Deaths'] = deaths
-    del deaths
 
     data = data.reset_index()
     data.columns = ['Date', 'Confirmed', 'Deaths']
@@ -31,5 +31,8 @@ def read_states(state:str) -> pd.DataFrame:
     # print(data.head())
     # print(data.tail())
     data = pd.DataFrame.to_dict(data, orient="records")
+
+    del deaths
+    gc.collect()
 
     return data

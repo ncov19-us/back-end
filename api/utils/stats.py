@@ -1,3 +1,4 @@
+import gc
 import json
 from typing import Dict
 import requests
@@ -62,6 +63,7 @@ def get_daily_stats() -> Dict:
     }
 
     del data, data2
+    gc.collect()
 
     return stats
 
@@ -120,5 +122,6 @@ def get_daily_state_stats(state: str) -> Dict:
     }
 
     del df, data
+    gc.collect()
 
     return stats

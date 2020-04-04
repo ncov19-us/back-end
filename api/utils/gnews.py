@@ -44,6 +44,7 @@ def get_state_topic_google_news(state: str, topic: str, max_rows: int=10) -> Dic
     df.columns = ["title", "url", "published", "state"]
     df["source"] = df["title"].str.split("-").str[-1]
     df.iloc[: min(len(df), max_rows)]
+    
     return df.to_dict(orient="records")
 
 
