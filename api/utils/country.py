@@ -1,3 +1,4 @@
+import gc
 from typing import Any, Dict
 import pandas as pd
 import pycountry
@@ -237,6 +238,7 @@ def read_country_data(country_alpha: str) -> Dict:
     merge = pd.merge(df1, df2, on="Date")
 
     del df1, df2
+    gc.collect()
     # return convert_df_to_json(merge)
     # return pd.DataFrame.to_json(merge, orient="records")
     return pd.DataFrame.to_dict(merge, orient="records")
