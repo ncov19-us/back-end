@@ -1,10 +1,15 @@
+import gc
 import json
 from typing import Dict
 import requests
 import pandas as pd
-from api.config import Config
+from api.config import DataReadingError, DataValidationError
+from api.config import _config
+from api.config import get_logger
 from api.utils import reverse_states_map
 
+
+_logger = get_logger(logger_name=__name__)
 
 def get_daily_stats() -> Dict:
     """Get daily stats for a specific state, including tested, confirmed, 
@@ -25,19 +30,21 @@ def get_daily_stats() -> Dict:
     todays_confirmed, deaths, todays_deaths = 0, 0, 0
 
     try:
-        data2 = requests.get(url=Config.TMP_URL).json()
+        data2 = requests.get(url=_config.TMP_URL).json()
         confirmed = data2["cases"]
         todays_confirmed = data2["todayCases"]
         deaths = data2["deaths"]
         todays_deaths = data2["todayDeaths"]
-        # critical = data2["critical"]
-        # active = data2["active"]
-    except:
+        
+        del data2
+        gc.collect()
+    except Exception as ex:
+        _logger.error(f"stats.get_daily_stats {ex}")
         confirmed, todays_confirmed, deaths, todays_deaths = 0, 0, 0, 0
 
     try:
         # covidtracking api
-        data = requests.get(url=Config.CVTRACK_URL).json()
+        data = requests.get(url=_config.CVTRACK_URL).json()
         curr = data[0]
         prev = data[1]
         tested = curr["posNeg"]
@@ -46,10 +53,11 @@ def get_daily_stats() -> Dict:
         todays_confirmed = curr["positive"] - prev["positive"]
         deaths = curr["death"]
         todays_deaths = curr["death"] - prev["death"]
-        # tested_positive = curr["positive"]
-        # tested_negative = data1["negative"]
-        # hospitalized = data1["hospitalized"]
-    except:
+        
+        del data
+        gc.collect()
+    except Exception as ex:
+        _logger.error(f"stats.get_daily_stats {ex}")
         tested = 0
 
     stats = {
@@ -61,7 +69,15 @@ def get_daily_stats() -> Dict:
         "todays_deaths": todays_deaths,
     }
 
-    del data, data2
+    ###################################################################
+    #                     Sanity Check
+    ################################################################### 
+    if (int(todays_tested) >= int(tested)) or (int(todays_confirmed) >= int(confirmed)):
+        # not testing todays_deaths > deaths, not every country has reported deaths
+        raise DataValidationError("stats.py numbers doesn't make sense")
+
+    if (int(confirmed) > int(tested)) or (int(deaths) > int(confirmed)):
+        raise DataValidationError("stats.py numbers doesnt make sense")
 
     return stats
 
@@ -84,10 +100,10 @@ def get_daily_state_stats(state: str) -> Dict:
     tested, todays_tested, confirmed = 0, 0, 0
     todays_confirmed, deaths, todays_deaths = 0, 0, 0
 
-    URL = Config.CVTRACK_STATES_URL + f"/daily?state={state}"
+    URL = _config.CVTRACK_STATES_URL + f"/daily?state={state}"
 
     response = requests.get(url=URL)
-    # print(response.json())
+    
     if response.status_code == 200:
         # covidtracking api throws error json if request error {'error': }
         if type(response.json()) is list:
@@ -112,16 +128,18 @@ def get_daily_state_stats(state: str) -> Dict:
 
 >>>>>>> 8f7f86e... han: updated stats.py to ct api
             except:
-                return {"error": "get_daily_state_stats API parsing error."}
+                # return {"error": "get_daily_state_stats API parsing error."}
+                raise DataReadingError("get_daily_state_stats API parsing error")
 
-        base_url = Config.COUNTY_URL
+        base_url = _config.COUNTY_URL
         df = pd.read_csv(base_url)
         df = df[df["State Name"] == reverse_states_map[state]]
         grouped = df.groupby(["State Name"])
         confirmed = grouped["Confirmed"].sum().values[0].astype(str)
         todays_confirmed = grouped["New"].sum().values[0].astype(str)
         deaths = grouped["Death"].sum().values[0].astype(str)
-        # todays_deaths = grouped["New Death"].sum().values[0].astype(str)
+    else:
+        raise DataReadingError("get_daily_state_stats data reading error")
 
     stats = {
         "tested": tested,
@@ -132,6 +150,17 @@ def get_daily_state_stats(state: str) -> Dict:
         "todays_deaths": todays_deaths,
     }
 
+    ###################################################################
+    #                     Sanity Check
+    ################################################################### 
+    if (int(todays_tested) >= int(tested)) or (int(todays_confirmed) >= int(confirmed)):
+        # not testing for todays_deaths >= deaths because Wyoming has 0 reported death
+        raise DataValidationError("stats.py numbers doesn't make sense")
+
+    if (int(confirmed) > int(tested)) or (int(deaths) > int(confirmed)):
+        raise DataValidationError("stats.py numbers doesnt make sense")
+
     del df, data
+    gc.collect()
 
     return stats

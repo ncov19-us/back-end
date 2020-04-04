@@ -1,9 +1,10 @@
+import gc
 from typing import Dict
 import pandas as pd
-from bs4 import BeautifulSoup
 import requests
-from api.config import Config
-
+from api.config import _config
+from api.config import DataReadingError, DataValidationError
+from bs4 import BeautifulSoup
 
 def get_state_topic_google_news(state: str, topic: str, max_rows: int=10) -> Dict:
     """This function takes a US State name (string dtype) and a topic of interest (string dtype). 
@@ -44,7 +45,13 @@ def get_state_topic_google_news(state: str, topic: str, max_rows: int=10) -> Dic
     df.columns = ["title", "url", "published", "state"]
     df["source"] = df["title"].str.split("-").str[-1]
     df.iloc[: min(len(df), max_rows)]
-    return df.to_dict(orient="records")
+
+    result = df.to_dict(orient="records")
+    
+    del df, page, soup, xml
+    gc.collect()
+    
+    return result
 
 
 def get_us_news(max_rows:int = 50) -> Dict:
@@ -54,7 +61,7 @@ def get_us_news(max_rows:int = 50) -> Dict:
     :return: :Dict: python dictionary of the data for pydantic to force type checking.
     """
 
-    news_requests = requests.get(Config.NEWS_API_URL)
+    news_requests = requests.get(_config.NEWS_API_URL)
     json_data = news_requests.json()["articles"]
     df = pd.DataFrame(json_data)
     df = pd.DataFrame(df[["title", "url", "publishedAt"]])
@@ -74,7 +81,12 @@ def get_us_news(max_rows:int = 50) -> Dict:
     df["published"] = df["published"].apply(dt_fmt)
     df = df.iloc[: min(len(df), max_rows)]
 
-    return df.to_dict(orient="records")
+    result = df.to_dict(orient="records")
+
+    del news_requests, json_data, df
+    gc.collect()
+
+    return result
 
 
 if __name__ == "__main__":

@@ -1,7 +1,8 @@
+import gc
 from typing import Any, Dict
 import pandas as pd
 import pycountry
-# from api.utils import convert_df_to_json
+from api.config import DataReadingError, DataValidationError
 
 
 # Country dictionary
@@ -193,7 +194,11 @@ def parse_df(metric_type: str) -> pd.DataFrame:
         raise ValueError(f"{metric_type} metric type not supported")
 
     url = f"https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_{metric_type}_global.csv"
-    df = pd.read_csv(url)
+    try:
+        df = pd.read_csv(url)
+    except:
+        raise DataReadingError("error accessing country data")
+
     return df
 
 
@@ -209,7 +214,10 @@ def get_country_stats(country_alpha: str, metric_type: str) -> pd.DataFrame:
     country_alpha = country_alpha.upper()
     metric_type = metric_type.lower()
 
-    df = parse_df(metric_type=metric_type)
+    try:
+        df = parse_df(metric_type=metric_type)
+    except:
+        raise DataReadingError("error accessing country data")
 
     if country_alpha not in country_dict:
         raise ValueError(f"{country_alpha} not found in our dictionary.")
@@ -237,6 +245,7 @@ def read_country_data(country_alpha: str) -> Dict:
     merge = pd.merge(df1, df2, on="Date")
 
     del df1, df2
+    gc.collect()
     # return convert_df_to_json(merge)
     # return pd.DataFrame.to_json(merge, orient="records")
     return pd.DataFrame.to_dict(merge, orient="records")

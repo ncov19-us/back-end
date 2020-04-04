@@ -1,0 +1,917 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "ncov19.us API",
+        "description": "API Support: ncov19us@gmail.com | URL: https://github.com/ncov19-us/back-end | [GNU GENERAL PUBLIC LICENSE](https://github.com/ncov19-us/back-end/blob/master/LICENSE)",
+        "version": "0.1.5"
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "summary": "Root",
+                "description": "Root URL, reporting version and status.\n    ",
+                "operationId": "root__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RootOutput"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/news": {
+            "get": {
+                "summary": "Get Gnews",
+                "description": "Fetch US news from Google News API and return the results in JSON\n    ",
+                "operationId": "get_gnews_news_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NewsOut"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Message"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post Gnews",
+                "description": "Fetch specific state and topic news from Google News API and return the\nresults in JSON\n\nInput: NewsInput object schema, with state and topic attribute string\nOutput: JSONResponse of the topics fetched",
+                "operationId": "post_gnews_news_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewsInput"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NewsOut"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Message"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/twitter": {
+            "get": {
+                "summary": "Get Twitter",
+                "description": "Fetch and return Twitter data from MongoDB connection.\n\n:param: none\n:return: str",
+                "operationId": "get_twitter_twitter_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TwitterOutput"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Message"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post Twitter",
+                "description": "Fetch and return Twitter data from MongoDB connection.\n\n:param: none. Two letter state abbreviation.\n:return: str",
+                "operationId": "post_twitter_twitter_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TwitterInput"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TwitterOutput"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Message"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/county": {
+            "get": {
+                "summary": "Get County Data",
+                "description": "Get all US county data and return it as a big fat json string. Respond with\n404 if run into error.\n- Retrieves county locations, cached for 1 hour.\n\n:param: none.\n:return: JSONResponse",
+                "operationId": "get_county_data_county_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CountyOut"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Message"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post County",
+                "description": "Get all US county data and return it as a big fat json string. Respond with\n404 if run into error.\n- Retrieves county locations, cached for 1 hour.\n\n:param: none.\n:return: JSONResponse",
+                "operationId": "post_county_county_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CountyInput"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CountyOut"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Message"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/state": {
+            "post": {
+                "summary": "Post State",
+                "description": "Fetch state level data time series for a single state, ignoring the \nunattributed and out of state cases.\n\nInput: two letter states code",
+                "operationId": "post_state_state_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StateInput"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StateOutput"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Message"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/country": {
+            "post": {
+                "summary": "Get Country",
+                "description": "Fetch country level data time series for a single country\n\nInput: Two letter country alpha2Code",
+                "operationId": "get_country_country_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CountryInput"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CountryOutput"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Message"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stats": {
+            "get": {
+                "summary": "Get Stats",
+                "description": "Get overall tested, confirmed, and deaths stats from the database\nand return it as a json string. For the top bar.\n\n:param: none.\n:return: JSONResponse",
+                "operationId": "get_stats_stats_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StatsOutput"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Message"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post Stats",
+                "description": "Get overall tested, confirmed, and deaths stats from the database\nand return it as a json string. For the top bar.\n\n:param: Stats\n:return: JSONResponse",
+                "operationId": "post_stats_stats_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StatsInput"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StatsOutput"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Message"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Country": {
+                "title": "Country",
+                "required": [
+                    "Date",
+                    "Confirmed",
+                    "Deaths"
+                ],
+                "type": "object",
+                "properties": {
+                    "Date": {
+                        "title": "Date",
+                        "type": "string"
+                    },
+                    "Confirmed": {
+                        "title": "Confirmed",
+                        "type": "integer"
+                    },
+                    "Deaths": {
+                        "title": "Deaths",
+                        "type": "integer"
+                    }
+                }
+            },
+            "CountryInput": {
+                "title": "CountryInput",
+                "required": [
+                    "alpha2Code"
+                ],
+                "type": "object",
+                "properties": {
+                    "alpha2Code": {
+                        "title": "Alpha2Code",
+                        "type": "string"
+                    }
+                }
+            },
+            "CountryOutput": {
+                "title": "CountryOutput",
+                "required": [
+                    "success",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "title": "Success",
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "title": "Message",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Country"
+                        }
+                    }
+                }
+            },
+            "County": {
+                "title": "County",
+                "required": [
+                    "confirmed",
+                    "new",
+                    "death",
+                    "new_death",
+                    "latitude",
+                    "longitude"
+                ],
+                "type": "object",
+                "properties": {
+                    "county_name": {
+                        "title": "County Name",
+                        "type": "string",
+                        "default": "New York"
+                    },
+                    "state_name": {
+                        "title": "State Name",
+                        "type": "string",
+                        "default": "New York"
+                    },
+                    "confirmed": {
+                        "title": "Confirmed",
+                        "type": "integer"
+                    },
+                    "new": {
+                        "title": "New",
+                        "type": "integer"
+                    },
+                    "death": {
+                        "title": "Death",
+                        "type": "integer"
+                    },
+                    "new_death": {
+                        "title": "New Death",
+                        "type": "integer"
+                    },
+                    "fatality_rate": {
+                        "title": "Fatality Rate",
+                        "type": "string",
+                        "default": "1.2%"
+                    },
+                    "latitude": {
+                        "title": "Latitude",
+                        "type": "number"
+                    },
+                    "longitude": {
+                        "title": "Longitude",
+                        "type": "number"
+                    },
+                    "last_update": {
+                        "title": "Last Update",
+                        "type": "string",
+                        "default": "2020-03-30 22:53 EDT"
+                    }
+                }
+            },
+            "CountyInput": {
+                "title": "CountyInput",
+                "type": "object",
+                "properties": {
+                    "state": {
+                        "title": "State",
+                        "type": "string",
+                        "default": "CA"
+                    },
+                    "county": {
+                        "title": "County",
+                        "type": "string",
+                        "default": "Orange"
+                    }
+                }
+            },
+            "CountyOut": {
+                "title": "CountyOut",
+                "required": [
+                    "success",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "title": "Success",
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "title": "Message",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/County"
+                        }
+                    }
+                }
+            },
+            "HTTPValidationError": {
+                "title": "HTTPValidationError",
+                "type": "object",
+                "properties": {
+                    "detail": {
+                        "title": "Detail",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        }
+                    }
+                }
+            },
+            "Message": {
+                "title": "Message",
+                "required": [
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "title": "Message",
+                        "type": "string"
+                    }
+                }
+            },
+            "News": {
+                "title": "News",
+                "required": [
+                    "title",
+                    "url",
+                    "published"
+                ],
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "title": "Title",
+                        "type": "string"
+                    },
+                    "url": {
+                        "title": "Url",
+                        "type": "string"
+                    },
+                    "published": {
+                        "title": "Published",
+                        "type": "string"
+                    }
+                }
+            },
+            "NewsInput": {
+                "title": "NewsInput",
+                "type": "object",
+                "properties": {
+                    "state": {
+                        "title": "State",
+                        "type": "string",
+                        "default": "CA"
+                    },
+                    "topic": {
+                        "title": "Topic",
+                        "type": "string",
+                        "default": "Coronavirus"
+                    }
+                }
+            },
+            "NewsOut": {
+                "title": "NewsOut",
+                "required": [
+                    "success",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "title": "Success",
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "title": "Message",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/News"
+                        }
+                    }
+                }
+            },
+            "RootOutput": {
+                "title": "RootOutput",
+                "required": [
+                    "success",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "title": "Success",
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "title": "Message",
+                        "type": "string"
+                    }
+                }
+            },
+            "State": {
+                "title": "State",
+                "required": [
+                    "Date",
+                    "Confirmed",
+                    "Deaths"
+                ],
+                "type": "object",
+                "properties": {
+                    "Date": {
+                        "title": "Date",
+                        "type": "string"
+                    },
+                    "Confirmed": {
+                        "title": "Confirmed",
+                        "type": "integer"
+                    },
+                    "Deaths": {
+                        "title": "Deaths",
+                        "type": "integer"
+                    }
+                }
+            },
+            "StateInput": {
+                "title": "StateInput",
+                "required": [
+                    "stateAbbr"
+                ],
+                "type": "object",
+                "properties": {
+                    "stateAbbr": {
+                        "title": "Stateabbr",
+                        "type": "string"
+                    }
+                }
+            },
+            "StateOutput": {
+                "title": "StateOutput",
+                "required": [
+                    "success",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "title": "Success",
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "title": "Message",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/State"
+                        }
+                    }
+                }
+            },
+            "Stats": {
+                "title": "Stats",
+                "required": [
+                    "tested",
+                    "todays_tested",
+                    "confirmed",
+                    "todays_confirmed",
+                    "deaths",
+                    "todays_deaths"
+                ],
+                "type": "object",
+                "properties": {
+                    "tested": {
+                        "title": "Tested",
+                        "type": "integer"
+                    },
+                    "todays_tested": {
+                        "title": "Todays Tested",
+                        "type": "integer"
+                    },
+                    "confirmed": {
+                        "title": "Confirmed",
+                        "type": "integer"
+                    },
+                    "todays_confirmed": {
+                        "title": "Todays Confirmed",
+                        "type": "integer"
+                    },
+                    "deaths": {
+                        "title": "Deaths",
+                        "type": "integer"
+                    },
+                    "todays_deaths": {
+                        "title": "Todays Deaths",
+                        "type": "integer"
+                    }
+                }
+            },
+            "StatsInput": {
+                "title": "StatsInput",
+                "type": "object",
+                "properties": {
+                    "state": {
+                        "title": "State",
+                        "type": "string",
+                        "default": "CA"
+                    }
+                }
+            },
+            "StatsOutput": {
+                "title": "StatsOutput",
+                "required": [
+                    "success",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "title": "Success",
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "$ref": "#/components/schemas/Stats"
+                    }
+                }
+            },
+            "Tweets": {
+                "title": "Tweets",
+                "required": [
+                    "tweet_id",
+                    "full_text",
+                    "created_at"
+                ],
+                "type": "object",
+                "properties": {
+                    "tweet_id": {
+                        "title": "Tweet Id",
+                        "type": "integer"
+                    },
+                    "full_text": {
+                        "title": "Full Text",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "title": "Created At",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "TwitterInput": {
+                "title": "TwitterInput",
+                "type": "object",
+                "properties": {
+                    "state": {
+                        "title": "State",
+                        "type": "string",
+                        "default": "CA"
+                    }
+                }
+            },
+            "TwitterOutput": {
+                "title": "TwitterOutput",
+                "required": [
+                    "success",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "title": "Success",
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "$ref": "#/components/schemas/UserTweets"
+                    }
+                }
+            },
+            "UserTweets": {
+                "title": "UserTweets",
+                "required": [
+                    "username",
+                    "full_name"
+                ],
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "title": "Username",
+                        "type": "string"
+                    },
+                    "full_name": {
+                        "title": "Full Name",
+                        "type": "string"
+                    },
+                    "tweets": {
+                        "title": "Tweets",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Tweets"
+                        }
+                    }
+                }
+            },
+            "ValidationError": {
+                "title": "ValidationError",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "loc": {
+                        "title": "Location",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "msg": {
+                        "title": "Message",
+                        "type": "string"
+                    },
+                    "type": {
+                        "title": "Error Type",
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
