@@ -13,14 +13,32 @@ def read_states(state:str) -> pd.DataFrame:
     state = reverse_states_map[state]
 
     data = pd.read_csv(config_.STATE_CONFIRMED)
-    #data = data[data['FIPS'] < 79999]
-    deaths = pd.read_csv(config_.STATE_DEATH)
-    #deaths = deaths[deaths['FIPS'] < 79999]
-
     data = data[data['Province_State'] == state]
+
+    deaths = pd.read_csv(config_.STATE_DEATH)
+    deaths = deaths[deaths['Province_State'] == state]
+
+    # HARD CODE:
+    if  state == "Montana":
+        # fix death
+        pass
+    elif state == "New Hampshire":
+        row  = data[data['Admin2'] == 'Hillsborough'].transpose().replace(to_replace=0, method='ffill').transpose()
+        data[data['Admin2']=='Hillsborough'] = row
+        # fix death and confirmed
+        pass
+    elif state == "Hawaii":
+        # fix death
+        pass
+    elif state == "New Jersey":
+        # fix death
+        pass
+    elif state == "North Carolina":
+        # fix death
+        pass
+
     data = pd.DataFrame(data.aggregate('sum')[11:], columns=['Confirmed'])
 
-    deaths = deaths[deaths['Province_State'] == state]
     deaths = pd.DataFrame(deaths.aggregate('sum')[12:])
 
     data['Deaths'] = deaths
