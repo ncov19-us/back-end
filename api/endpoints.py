@@ -7,8 +7,8 @@ from pydantic import BaseModel, ValidationError, validator, Field
 from pydantic.dataclasses import dataclass
 from starlette.responses import JSONResponse
 import api
-from api.config import DevelopmentConfig as dev_config
-from api.config import ProductionConfig as prod_config
+from api.config import config_
+
 from api.utils.twitter_mongo import TwitterMongo
 from api.utils import get_state_topic_google_news, get_us_news
 from api.utils import reverse_states_map
@@ -23,7 +23,7 @@ from cachetools import cached, TTLCache
 
 # Starts the FastAPI Router to be used by the FastAPI app.
 router = APIRouter()
-tm = TwitterMongo("covid", "twitter", verbose=False)
+tm = TwitterMongo(config_.DB_NAME, config_.COLLECTION_TWITTER, verbose=False)
 
 
 ###############################################################################

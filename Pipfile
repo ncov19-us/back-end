@@ -14,6 +14,8 @@ cachetools = "*"
 gunicorn = "*"
 pycountry = "*"
 mongoengine = "*"
+beautifulsoup4 = "*"
+lxml = "*"
 
 [dev-packages]
 black = "*"

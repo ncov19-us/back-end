@@ -3,7 +3,7 @@ import json
 from typing import Dict
 import requests
 import pandas as pd
-from api.config import Config
+from api.config import config_
 from api.utils import reverse_states_map
 
 
@@ -26,7 +26,7 @@ def get_daily_stats() -> Dict:
     todays_confirmed, deaths, todays_deaths = 0, 0, 0
 
     try:
-        data2 = requests.get(url=Config.TMP_URL).json()
+        data2 = requests.get(url=config_.TMP_URL).json()
         confirmed = data2["cases"]
         todays_confirmed = data2["todayCases"]
         deaths = data2["deaths"]
@@ -38,7 +38,7 @@ def get_daily_stats() -> Dict:
 
     try:
         # covidtracking api
-        data = requests.get(url=Config.CVTRACK_URL).json()
+        data = requests.get(url=config_.CVTRACK_URL).json()
         curr = data[0]
         prev = data[1]
         tested = curr["posNeg"]
@@ -86,7 +86,7 @@ def get_daily_state_stats(state: str) -> Dict:
     tested, todays_tested, confirmed = 0, 0, 0
     todays_confirmed, deaths, todays_deaths = 0, 0, 0
 
-    URL = Config.CVTRACK_STATES_URL + f"/daily?state={state}"
+    URL = config_.CVTRACK_STATES_URL + f"/daily?state={state}"
 
     response = requests.get(url=URL)
     # print(response.json())
@@ -103,7 +103,7 @@ def get_daily_state_stats(state: str) -> Dict:
             except:
                 return {"error": "get_daily_state_stats API parsing error."}
 
-        base_url = Config.COUNTY_URL
+        base_url = config_.COUNTY_URL
         df = pd.read_csv(base_url)
         df = df[df["State Name"] == reverse_states_map[state]]
         grouped = df.groupby(["State Name"])
