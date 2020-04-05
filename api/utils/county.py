@@ -1,6 +1,6 @@
 from typing import Dict
 import pandas as pd
-from api.config import Config
+from api.config import config_
 from api.utils import reverse_states_map
 
 
@@ -10,7 +10,7 @@ def read_county_data() -> pd.DataFrame:
 
     :return: :Dict: COUNTY_URL as a python dictionary/json file.
     """
-    df = pd.read_csv(Config.COUNTY_URL)
+    df = pd.read_csv(config_.COUNTY_URL)
     df.columns = map(str.lower, df.columns)
     df.columns = df.columns.str.replace(" ", "_")
     df = pd.DataFrame.to_dict(df, orient="records")
@@ -20,8 +20,8 @@ def read_county_data() -> pd.DataFrame:
 def read_county_stats(state: str, county: str) -> pd.DataFrame:
     
     try:
-        df = pd.read_csv(Config.COUNTY_URL)
-        deaths = pd.read_csv(Config.STATE_DEATH)
+        df = pd.read_csv(config_.COUNTY_URL)
+        deaths = pd.read_csv(config_.STATE_DEATH)
     except:
         raise ValueError(
             f"Data reading error State: {state}, and County: {county}."

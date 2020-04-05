@@ -2,7 +2,7 @@ import os
 import json
 import pprint
 from typing import List
-from decouple import config
+from api.config import config_
 import pymongo
 from pymongo.errors import DuplicateKeyError
 import pandas as pd
@@ -25,7 +25,7 @@ class StateMongo:
         """
         self.db_name = db_name
         self.collection_name = collection_name
-        self.client = pymongo.MongoClient(host=config("MONGODB_CONNECTION_URI"))
+        self.client = pymongo.MongoClient(host=config_.MONGODB_CONNECTION_URI)
 
         self.db = self.client[self.db_name]
         self.collection = self.db[self.collection_name]

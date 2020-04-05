@@ -1,6 +1,6 @@
 import pymongo
 from pymongo.errors import DuplicateKeyError
-from decouple import config
+from api.config import config_
 from typing import List
 import pprint
 import json
