@@ -13,9 +13,9 @@ def read_states(state:str) -> pd.DataFrame:
     state = reverse_states_map[state]
 
     data = pd.read_csv(config_.STATE_CONFIRMED)
-    data = data[data['FIPS'] < 79999]
+    #data = data[data['FIPS'] < 79999]
     deaths = pd.read_csv(config_.STATE_DEATH)
-    deaths = deaths[deaths['FIPS'] < 79999]
+    #deaths = deaths[deaths['FIPS'] < 79999]
 
     data = data[data['Province_State'] == state]
     data = pd.DataFrame(data.aggregate('sum')[11:], columns=['Confirmed'])
