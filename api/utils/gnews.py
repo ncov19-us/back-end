@@ -1,12 +1,19 @@
+from typing import Dict
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests
 from api.config import Config
 
 
-def get_state_topic_google_news(state, topic, max_rows=10):
+def get_state_topic_google_news(state: str, topic: str, max_rows: int=10) -> Dict:
     """This function takes a US State name (string dtype) and a topic of interest (string dtype). 
     The output is a pandas DataFrame with articles, urls, and publishing times for articles containing the state and topic
+
+    :param: :state: :str: state, the state to query Google News API
+    :param: :topic: :str: topic, the topic to query Google News API
+    :param: :max_rows: :int: number of rows to return
+
+    :return: :Dict: python dictionary of the data for pydantic to force type checking.
     """
 
     url = "https://news.google.com/rss/search?q={}+{}&hl=en-US&gl=US&ceid=US:en".format(
@@ -37,15 +44,17 @@ def get_state_topic_google_news(state, topic, max_rows=10):
     df.columns = ["title", "url", "published", "state"]
     df["source"] = df["title"].str.split("-").str[-1]
     df.iloc[: min(len(df), max_rows)]
-    return convert_df_to_json(df)
+    
+    return df.to_dict(orient="records")
 
 
-def convert_df_to_json(df):
-    data = pd.DataFrame.to_json(df, orient="records")
-    return data
+def get_us_news(max_rows:int = 50) -> Dict:
+    """This function gathers news from the whole US from the past 5 hours.
 
+    :param: :max_rows: :int: number of rows to return
+    :return: :Dict: python dictionary of the data for pydantic to force type checking.
+    """
 
-def get_us_news(max_rows=50):
     news_requests = requests.get(Config.NEWS_API_URL)
     json_data = news_requests.json()["articles"]
     df = pd.DataFrame(json_data)
@@ -65,7 +74,8 @@ def get_us_news(max_rows=50):
     # Apply pandas function to format news published date
     df["published"] = df["published"].apply(dt_fmt)
     df = df.iloc[: min(len(df), max_rows)]
-    return convert_df_to_json(df)
+
+    return df.to_dict(orient="records")
 
 
 if __name__ == "__main__":

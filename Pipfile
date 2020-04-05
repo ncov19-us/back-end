@@ -16,10 +16,13 @@ lxml = "*"
 cachetools = "*"
 gunicorn = "*"
 pycountry = "*"
+mongoengine = "*"
+tqdm = "*"
 
 [dev-packages]
 black = "*"
 pylint = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.7"

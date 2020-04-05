@@ -1,19 +1,32 @@
+import gc
 import json
+from typing import Dict
 import requests
 import pandas as pd
-from typing import Dict
 from api.config import Config
 from api.utils import reverse_states_map
 
 
 def get_daily_stats() -> Dict:
+    """Get daily stats for a specific state, including tested, confirmed, 
+    todays_confirmed, deaths, and todays_deaths. Everything is initialized
+    at zero.
+
+    :params: :str: state. the state to look up.
+    :return: :Dict: {"tested": str, 
+                     "todays_tested": str,
+                     "confirmed": str,
+                     "todays_confirmed": str,
+                     "deaths": str,
+                     "todays_deaths: str}
+    """
     # initialize the variables so it doesnt crash if both api call failed
 
-    confirmed, todays_confirmed, deaths, todays_deaths = 0, 0, 0, 0
+    tested, todays_tested, confirmed = 0, 0, 0
+    todays_confirmed, deaths, todays_deaths = 0, 0, 0
 
     try:
         data2 = requests.get(url=Config.TMP_URL).json()
-
         confirmed = data2["cases"]
         todays_confirmed = data2["todayCases"]
         deaths = data2["deaths"]
@@ -49,13 +62,30 @@ def get_daily_stats() -> Dict:
         "todays_deaths": todays_deaths,
     }
 
+    del data, data2
+    gc.collect()
+
     return stats
 
 
 def get_daily_state_stats(state: str) -> Dict:
+    """Get daily stats for a specific state, including tested, confirmed, 
+    todays_confirmed, deaths, and todays_deaths. Everything is initialized
+    at zero.
+
+    :params: :str: state. the state to look up.
+    :return: :Dict: {"tested": str, 
+                     "todays_tested": str,
+                     "confirmed": str,
+                     "todays_confirmed": str,
+                     "deaths": str,
+                     "todays_deaths: str}
+    """
     # initialize the variables so it doesnt crash if both api call failed
 
-    tested, confirmed, todays_confirmed, deaths, todays_deaths = 0, 0, 0, 0, 0
+    tested, todays_tested, confirmed = 0, 0, 0
+    todays_confirmed, deaths, todays_deaths = 0, 0, 0
+
     URL = Config.CVTRACK_STATES_URL + f"/daily?state={state}"
 
     response = requests.get(url=URL)
@@ -90,5 +120,8 @@ def get_daily_state_stats(state: str) -> Dict:
         "deaths": deaths,
         "todays_deaths": todays_deaths,
     }
+
+    del df, data
+    gc.collect()
 
     return stats
