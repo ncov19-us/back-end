@@ -12,27 +12,14 @@ def read_states(state:str) -> pd.DataFrame:
     
     state = reverse_states_map[state]
 
-    data = pd.read_csv(config_.STATE_CONFIRMED)
-    data = data[data['FIPS'] < 79999]
-    deaths = pd.read_csv(config_.STATE_DEATH)
-    deaths = deaths[deaths['FIPS'] < 79999]
-
-    data = data[data['Province_State'] == state]
-    data = pd.DataFrame(data.aggregate('sum')[11:], columns=['Confirmed'])
-
-    deaths = deaths[deaths['Province_State'] == state]
-    deaths = pd.DataFrame(deaths.aggregate('sum')[12:])
-
-    data['Deaths'] = deaths
-
-    data = data.reset_index()
+    data = pd.read_csv(config_.NYT_STATE)
+    data = data[data['state']==state]
+    data = data[['date', 'cases', 'deaths']]
     data.columns = ['Date', 'Confirmed', 'Deaths']
     data = data.fillna(0)
-    # print(data.head())
-    # print(data.tail())
-    data = pd.DataFrame.to_dict(data, orient="records")
+    dict_data = pd.DataFrame.to_dict(data, orient="records")
 
-    del deaths
+    del data
     gc.collect()
 
-    return data
+    return dict_data
