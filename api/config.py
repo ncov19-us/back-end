@@ -4,7 +4,7 @@ import pathlib
 import os
 import sys
 from decouple import config
-import tweepy
+
 
 PACKAGE_ROOT = pathlib.Path(__file__).resolve().parent.parent
 
@@ -15,6 +15,8 @@ FORMATTER = logging.Formatter(
 LOG_DIR = PACKAGE_ROOT / "logs"
 LOG_DIR.mkdir(exist_ok=True)
 LOG_FILE = LOG_DIR / "api.log"
+
+
 
 
 def get_console_handler():
@@ -44,35 +46,62 @@ def get_logger(*, logger_name):
 
 
 class Config:
+    """
+    Base config for Staging API
+    """
     DEBUG = False
     TESTING = False
     CSRF_ENABLED = True
-    SERVER_PORT = 8000
+    
+    # Add MongoConnection
+    MONGODB_CONNECTION_URI=config("MONGODB_CONNECTION_URI")
+    
+    # Add Collections here
     COLLECTION_STATE = "state"
     COLLECTION_COUNTY = "county"
     COLLECTION_TWITTER = "twitter"
+    
     # JHU CSSE Daily Reports
     BASE_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/"
+    
     # JHU CSSE time series reports
     TIME_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
+    
+    # NEWS API 
     NEWS_API_KEY = config("NEWS_API_KEY")
     NEWS_API_URL = (
         f"https://newsapi.org/v2/top-headlines?country=us&apiKey={NEWS_API_KEY}"
     )
+    
+    # CVTRACK
     CVTRACK_URL = "https://covidtracking.com/api/us/daily"
     CVTRACK_STATES_URL = "https://covidtracking.com/api/states"
+    
     TMP_URL = "https://coronavirus-19-api.herokuapp.com/countries/USA"
+    
+    # ADD DATA URLS
     COUNTY_URL = config("COUNTY_URL")
     STATE_CONFIRMED = config("STATE_CONFIRMED")
     STATE_DEATH = config("STATE_DEATH")
-
+    
+    DB_NAME = "covid"
+    
+    
+    INFO = dict(
+    {
+        "title": "ncov19.us API",
+        "description": """API Support: ncov19us@gmail.com | URL: https://github.com/ncov19-us/back-end | [GNU GENERAL PUBLIC LICENSE](https://github.com/ncov19-us/back-end/blob/master/LICENSE)""",
+    }
+    )
 
 class ProductionConfig(Config):
-    DEBUG = False
-    DB_NAME = "covid"
+    pass
 
 
 class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
+    TESTING = True
     DB_NAME = "covid-staging"
+
+config_ = Config()

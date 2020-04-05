@@ -2,7 +2,6 @@ import gc
 from typing import Any, Dict
 import pandas as pd
 import pycountry
-# from api.utils import convert_df_to_json
 
 
 # Country dictionary
