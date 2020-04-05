@@ -83,7 +83,8 @@ class Config:
     COUNTY_URL = config("COUNTY_URL")
     STATE_CONFIRMED = config("STATE_CONFIRMED")
     STATE_DEATH = config("STATE_DEATH")
-    
+    NYT_STATE = config("NYT_STATE")
+
     DB_NAME = "covid"
     
     

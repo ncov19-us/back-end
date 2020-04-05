@@ -12,45 +12,14 @@ def read_states(state:str) -> pd.DataFrame:
     
     state = reverse_states_map[state]
 
-    data = pd.read_csv(config_.STATE_CONFIRMED)
-    data = data[data['Province_State'] == state]
-
-    deaths = pd.read_csv(config_.STATE_DEATH)
-    deaths = deaths[deaths['Province_State'] == state]
-
-    # HARD CODE:
-    if  state == "Montana":
-        # fix death
-        pass
-    elif state == "New Hampshire":
-        row  = data[data['Admin2'] == 'Hillsborough'].transpose().replace(to_replace=0, method='ffill').transpose()
-        data[data['Admin2']=='Hillsborough'] = row
-        # fix death and confirmed
-        pass
-    elif state == "Hawaii":
-        # fix death
-        pass
-    elif state == "New Jersey":
-        # fix death
-        pass
-    elif state == "North Carolina":
-        # fix death
-        pass
-
-    data = pd.DataFrame(data.aggregate('sum')[11:], columns=['Confirmed'])
-
-    deaths = pd.DataFrame(deaths.aggregate('sum')[12:])
-
-    data['Deaths'] = deaths
-
-    data = data.reset_index()
+    data = pd.read_csv(config_.NYT_STATE)
+    data = data[data['state']==state]
+    data = data[['date', 'cases', 'deaths']]
     data.columns = ['Date', 'Confirmed', 'Deaths']
     data = data.fillna(0)
-    # print(data.head())
-    # print(data.tail())
-    data = pd.DataFrame.to_dict(data, orient="records")
+    dict_data = pd.DataFrame.to_dict(data, orient="records")
 
-    del deaths
+    del data
     gc.collect()
 
-    return data
+    return dict_data
