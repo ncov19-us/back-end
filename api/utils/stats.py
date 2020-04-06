@@ -67,10 +67,10 @@ def get_daily_stats() -> Dict:
     ###################################################################
     #                     Sanity Check
     ################################################################### 
-    if (todays_tested >= tested) or (todays_confirmed >= confirmed):
+    if (int(todays_tested) >= int(tested)) or (int(todays_confirmed) >= int(confirmed)):
         # not testing todays_deaths > deaths, not every country has reported deaths
         raise DataValidationError("stats.py numbers doesn't make sense")
-    elif (confirmed > tested) or (deaths > confirmed):
+    elif (int(confirmed) > int(tested)) or (int(deaths) > int(confirmed)):
         raise DataValidationError("stats.py numbers doesnt make sense")
 
     return stats
@@ -134,10 +134,10 @@ def get_daily_state_stats(state: str) -> Dict:
     ###################################################################
     #                     Sanity Check
     ################################################################### 
-    if (todays_tested >= tested) or (todays_confirmed >= confirmed):
+    if (int(todays_tested) >= int(tested)) or (int(todays_confirmed) >= int(confirmed)):
         # not testing for todays_deaths >= deaths because Wyoming has 0 reported death
         raise DataValidationError("stats.py numbers doesn't make sense")
-    elif (confirmed > tested) or (deaths > confirmed):
+    elif (int(confirmed) > int(tested)) or (int(deaths) > int(confirmed)):
         raise DataValidationError("stats.py numbers doesnt make sense")
 
     del df, data
