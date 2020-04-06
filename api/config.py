@@ -9,14 +9,16 @@ from decouple import config
 PACKAGE_ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 FORMATTER = logging.Formatter(
-    "%(asctime)s — %(name)s — %(levelname)s —" "%(funcName)s:%(lineno)d — %(message)s"
+    "%(asctime)s — %(name)-12s — %(levelname)-8s —" "%(funcName)s:%(lineno)d — %(message)s"
+)
+
+CONSOLE_FORMATTER = logging.Formatter(
+    "%(name)-12s: %(levelname)-8s %(message)s"
 )
 
 LOG_DIR = PACKAGE_ROOT / "logs"
 LOG_DIR.mkdir(exist_ok=True)
 LOG_FILE = LOG_DIR / "api.log"
-
-
 
 
 def get_console_handler():
@@ -43,6 +45,38 @@ def get_logger(*, logger_name):
     logger.addHandler(get_file_handler())
     logger.propagate = False
     return logger
+
+
+class DataReadingError(Exception):
+    """DataError exception used for individual component in utils/ sanity checking.
+    """
+    def __init__(self, *args):
+        if args:
+            self.message = args[0]
+        else:
+            self.message = None
+
+    def __str__(self):
+        if self.message:
+            return f"DataReadingError {self.message}"
+        else:
+            return "DataReadingError"
+
+
+class DataValidationError(Exception):
+    """DataError exception used for individual component in utils/ sanity checking.
+    """
+    def __init__(self, *args):
+        if args:
+            self.message = args[0]
+        else:
+            self.message = None
+
+    def __str__(self):
+        if self.message:
+            return f"DataValidationError {self.message}"
+        else:
+            return "DataValidationError"
 
 
 class Config:

@@ -1,5 +1,6 @@
 from typing import Dict
 import pandas as pd
+from api.config import DataReadingError, DataValidationError
 from api.config import config_
 from api.utils import reverse_states_map
 
@@ -17,13 +18,13 @@ def read_county_data() -> pd.DataFrame:
     return df
 
 
-def read_county_stats(state: str, county: str) -> pd.DataFrame:
+def read_county_stats(state: str, county: str) -> Dict:
     
     try:
         df = pd.read_csv(config_.COUNTY_URL)
         deaths = pd.read_csv(config_.STATE_DEATH)
     except:
-        raise ValueError(
+        raise DataReadingError(
             f"Data reading error State: {state}, and County: {county}."
         )
     
@@ -42,9 +43,9 @@ def read_county_stats(state: str, county: str) -> pd.DataFrame:
         df.new_death.iloc[0] = deaths
         df = pd.DataFrame.to_dict(df, orient="records")
         if len(df) == 0:
-            raise
+            raise DataValidationError("county.py len(df) == 0")
     except:
-        raise ValueError(
+        raise DataValidationError(
             f"Can't find State: {state}, and County: {county} combination."
         )
     return df

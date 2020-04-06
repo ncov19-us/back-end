@@ -1,7 +1,9 @@
+import gc
 from typing import Dict
 import pandas as pd
 import requests
 from api.config import config_
+from api.config import DataReadingError, DataValidationError
 from bs4 import BeautifulSoup
 
 def get_state_topic_google_news(state: str, topic: str, max_rows: int=10) -> Dict:
@@ -43,8 +45,13 @@ def get_state_topic_google_news(state: str, topic: str, max_rows: int=10) -> Dic
     df.columns = ["title", "url", "published", "state"]
     df["source"] = df["title"].str.split("-").str[-1]
     df.iloc[: min(len(df), max_rows)]
+
+    result = df.to_dict(orient="records")
     
-    return df.to_dict(orient="records")
+    del df, page, soup, xml
+    gc.collect()
+    
+    return result
 
 
 def get_us_news(max_rows:int = 50) -> Dict:
@@ -74,7 +81,12 @@ def get_us_news(max_rows:int = 50) -> Dict:
     df["published"] = df["published"].apply(dt_fmt)
     df = df.iloc[: min(len(df), max_rows)]
 
-    return df.to_dict(orient="records")
+    result = df.to_dict(orient="records")
+
+    del news_requests, json_data, df
+    gc.collect()
+
+    return result
 
 
 if __name__ == "__main__":
