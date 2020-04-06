@@ -6,8 +6,10 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, ValidationError, validator, Field
 from pydantic.dataclasses import dataclass
 from starlette.responses import JSONResponse
+
 import api
 from api.config import config_
+from api.config import get_logger
 
 from api.utils.twitter_mongo import TwitterMongo
 from api.utils import get_state_topic_google_news, get_us_news
@@ -23,6 +25,7 @@ from cachetools import cached, TTLCache
 
 # Starts the FastAPI Router to be used by the FastAPI app.
 router = APIRouter()
+_logger = get_logger(logger_name=__name__)
 tm = TwitterMongo(config_.DB_NAME, config_.COLLECTION_TWITTER, verbose=False)
 
 
@@ -46,6 +49,7 @@ class RootOutput(BaseModel):
 def root() -> JSONResponse:
     """Root URL, reporting version and status.
     """
+    _logger.info("Endpoint: / --- GET")
     root_output = JSONResponse(
         status_code=200,
         content={
@@ -87,6 +91,7 @@ async def get_gnews() -> JSONResponse:
         del data
         gc.collect()
     except Exception as ex:
+        _logger.warning(f"Endpoint: /news --- GET --- {ex}")
         return JSONResponse(
             status_code=404, content={"message": f"[Error] get /News API: {ex}"}
         )
@@ -109,6 +114,7 @@ async def post_gnews(news: NewsInput) -> JSONResponse:
         del data
         gc.collect()
     except Exception as ex:
+        _logger.warning(f"Endpoint: /news --- POST --- {ex}")
         return JSONResponse(
             status_code=404, content={"message": f"[Error] post /News API: {ex}"}
         )
@@ -168,6 +174,7 @@ async def get_twitter() -> JSONResponse:
         del tweets
         gc.collect()
     except Exception as ex:
+        _logger.warning(f"Endpoint: /twitter --- GET --- {ex}")
         raise HTTPException(status_code=404, detail=f"[Error] get /twitter API: {ex}")
 
     return json_data
@@ -198,6 +205,7 @@ async def post_twitter(twyuser: TwitterInput) -> JSONResponse:
         del tweets
         gc.collect()
     except Exception as ex:
+        _logger.warning(f"Endpoint: /twitter --- POST --- {ex}")
         raise HTTPException(status_code=404, detail=f"[Error] post /twitter API: {ex}")
 
     return json_data
@@ -248,6 +256,7 @@ async def get_county_data() -> JSONResponse:
         del data
         gc.collect()
     except Exception as ex:
+        _logger.warning(f"Endpoint: /county --- GET --- {ex}")
         raise HTTPException(status_code=404, detail=f"[Error] get '/county' API: {ex}")
 
     return json_data
@@ -269,6 +278,7 @@ def post_county(county: CountyInput) -> JSONResponse:
         del data
         gc.collect()
     except Exception as ex:
+        _logger.warning(f"Endpoint: /county --- POST --- {ex}")
         raise HTTPException(status_code=404, detail=f"[Error] get '/county' API: {ex}")
 
     return json_data
@@ -311,6 +321,7 @@ async def post_state(state: StateInput) -> JSONResponse:
         del data
         gc.collect()
     except Exception as ex:
+        _logger.warning(f"Endpoint: /state --- POST --- {ex}")
         raise HTTPException(status_code=404, detail=f"[Error] get /country API: {ex}")
 
     return json_data
@@ -350,6 +361,7 @@ async def get_country(country: CountryInput) -> JSONResponse:
         data = read_country_data(cc)
         json_data = {"success": True, "message": data}
     except Exception as ex:
+        _logger.warning(f"Endpoint: /country --- GET --- {ex}")
         raise HTTPException(status_code=404, detail=f"[Error] get /country API: {ex}")
 
     return json_data
@@ -389,6 +401,7 @@ async def get_stats() -> JSONResponse:
         data = get_daily_stats()
         json_data = {"success": True, "message": data}
     except Exception as ex:
+        _logger.warning(f"Endpoint: /stats --- GET --- {ex}")
         raise HTTPException(status_code=404, detail=f"[Error] get /stats API: {ex}")
     return json_data
 
@@ -405,31 +418,6 @@ async def post_stats(stats: StatsInput) -> JSONResponse:
         data = get_daily_state_stats(stats.state)
         json_data = {"success": True, "message": data}
     except Exception as ex:
+        _logger.warning(f"Endpoint: /stats --- POST --- {ex}")
         raise HTTPException(status_code=404, detail=f"[Error] post /stats API: {ex}")
     return json_data
-
-
-
-
-
-
-# get:
-# /daily
-# US daily?
-# /timeseries
-# US time series?
-# /info
-# US info?
-
-# post:
-# /daily
-#  {country, state, county} + {alpha2Code, stateabbrv, county name}
-
-
-
-# /timeseries
-#  {country, state, county} + {alpha2Code, stateabbrv, county name}
-# # US time series?
-# /info
-# # US info?
-#  {country, state, county} + {alpha2Code, stateabbrv, county name}
