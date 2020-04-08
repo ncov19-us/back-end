@@ -39,6 +39,8 @@ To get the server running locally:
 
 ### Refer to API Documentation 📖
 
+[API Doc Postman](https://explore.postman.com/api/3596/ncov19us-api)
+
 [API Doc ReDoc](https://covid19-us-api-staging.herokuapp.com/redoc)
 
 [API Doc Swagger](https://covid19-us-api-staging.herokuapp.com/docs)
