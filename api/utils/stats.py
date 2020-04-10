@@ -5,8 +5,11 @@ import requests
 import pandas as pd
 from api.config import DataReadingError, DataValidationError
 from api.config import config_
+from api.config import get_logger
 from api.utils import reverse_states_map
 
+
+_logger = get_logger(logger_name=__name__)
 
 def get_daily_stats() -> Dict:
     """Get daily stats for a specific state, including tested, confirmed, 
@@ -35,7 +38,8 @@ def get_daily_stats() -> Dict:
         
         del data2
         gc.collect()
-    except:
+    except Exception as ex:
+        _logger.error(f"stats.get_daily_stats {ex}")
         confirmed, todays_confirmed, deaths, todays_deaths = 0, 0, 0, 0
 
     try:
@@ -51,8 +55,9 @@ def get_daily_stats() -> Dict:
         todays_deaths = curr["death"] - prev["death"]
         
         del data
-        gc.collect
-    except:
+        gc.collect()
+    except Exception as ex:
+        _logger.error(f"stats.get_daily_stats {ex}")
         tested = 0
 
     stats = {
@@ -70,7 +75,8 @@ def get_daily_stats() -> Dict:
     if (int(todays_tested) >= int(tested)) or (int(todays_confirmed) >= int(confirmed)):
         # not testing todays_deaths > deaths, not every country has reported deaths
         raise DataValidationError("stats.py numbers doesn't make sense")
-    elif (int(confirmed) > int(tested)) or (int(deaths) > int(confirmed)):
+
+    if (int(confirmed) > int(tested)) or (int(deaths) > int(confirmed)):
         raise DataValidationError("stats.py numbers doesnt make sense")
 
     return stats
@@ -137,7 +143,8 @@ def get_daily_state_stats(state: str) -> Dict:
     if (int(todays_tested) >= int(tested)) or (int(todays_confirmed) >= int(confirmed)):
         # not testing for todays_deaths >= deaths because Wyoming has 0 reported death
         raise DataValidationError("stats.py numbers doesn't make sense")
-    elif (int(confirmed) > int(tested)) or (int(deaths) > int(confirmed)):
+
+    if (int(confirmed) > int(tested)) or (int(deaths) > int(confirmed)):
         raise DataValidationError("stats.py numbers doesnt make sense")
 
     del df, data
