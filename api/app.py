@@ -1,11 +1,11 @@
 import uvicorn
-from fastapi import FastAPI
 from fastapi import Depends, FastAPI, Header, HTTPException
 from starlette.middleware.cors import CORSMiddleware
 import api
 import api.endpoints
 from api.config import get_logger
 from api.config import config_
+
 
 _logger = get_logger(logger_name=__name__)
 
