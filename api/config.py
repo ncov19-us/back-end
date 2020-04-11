@@ -157,11 +157,14 @@ class DevelopmentConfig(Config):
 # is set to true on Linux `export STAGING=True` or Windows Powershell
 # `$Env:STAGING="True"`. Using os.environ directly will throw errors
 # if not set.
-STAGING = os.getenv("STAGING") or "False"
+def get_config():
+    STAGING = os.getenv("STAGING") or "False"
 
-if STAGING == "True":
-    _config = Config()
-else:
-    _config = ProductionConfig()
+    if STAGING == "True":
+        return ProductionConfig()
+    else:
+        return DevelopmentConfig()
+
+_config = get_config()
 
 print(f"[DEBUG] Config being used is: {_config.__class__.__name__}")
