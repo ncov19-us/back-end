@@ -7,4 +7,4 @@ from api.config import get_logger
 with open(PACKAGE_ROOT / "VERSION") as version_file:
     __version__ = version_file.read().strip()
 
-APP = create_app()
+app = create_app()

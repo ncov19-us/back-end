@@ -2,7 +2,7 @@ import gc
 from typing import Dict
 import pandas as pd
 import requests
-from api.config import config_
+from api.config import _config
 from api.config import DataReadingError, DataValidationError
 from bs4 import BeautifulSoup
 
@@ -61,7 +61,7 @@ def get_us_news(max_rows:int = 50) -> Dict:
     :return: :Dict: python dictionary of the data for pydantic to force type checking.
     """
 
-    news_requests = requests.get(config_.NEWS_API_URL)
+    news_requests = requests.get(_config.NEWS_API_URL)
     json_data = news_requests.json()["articles"]
     df = pd.DataFrame(json_data)
     df = pd.DataFrame(df[["title", "url", "publishedAt"]])

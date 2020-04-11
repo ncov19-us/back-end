@@ -1,7 +1,7 @@
 import gc
 from typing import Dict
 import pandas as pd
-from api.config import config_
+from api.config import _config
 from api.config import DataReadingError, DataValidationError
 from api.utils import reverse_states_map
 
@@ -14,7 +14,7 @@ def read_states(state:str) -> Dict:
     state = reverse_states_map[state]
 
     try:
-        data = pd.read_csv(config_.NYT_STATE)
+        data = pd.read_csv(_config.NYT_STATE)
         data = data[data['state']==state]
         data = data[['date', 'cases', 'deaths']]
         data.columns = ['Date', 'Confirmed', 'Deaths']

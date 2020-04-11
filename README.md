@@ -1,6 +1,12 @@
-# nCOV19.US API Documentation
+# nCOV19.US API
 
-#### Backend delpoyed at 👉 [Staging API](https://covid19-us-api-staging.herokuapp.com/) <br>
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![Version: v0.1.5](https://img.shields.io/badge/release-v0.1.5-blue)
+![Python Version](https://img.shields.io/badge/python-v3.7-blue)
+![Build](https://img.shields.io/badge/build-passing-brightgreen)
+![CodeFactor](https://www.codefactor.io/Content/badges/A.svg)
+
+#### Backend delpoyed at 👉 [Public API](https://api.ncov19.us/) <br>
 
 
 ## 1️⃣ Getting started
@@ -10,7 +16,7 @@ To get the server running locally:
 1. Install `pipenv` via `conda` or `pip`
 2. Create virtual env. via `pipenv install`
 3. Activate virtual env. `pipenv shell`
-4. Run the app, `uvicorn api:APP --reload`
+4. Run the app, `uvicorn api:app --reload`
 
 
 ### TECH STACK 📚
@@ -39,9 +45,9 @@ To get the server running locally:
 
 ### Refer to API Documentation 📖
 
-[API Doc ReDoc](https://covid19-us-api-staging.herokuapp.com/redoc)
+[API Doc ReDoc](https://api.ncov19.us/redoc)
 
-[API Doc Swagger](https://covid19-us-api-staging.herokuapp.com/docs)
+[API Doc Swagger](https://api.ncov19.us/docs)
 
 
 

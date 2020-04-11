@@ -4,7 +4,7 @@ from starlette.middleware.cors import CORSMiddleware
 import api
 import api.endpoints
 from api.config import get_logger
-from api.config import config_
+from api.config import _config
 
 
 _logger = get_logger(logger_name=__name__)
@@ -16,12 +16,12 @@ def create_app() -> FastAPI:
     :param: :Config: config_object. app config.
     """
     _logger.info(f"[INFO]: Endpoint Version {api.__version__}")
-    _logger.info(f"[INFO]: config_object is {config_}")
+    _logger.info(f"[INFO]: config_object is {_config}")
 
     app = FastAPI(
-        title=config_.INFO["title"],
+        title=_config.INFO["title"],
         version=api.__version__,
-        description=config_.INFO["description"],
+        description=_config.INFO["description"],
     )
 
     # All the API Routers are stored in endpoints.py, so we import them

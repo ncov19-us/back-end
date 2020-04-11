@@ -6,6 +6,9 @@ import sys
 from decouple import config
 
 
+#####################################################################################
+#                               Logging
+#####################################################################################
 PACKAGE_ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 FORMATTER = logging.Formatter(
@@ -47,6 +50,9 @@ def get_logger(*, logger_name):
     return logger
 
 
+#####################################################################################
+#                               Custom Exceptions
+#####################################################################################
 class DataReadingError(Exception):
     """DataError exception used for individual component in utils/ sanity checking.
     """
@@ -79,6 +85,9 @@ class DataValidationError(Exception):
             return "DataValidationError"
 
 
+#####################################################################################
+#                                  Configs
+#####################################################################################
 class Config:
     """
     Base config for Staging API
@@ -129,8 +138,12 @@ class Config:
     }
     )
 
+
 class ProductionConfig(Config):
-    pass
+    DEVELOPMENT = False
+    DEBUG = False
+    TESTING = False
+    DB_NAME = "covid"
 
 
 class DevelopmentConfig(Config):
@@ -139,4 +152,16 @@ class DevelopmentConfig(Config):
     TESTING = True
     DB_NAME = "covid-staging"
 
-config_ = Config()
+
+# Set default config to ProductionConfig unless STAGING environment 
+# is set to true on Linux `export STAGING=True` or Windows Powershell
+# `$Env:STAGING="True"`. Using os.environ directly will throw errors
+# if not set.
+STAGING = os.getenv("STAGING") or "False"
+
+if STAGING == "True":
+    _config = Config()
+else:
+    _config = ProductionConfig()
+
+print(f"[DEBUG] Config being used is: {_config.__class__.__name__}")

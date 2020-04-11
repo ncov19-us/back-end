@@ -8,7 +8,7 @@ from pydantic.dataclasses import dataclass
 from starlette.responses import JSONResponse
 
 import api
-from api.config import config_
+from api.config import _config
 from api.config import get_logger
 
 from api.utils.twitter_mongo import TwitterMongo
@@ -26,7 +26,7 @@ from cachetools import cached, TTLCache
 # Starts the FastAPI Router to be used by the FastAPI app.
 router = APIRouter()
 _logger = get_logger(logger_name=__name__)
-tm = TwitterMongo(config_.DB_NAME, config_.COLLECTION_TWITTER, verbose=False)
+tm = TwitterMongo(_config.DB_NAME, _config.COLLECTION_TWITTER, verbose=False)
 
 
 ###############################################################################

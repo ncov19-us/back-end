@@ -6,7 +6,7 @@ import pprint
 import json
 import os
 import pandas as pd
-from api.config import config_
+from api.config import _config
 
 class TwitterMongo:
     """
@@ -24,7 +24,7 @@ class TwitterMongo:
         """
         self.db_name = db_name
         self.collection_name = collection_name
-        self.client = pymongo.MongoClient(host=config_.MONGODB_CONNECTION_URI)
+        self.client = pymongo.MongoClient(host=_config.MONGODB_CONNECTION_URI)
 
         self.db = self.client[self.db_name]
         self.collection = self.db[self.collection_name]
