@@ -167,4 +167,4 @@ def get_config():
 
 _config = get_config()
 
-print(f"[DEBUG] Config being used is: {_config.__class__.__name__}")
+print(f"[INFO] Config being used is: {_config.__class__.__name__}")
