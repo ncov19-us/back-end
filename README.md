@@ -1,5 +1,7 @@
 # [nCOV19.US](https://ncov19.us) API Documentation
 
+[![CodeFactor](https://www.codefactor.io/repository/github/ncov19-us/back-end/badge)](https://www.codefactor.io/repository/github/ncov19-us/back-end) 
+
 #### Backend delpoyed at 👉 [api.ncov19.us](https://api.ncov19.us) <br>
 
 ## 1️⃣ Endpoints
@@ -39,6 +41,7 @@ To get the server running locally:
 
 ## 4️⃣ Contributors
 
+### Project Leaders
 
 [<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/hurshd0)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hanchunglee/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://github.com/leehanchung)    **[Han Lee](https://github.com/hurshd0)**    |    Maintainer
 
