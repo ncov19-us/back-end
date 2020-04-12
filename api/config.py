@@ -156,19 +156,20 @@ class DevelopmentConfig(Config):
 
 def get_config():
     """Set default config to ProductionConfig unless STAGING environment 
-    is set to true on Linux `export STAGING=True` or Windows Powershell
-    `$Env:STAGING="True"`. Using os.environ directly will throw errors
+    is set to false on Linux `export STAGING=False` or Windows Powershell
+    `$Env:STAGING="False"`. Using os.environ directly will throw errors
     if not set.
 
     For pytest, plesae use ProductionConfig
     """
-    STAGING = os.getenv("STAGING") or "False"
+    STAGING = os.getenv("STAGING") or "True"
 
-    if STAGING == "True":
-        return ProductionConfig()
+    if STAGING == "False":
+        return DevelopmentConfig()
 
-    return DevelopmentConfig()
+    return ProductionConfig()
+    
 
-_config = get_config()
+app_config = get_config()
 
-print(f"[INFO] Config being used is: {_config.__class__.__name__}")
+print(f"[INFO] Config being used is: {app_config.__class__.__name__}")
