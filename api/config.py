@@ -153,11 +153,15 @@ class DevelopmentConfig(Config):
     DB_NAME = "covid-staging"
 
 
-# Set default config to ProductionConfig unless STAGING environment 
-# is set to true on Linux `export STAGING=True` or Windows Powershell
-# `$Env:STAGING="True"`. Using os.environ directly will throw errors
-# if not set.
+
 def get_config():
+    """Set default config to ProductionConfig unless STAGING environment 
+    is set to true on Linux `export STAGING=True` or Windows Powershell
+    `$Env:STAGING="True"`. Using os.environ directly will throw errors
+    if not set.
+
+    For pytest, plesae use ProductionConfig
+    """
     STAGING = os.getenv("STAGING") or "False"
 
     if STAGING == "True":
