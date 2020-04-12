@@ -6,7 +6,6 @@ What Changed ? e.g. Github Issues Title or Trello Card Title
 
 Please delete options that are not relevant.
 
-- [ ] :art: CSS Styling fix
 - [ ] :ambulance: Bug fix (non-breaking change which fixes an issue)
 - [ ] :recycle: :wastebasket: Re-factor, cleanup, un-comment, docstring
 - [ ] :sparkles: New feature (non-breaking change which adds functionality)
