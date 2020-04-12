@@ -182,7 +182,7 @@ def test_post_county_validation(test_app):
 
 def test_post_county_not_found(test_app):
     """data not found"""
-    
+
     payload = {'state': 'validation', 'county': 'shouldnt work'}
     response = test_app.post("/county", data=json.dumps(payload))
     assert response.status_code == 404

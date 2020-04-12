@@ -166,8 +166,8 @@ def get_config():
 
     if STAGING == "True":
         return ProductionConfig()
-    else:
-        return DevelopmentConfig()
+
+    return DevelopmentConfig()
 
 _config = get_config()
 
