@@ -1,4 +1,4 @@
-# nCOV19.US API
+# [nCOV19.US API](https://api.ncov19.us/)
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![Version: v0.1.5](https://img.shields.io/badge/release-v0.1.5-blue)
@@ -8,25 +8,9 @@
 
 #### Backend delpoyed at 👉 [Public API](https://api.ncov19.us/) <br>
 
+#### Backend delpoyed at 👉 [api.ncov19.us](https://api.ncov19.us) <br>
 
-## 1️⃣ Getting started
-
-To get the server running locally:
-
-1. Install `pipenv` via `conda` or `pip`
-2. Create virtual env. via `pipenv install`
-3. Activate virtual env. `pipenv shell`
-4. Run the app, `uvicorn api:app --reload`
-
-
-### TECH STACK 📚
-
--    FAST API
--    PyMongo
-
----
-
-## 2️⃣ Endpoints
+## 1️⃣ Endpoints
 
 #### Main Routes
 
@@ -39,31 +23,40 @@ To get the server running locally:
 | POST    | `/twitter` | all users      | Fetch and return State specific official Twitter tweets |
 | GET    | `/country` | all users      | Fetch and return JHU CSSE Country level data as timeseries |
 
----
-
-## 3️⃣ Data Model
-
 ### Refer to API Documentation 📖
 
 [API Doc ReDoc](https://api.ncov19.us/redoc)
 
 [API Doc Swagger](https://api.ncov19.us/docs)
 
+## 2️⃣ Getting started
+
+To get the server running locally:
+
+1. Install `pipenv` via `conda` or `pip`
+2. Create virtual env. via `pipenv install`
+3. Activate virtual env. `pipenv shell`
+4. Run the app, `uvicorn api:app --reload`
+
+### TECH STACK 📚
+
+-    FastAPI
+-    PyMongo
+
+---
+
+## 4️⃣ Contributors
+
+### Project Leaders
+
+[<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/leehanchung)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hanchunglee/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hanchunglee)    **[Han Lee](https://github.com/leehanchung)**    |    Maintainer
+
+[<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/hurshd0)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hurshd/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hurshd0)    **[Hursh Desai](https://github.com/hurshd0)**    |    Maintainer
+
+---
 
 
-## 3️⃣ Environment Variables
-
-In order for the app to function correctly, the user must set up their own environment variables.
-
-create a .env file that includes the following:
-
-  
-    *  MONGODB_CONNECTION_URI - optional development db for using functionality not available in SQLite
-    *  NEWS_API_KEY - set to "development" until ready for "production"
-    *  JWT_SECRET - you can generate this by using a python shell and running import random''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#\$%^&amp;*(-*=+)') for i in range(50)])
-
-    
-## Contributing
+## 3️⃣ Contributing
 
 When contributing to this repository, please read [CONTRUBTION](./CONTRIBUTION.md) guide.
 

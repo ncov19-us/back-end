@@ -5,6 +5,7 @@ import api
 from api import config
 from api.config import DataReadingError, DataValidationError
 
+
 #####################################################################################
 #                                 Testing logging
 #####################################################################################
