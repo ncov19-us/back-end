@@ -1,13 +1,16 @@
-import os
-import logging
+# pylint: disable=redefined-outer-name
 import pytest
-import api
 from api import config
 from api.config import DataReadingError, DataValidationError
 
+<<<<<<< HEAD
 #####################################################################################
+=======
+
+################################################################################
+>>>>>>> ef9ad7b... style: chore:
 #                                 Testing logging
-#####################################################################################
+################################################################################
 # _logger = config.get_logger(logger_name="test")
 
 # def mock_debug():
@@ -39,51 +42,51 @@ from api.config import DataReadingError, DataValidationError
 #     assert "warning message" in caplog.text
 
 
-#####################################################################################
+################################################################################
 #                                 Testing custom errors
-#####################################################################################
+################################################################################
 def test_DataReadingError_without_message():
     with pytest.raises(DataReadingError) as excinfo:
         raise DataReadingError()
-    assert "DataReadingError" == str(excinfo.value)
+    assert str(excinfo.value) == "DataReadingError"
 
 
 def test_DataReadingError_with_message():
     with pytest.raises(DataReadingError) as excinfo:
         raise DataReadingError("with message")
-    assert "DataReadingError with message" == str(excinfo.value)
+    assert str(excinfo.value) == "DataReadingError with message"
 
 
 def test_DataValidationError_without_message():
     with pytest.raises(DataValidationError) as excinfo:
         raise DataValidationError()
-    assert "DataValidationError" == str(excinfo.value)
+    assert str(excinfo.value) == "DataValidationError"
 
 
 def test_DataValidationError_with_message():
     with pytest.raises(DataValidationError) as excinfo:
         raise DataValidationError("with message")
-    assert "DataValidationError with message" == str(excinfo.value)
+    assert str(excinfo.value) == "DataValidationError with message"
 
 
-#####################################################################################
+################################################################################
 #                                 Testing Configs
-#####################################################################################
+################################################################################
 def test_production_config():
     _config = config.ProductionConfig
-    assert _config.TESTING == False
-    assert _config.DEBUG == False
-    assert _config.DEVELOPMENT == False
+    assert not _config.TESTING
+    assert not _config.DEBUG
+    assert not _config.DEVELOPMENT
     assert _config.DB_NAME == "covid"
-    
+
 
 def test_development_config():
     _config = config.DevelopmentConfig
-    assert _config.TESTING == True
-    assert _config.DEBUG == True
-    assert _config.DEVELOPMENT == True
+    assert _config.TESTING
+    assert _config.DEBUG
+    assert _config.DEVELOPMENT
     assert _config.DB_NAME == "covid-staging"
-    
+
 
 @pytest.fixture
 def mock_staging_true(monkeypatch):
@@ -106,10 +109,12 @@ def mock_config():
 
 
 def test_default_config_production(mock_staging_true):
+    # pylint: disable=W0612,W0613
     _config = mock_config()
     assert _config.__class__.__name__ == "ProductionConfig"
 
 
 def test_default_config_development(mock_staging_false):
+    # pylint: disable=W0612,W0613
     _config = mock_config()
     assert _config.__class__.__name__ == "DevelopmentConfig"

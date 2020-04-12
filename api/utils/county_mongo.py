@@ -1,31 +1,30 @@
-import pymongo
-from pymongo.errors import DuplicateKeyError
-from api.config import _config
-from typing import List
 import pprint
-import json
-import os
+import pymongo
 import pandas as pd
+from api.config import app_config
 
 
 class StateMongo:
-
-    """
-    Covid Mongodb wrapper over PyMongo, that makes it easier to fetch and filter records
+    """Covid Mongodb wrapper over PyMongo, that makes it easier to fetch
+    and filter records
     """
 
     def __init__(self, db_name: str, collection_name: str, verbose=True):
         """
-        Creates mongodb connection to coivd-ds database and covid data collection.
+        Creates mongodb connection to coivd-ds database and covid data
+        collection.
+
         Parameters
         ==========
         db_name: str - database name, for e.g. coivd_ds
         collection_name: str - collection aka table name
-        verbose: bool - if True prints out databases, collection info from MongoDB Atlas
+        verbose: bool - if True prints out databases, collection info from Mongo
         """
         self.db_name = db_name
         self.collection_name = collection_name
-        self.client = pymongo.MongoClient(host=_config("MONGODB_CONNECTION_URI"))
+        self.client = pymongo.MongoClient(
+            host=app_config("MONGODB_CONNECTION_URI")
+        )
 
         self.db = self.client[self.db_name]
         self.collection = self.db[self.collection_name]
@@ -40,12 +39,14 @@ class StateMongo:
     def get_data_by_state(self, state_abbr: str, verbose=False):
         if not state_abbr:
             raise ValueError(
-                f"The parameter state_abbr: {state_abbr} must be non-nill reference."
+                f"The parameter state_abbr:"
+                " {state_abbr} must be non-nill reference."
             )
         result = self.collection.find_one({"State": state_abbr})
         if result is None:
             print(
-                f"Can't find base meme name {state_abbr} in the collection {self.collection_name}."
+                f"Can't find base meme name {state_abbr} "
+                "in the collection {self.collection_name}."
             )
         if verbose and result is not None:
             pprint.pprint(result)

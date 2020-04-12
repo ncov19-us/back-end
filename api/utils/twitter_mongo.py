@@ -1,29 +1,31 @@
-import pymongo
-from pymongo.errors import DuplicateKeyError
 from typing import List
 import pprint
-import json
-import os
-import pandas as pd
-from api.config import _config
+import pymongo
+from pymongo.errors import DuplicateKeyError
+from api.config import app_config
 
 class TwitterMongo:
-    """
-    Twiter Mongodb wrapper over PyMongo, that makes it easier to fetch and filter records
+    """Twiter Mongodb wrapper over PyMongo, that makes it easier to fetch and
+    filter records
     """
 
     def __init__(self, db_name: str, collection_name: str, verbose=True):
         """
-        Creates mongodb connection to coivd-ds database and covid data collection.
+        Creates mongodb connection to coivd-ds database and covid data
+        collection.
+
         Parameters
         ==========
         db_name: str - database name, for e.g. coivd_ds
         collection_name: str - collection aka table name
-        verbose: bool - if True prints out databases, collection info from MongoDB Atlas
+        verbose: bool - if True prints out databases, collection info from
+                        MongoDB Atlas
         """
         self.db_name = db_name
         self.collection_name = collection_name
-        self.client = pymongo.MongoClient(host=_config.MONGODB_CONNECTION_URI)
+        self.client = pymongo.MongoClient(
+            host=app_config.MONGODB_CONNECTION_URI
+        )
 
         self.db = self.client[self.db_name]
         self.collection = self.db[self.collection_name]
@@ -37,16 +39,17 @@ class TwitterMongo:
 
     def dump_json_data_to_collection(self, data, verbose=False):
         """Dumps JSON data loaded in-memory to MongoDB collection.
-        
-        
+
+
         :param: data: list or dict - python data structure loaded in-memory
         :param: verbose: if True, prints out no. of records added
-        
-        :return: 
+
+        :return:
         """
-        if not (isinstance(data, list) or isinstance(data, dict)):
+        if not isinstance(data, (dict, list)):
             raise ValueError(
-                f"Parameter data passed must either be a python dict or list data type not {type(data)}"
+                "Parameter data passed must either be a dict "
+                f"or list data type not {type(data)}"
             )
         try:
             status = self.collection.insert_many(data)
@@ -63,17 +66,18 @@ class TwitterMongo:
         """Get stored user data by username
         :param: username: username to be added
         :param: verbose: Default False.
-        
+
         :return: JSON Object
         """
         if not username:
             raise ValueError(
-                f"The parameter username: {username} must be non-nill reference."
+                f"Parameter username: {username} must be non-nill reference."
             )
         result = self.collection.find_one({"username": username})
         if result is None:
             print(
-                f"Can't find username:{username} in the collection {self.collection_name}."
+                f"Can't find username:{username} in",
+                f" the collection {self.collection_name}."
             )
         if verbose and result is not None:
             pprint.pprint(result)
@@ -83,7 +87,7 @@ class TwitterMongo:
         """Get state document
         :param: state: state 2-char identifier
         :param: verbose: Default False.
-        
+
         :return: JSON object
         """
         if not state:
@@ -92,7 +96,8 @@ class TwitterMongo:
             )
         result = self.collection.find_one({"state": state})
         if result is None:
-            print(f"Can't find state:{state} in the collection {self.collection_name}.")
+            print(f"Can't find state:{state} in ",
+                   "the collection {self.collection_name}.")
         if verbose and result is not None:
             pprint.pprint(result)
             print(type(result))
@@ -100,10 +105,10 @@ class TwitterMongo:
 
     def update_user_tweets(self, username: str, tweet: List):
         """Add a list of tweets to a user's tweets field.
-        
+
         :param: username: username to be added
         :param: tweet: List of tweets
-        
+
         :return: none
         """
         self.collection.update(
@@ -112,10 +117,10 @@ class TwitterMongo:
 
     def update_user_latest_tweet_id(self, username: str, latest_tweet_id: int):
         """Update user's latest_tweet_id field.
-        
+
         :param: username: username to be updated
         :param: latest_tweet_id: the id of the tweet
-        
+
         :return: none
         """
         self.collection.update(
