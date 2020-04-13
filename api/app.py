@@ -1,5 +1,4 @@
-import uvicorn
-from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 import api
 import api.endpoints

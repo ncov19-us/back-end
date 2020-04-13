@@ -1,24 +1,30 @@
 import gc
 from typing import Dict
+
 import pandas as pd
 import requests
-from api.config import app_config
-from api.config import DataReadingError, DataValidationError
-from bs4 import BeautifulSoup
 
-def get_state_topic_google_news(state: str, topic: str, max_rows: int=10) -> Dict:
-    """This function takes a US State name (string dtype) and a topic of interest (string dtype). 
-    The output is a pandas DataFrame with articles, urls, and publishing times for articles containing the state and topic
+from bs4 import BeautifulSoup
+from api.config import app_config
+
+
+def get_state_topic_google_news(state: str,
+                                topic: str,
+                                max_rows: int = 10) -> Dict:
+    """This function takes a US State name (string dtype) and a topic of
+    interest (string dtype). The output is a pandas DataFrame with articles,
+    urls, and publishing times for articles containing the state and topic
 
     :param: :state: :str: state, the state to query Google News API
     :param: :topic: :str: topic, the topic to query Google News API
     :param: :max_rows: :int: number of rows to return
 
-    :return: :Dict: python dictionary of the data for pydantic to force type checking.
+    :return: :Dict: python dictionary of the data for pydantic to force
+                    type checking.
     """
 
-    url = "https://news.google.com/rss/search?q={}+{}&hl=en-US&gl=US&ceid=US:en".format(
-        state, topic
+    url = ("https://news.google.com/rss/search?"
+           f"q={state}+{topic}&hl=en-US&gl=US&ceid=US:en"
     )
     list_of_titles = []
     list_of_article_links = []
@@ -40,25 +46,26 @@ def get_state_topic_google_news(state: str, topic: str, max_rows: int=10) -> Dic
         state_id_for_articles.append(state)
 
     df = pd.DataFrame(
-        [list_of_titles, list_of_article_links, list_of_pubdates, state_id_for_articles]
+        [list_of_titles, list_of_article_links,
+         list_of_pubdates, state_id_for_articles]
     ).T
     df.columns = ["title", "url", "published", "state"]
     df["source"] = df["title"].str.split("-").str[-1]
-    df.iloc[: min(len(df), max_rows)]
+    df = df.iloc[: min(len(df), max_rows)]
 
     result = df.to_dict(orient="records")
-    
+
     del df, page, soup, xml
     gc.collect()
-    
+
     return result
 
 
-def get_us_news(max_rows:int = 50) -> Dict:
+def get_us_news(max_rows: int = 50) -> Dict:
     """This function gathers news from the whole US from the past 5 hours.
 
     :param: :max_rows: :int: number of rows to return
-    :return: :Dict: python dictionary of the data for pydantic to force type checking.
+    :return: :Dict: python dictionary of the data for type checking.
     """
 
     news_requests = requests.get(app_config.NEWS_API_URL)
@@ -67,14 +74,13 @@ def get_us_news(max_rows:int = 50) -> Dict:
     df = pd.DataFrame(df[["title", "url", "publishedAt"]])
     df = df.rename(columns={"publishedAt": "published"})
     # Infer datetime
-    df["published"] = pd.to_datetime(df["published"], infer_datetime_format=True)
-    # Assuming timedelta of 5 hours based on what i compared from CNN articles from API.
+    df["published"] = pd.to_datetime(df["published"],
+                                     infer_datetime_format=True)
+    # Assuming timedelta of 5 hr based on what comparison between CNN and API.
     df["published"] = df["published"] - pd.Timedelta("5 hours")
-    """
-    # Format date time way you want to display, https://strftime.org/
-    """
 
     def dt_fmt(val):
+        """Format date time way you want to display, https://strftime.org/"""
         return val.strftime("%a %d, %Y, %I: %M %p ET")
 
     # Apply pandas function to format news published date

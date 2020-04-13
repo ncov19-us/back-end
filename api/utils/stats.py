@@ -1,5 +1,4 @@
 import gc
-import json
 from typing import Dict
 import requests
 import pandas as pd
@@ -12,12 +11,12 @@ from api.utils import reverse_states_map
 _logger = get_logger(logger_name=__name__)
 
 def get_daily_stats() -> Dict:
-    """Get daily stats for a specific state, including tested, confirmed, 
+    """Get daily stats for a specific state, including tested, confirmed,
     todays_confirmed, deaths, and todays_deaths. Everything is initialized
     at zero.
 
     :params: :str: state. the state to look up.
-    :return: :Dict: {"tested": str, 
+    :return: :Dict: {"tested": str,
                      "todays_tested": str,
                      "confirmed": str,
                      "todays_confirmed": str,
@@ -35,10 +34,10 @@ def get_daily_stats() -> Dict:
         todays_confirmed = data2["todayCases"]
         deaths = data2["deaths"]
         todays_deaths = data2["todayDeaths"]
-        
+
         del data2
         gc.collect()
-    except Exception as ex:
+    except DataReadingError as ex:
         _logger.error(f"stats.get_daily_stats {ex}")
         confirmed, todays_confirmed, deaths, todays_deaths = 0, 0, 0, 0
 
@@ -53,10 +52,10 @@ def get_daily_stats() -> Dict:
         todays_confirmed = curr["positive"] - prev["positive"]
         deaths = curr["death"]
         todays_deaths = curr["death"] - prev["death"]
-        
+
         del data
         gc.collect()
-    except Exception as ex:
+    except DataReadingError as ex:
         _logger.error(f"stats.get_daily_stats {ex}")
         tested = 0
 
@@ -71,9 +70,10 @@ def get_daily_stats() -> Dict:
 
     ###################################################################
     #                     Sanity Check
-    ################################################################### 
-    if (int(todays_tested) >= int(tested)) or (int(todays_confirmed) >= int(confirmed)):
-        # not testing todays_deaths > deaths, not every country has reported deaths
+    ###################################################################
+    if ((int(todays_tested) >= int(tested)) or
+        (int(todays_confirmed) >= int(confirmed))):
+        # not todays_deaths > deaths, not every country has reported deaths
         raise DataValidationError("stats.py numbers doesn't make sense")
 
     if (int(confirmed) > int(tested)) or (int(deaths) > int(confirmed)):
@@ -83,12 +83,12 @@ def get_daily_stats() -> Dict:
 
 
 def get_daily_state_stats(state: str) -> Dict:
-    """Get daily stats for a specific state, including tested, confirmed, 
+    """Get daily stats for a specific state, including tested, confirmed,
     todays_confirmed, deaths, and todays_deaths. Everything is initialized
     at zero.
 
     :params: :str: state. the state to look up.
-    :return: :Dict: {"tested": str, 
+    :return: :Dict: {"tested": str,
                      "todays_tested": str,
                      "confirmed": str,
                      "todays_confirmed": str,
@@ -103,20 +103,20 @@ def get_daily_state_stats(state: str) -> Dict:
     URL = app_config.CVTRACK_STATES_URL + f"/daily?state={state}"
 
     response = requests.get(url=URL)
-    
+
     if response.status_code == 200:
         # covidtracking api throws error json if request error {'error': }
-        if type(response.json()) is list:
+        if isinstance(response.json(), list):
             try:
                 data = response.json()
                 curr = data[0]
                 prev = data[1]
-                todays_tested = curr["totalTestResults"] - prev["totalTestResults"]
+                todays_tested = curr["totalTestResults"] - \
+                                prev["totalTestResults"]
                 tested = curr["totalTestResults"]
                 todays_deaths = curr["deathIncrease"]
             except:
-                # return {"error": "get_daily_state_stats API parsing error."}
-                raise DataReadingError("get_daily_state_stats API parsing error")
+                raise DataReadingError("get_daily_state_stats parsing error")
 
         base_url = app_config.COUNTY_URL
         df = pd.read_csv(base_url)
@@ -139,9 +139,10 @@ def get_daily_state_stats(state: str) -> Dict:
 
     ###################################################################
     #                     Sanity Check
-    ################################################################### 
-    if (int(todays_tested) >= int(tested)) or (int(todays_confirmed) >= int(confirmed)):
-        # not testing for todays_deaths >= deaths because Wyoming has 0 reported death
+    ###################################################################
+    if ((int(todays_tested) >= int(tested)) or
+        (int(todays_confirmed) >= int(confirmed))):
+        # not checking for todays_deaths >= deaths
         raise DataValidationError("stats.py numbers doesn't make sense")
 
     if (int(confirmed) > int(tested)) or (int(deaths) > int(confirmed)):

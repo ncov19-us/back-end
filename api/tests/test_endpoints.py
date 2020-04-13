@@ -1,3 +1,4 @@
+# pylint: disable=redefined-outer-name
 import json
 import random
 import pytest
@@ -19,14 +20,16 @@ def test_app():
 ################################################################################
 def test_ping(test_app):
     response = test_app.get("/")
-    assert response.status_code == 200    
+    assert response.status_code == 200
 
 
 def test_get_root(test_app):
     response = test_app.get("/")
     assert response.status_code == 200
-    assert response.json() == {"success": True, 
-                               "message": f"ncov19.us API, Version {api.__version__}, Status OK."}
+    assert response.json() == {
+        "success": True,
+        "message": f"ncov19.us API, Version {api.__version__}, Status OK."
+    }
 
 
 def test_other_root(test_app):
@@ -43,7 +46,7 @@ def test_other_root(test_app):
     response = test_app.delete("/")
     assert response.status_code == 405
 
-                            
+
 ###############################################################################
 #
 #                   Test News feed endpoints
@@ -55,7 +58,7 @@ def test_get_news(test_app):
 
 
 def test_post_news_validation(test_app):
-    """Unprocessable entity""" 
+    """Unprocessable entity"""
     response = test_app.post("/news")
     assert response.status_code == 422
 
@@ -112,7 +115,7 @@ def test_post_twitter_validation(test_app):
     response = test_app.post("/twitter")
     assert response.status_code == 422
 
-    # TODO: /twitter post endpoint has no input field validation, so should still return 200
+    # TODO: /twitter post has no input validation, so still return 200
     payload = {'testing': 'validation'}
     response = test_app.post("/twitter", data=json.dumps(payload))
     assert response.status_code == 200
@@ -135,7 +138,7 @@ def test_post_twitter_not_found(test_app):
     payload = {'state': 'maine'}
     response = test_app.post("/twitter", data=json.dumps(payload))
     assert response.status_code == 404
-    
+
     # /twitter post endpoint takes state abbreviations capitalized, expect 404
     payload = {'state': 'mi'}
     response = test_app.post("/twitter", data=json.dumps(payload))
@@ -169,12 +172,12 @@ def test_post_county_validation(test_app):
     response = test_app.post("/county")
     assert response.status_code == 422
 
-    # TODO: /county post endpoint has no input field validation, so should still return 200
+    # TODO: /county post has no input validation, so still return 200
     payload = {'testing': 'validation'}
     response = test_app.post("/county", data=json.dumps(payload))
     assert response.status_code == 200
 
-    # TODO: /county post endpoint has no input field validation, so should still return 200
+    # TODO: /county post has no input validation, so still return 200
     payload = {'testing': 'validation', 'this': 'shouldnt work'}
     response = test_app.post("/county", data=json.dumps(payload))
     assert response.status_code == 200
