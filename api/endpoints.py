@@ -7,7 +7,6 @@ from pydantic import BaseModel
 from starlette.responses import JSONResponse, RedirectResponse
 from cachetools import cached, TTLCache
 
-import api
 from api.config import app_config
 from api.config import get_logger
 from api.utils.twitter_mongo import TwitterMongo
@@ -50,17 +49,11 @@ class RootOutput(BaseModel):
 async def root() -> JSONResponse:
     """Root URL, redirect to postman API doc
     """
-    # _logger.info("Endpoint: / --- GET")
-    # root_output = JSONResponse(
-    #     status_code=200,
-    #     content={
-    #         "success": True,
-    #         "message": f"ncov19.us API, Version {api.__version__}, Status OK.",
-    #     },
-    # )
+    _logger.info("Endpoint: / --- GET - redirect")
     # url = "https://explore.postman.com/api/3596/ncov19us-api"
     url = "https://documenter.getpostman.com/view/10962932/SzYevF7i"
     response = RedirectResponse(url=url)
+
     return response
 
 
