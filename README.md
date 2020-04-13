@@ -43,7 +43,6 @@
 
 ---
 
-
 ## 4️⃣ Contributing
 
 Please note we have a [CODE OF CONDUCT](./CODE_OF_CONDUCT.md). Please follow it in all your interactions with the project.
