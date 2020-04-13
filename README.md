@@ -1,15 +1,12 @@
-<<<<<<< HEAD
-# nCOV19.US API
-=======
 # [nCOV19.US](https://ncov19.us) API Documentation
->>>>>>> d8cf68a... chore: updated README
 
 <<<<<<< HEAD
 <<<<<<< HEAD
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![Version: v0.1.5](https://img.shields.io/badge/release-v0.1.5-blue)
 ![Python Version](https://img.shields.io/badge/python-v3.7-blue)
-![Build](https://img.shields.io/badge/build-passing-brightgreen)
+![Build](https://github.com/ncov19-us/back-end/workflows/Build/badge.svg?branch=staging&event=push)
+[![Coverage Status](https://coveralls.io/repos/github/ncov19-us/back-end/badge.svg?branch=coverall)](https://coveralls.io/github/ncov19-us/back-end?branch=coverall)
 [![CodeFactor](https://www.codefactor.io/repository/github/ncov19-us/back-end/badge)](https://www.codefactor.io/repository/github/ncov19-us/back-end) 
 
 #### Backend delpoyed at 👉 [Public API](https://api.ncov19.us/) <br>
@@ -73,6 +70,7 @@ To get the server running locally:
 =======
 ## 2️⃣ Getting started
 
+<<<<<<< HEAD
 To get the server running locally:
 >>>>>>> 63920e4... chore: updated README
 
@@ -84,6 +82,9 @@ To get the server running locally:
 ### TECH STACK 📚
 
 -    FAST API
+=======
+-    FastAPI
+>>>>>>> 12ce435... feat: coverall badge attempt #12
 -    PyMongo
 
 ---

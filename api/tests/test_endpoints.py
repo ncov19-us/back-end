@@ -3,7 +3,6 @@ import json
 import random
 import pytest
 from starlette.testclient import TestClient
-import api
 from api import app
 
 
@@ -18,12 +17,13 @@ def test_app():
 #                   Test root endpoint
 #
 ################################################################################
-def test_get_root(test_app):
-    """If not rerouting, this should just have to be 200
-    TODO: Rerouting should have 307 but requests are getting blocked.
+def test_get_root_redirect(test_app):
+    """redirect response should be 307
     """
-    response = test_app.get("/")
+    response = test_app.get("/", allow_redirects=False)
     assert response.status_code == 307
+    assert response.headers["location"] == \
+        "https://documenter.getpostman.com/view/10962932/SzYevF7i"
 
 
 def test_other_root(test_app):

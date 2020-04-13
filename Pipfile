@@ -16,12 +16,14 @@ pycountry = "*"
 mongoengine = "*"
 beautifulsoup4 = "*"
 lxml = "*"
+uvloop = "*"
 
 [dev-packages]
 black = "*"
 pylint = "*"
 pytest = "*"
 coverage = "*"
+coveralls = "*"
 
 [requires]
 python_version = "3.7"
