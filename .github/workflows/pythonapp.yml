@@ -19,7 +19,9 @@ jobs:
         pipenv install --dev
     - name: Lint with pylint
       run: |
+        pip install pylint
         pylint --rcfile=.pylintrc api
     - name: Test with pytest
       run: |
+        pip install pytest
         pytest
