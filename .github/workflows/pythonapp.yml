@@ -3,14 +3,8 @@
 
 name: Python application
 
-on:
-  push:
-    branches: [ master ]
-    branches: [ staging ]
-  pull_request:
-    branches: [ master ]
-    branches: [ staging ]
-
+on: [push, pull_request]
+  
 jobs:
   build:
 
@@ -30,5 +24,4 @@ jobs:
         pylint --rcfile=.pylintrc api
     - name: Test with pytest
       run: |
-        pipenv install pytest
         pytest
