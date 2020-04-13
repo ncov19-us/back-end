@@ -47,6 +47,6 @@ jobs:
     #===============================================#
     - name: STEP 6. Generate coverage reports
       env:
-        COVERALL_REPO_TOKEN: ${{ secrets.COVERALL_REPO_TOKEN}}
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN}}
       run: |
         coveralls
