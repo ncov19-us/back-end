@@ -175,10 +175,10 @@ def get_config():
     """
     STAGING = os.getenv("STAGING") or "True"
 
-    if STAGING == "False":
-        return DevelopmentConfig()
+    if STAGING == "True":
+        return ProductionConfig()
 
-    return ProductionConfig()
+    return DevelopmentConfig()
 
 
 app_config = get_config()
