@@ -23,4 +23,4 @@ jobs:
         pipenv run pylint --rcfile=.pylintrc api
     - name: Test with pytest
       run: |
-        pipenv run pytest
+        pytest
