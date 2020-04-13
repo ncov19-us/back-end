@@ -16,6 +16,7 @@ pycountry = "*"
 mongoengine = "*"
 beautifulsoup4 = "*"
 lxml = "*"
+uvloop = "*"
 
 [dev-packages]
 black = "*"

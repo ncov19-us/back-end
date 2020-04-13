@@ -3,7 +3,6 @@ import json
 import random
 import pytest
 from starlette.testclient import TestClient
-import api
 from api import app
 
 
@@ -18,18 +17,13 @@ def test_app():
 #                   Test root endpoint
 #
 ################################################################################
-def test_ping(test_app):
-    response = test_app.get("/")
-    assert response.status_code == 200
-
-
-def test_get_root(test_app):
-    response = test_app.get("/")
-    assert response.status_code == 200
-    assert response.json() == {
-        "success": True,
-        "message": f"ncov19.us API, Version {api.__version__}, Status OK."
-    }
+def test_get_root_redirect(test_app):
+    """redirect response should be 307
+    """
+    response = test_app.get("/", allow_redirects=False)
+    assert response.status_code == 307
+    assert response.headers["location"] == \
+        "https://documenter.getpostman.com/view/10962932/SzYevF7i"
 
 
 def test_other_root(test_app):
