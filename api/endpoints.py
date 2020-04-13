@@ -47,11 +47,10 @@ class RootOutput(BaseModel):
 
 @router.get("/")#, response_model=RootOutput)
 async def root() -> JSONResponse:
-    """Root URL, redirect to postman API doc
+    """Root URL, redirect to ReDoc API doc
     """
     _logger.info("Endpoint: / --- GET - redirect")
-    # url = "https://explore.postman.com/api/3596/ncov19us-api"
-    url = "https://documenter.getpostman.com/view/10962932/SzYevF7i"
+    url = "/redoc"
     response = RedirectResponse(url=url)
 
     return response
@@ -104,9 +103,6 @@ async def get_gnews() -> JSONResponse:
 async def post_gnews(news: NewsInput) -> JSONResponse:
     """Fetch specific state and topic news from Google News API and return the
     results in JSON
-
-    Input: NewsInput object schema, with state and topic attribute string
-    Output: JSONResponse of the topics fetched
     """
     try:
         state = reverse_states_map[news.state]
@@ -154,11 +150,7 @@ class TwitterOutput(BaseModel):
             response_model=TwitterOutput,
             responses={404: {"model": Message}})
 async def get_twitter() -> JSONResponse:
-    """Fetch and return Twitter data from MongoDB connection.
-
-    :param: none
-    :return: str
-    """
+    """Fetch and return Twitter data from MongoDB connection."""
     try:
         doc = tm.get_tweet_by_state("US")
         username = doc["username"]
@@ -189,11 +181,7 @@ async def get_twitter() -> JSONResponse:
              response_model=TwitterOutput,
              responses={404: {"model": Message}})
 async def post_twitter(twyuser: TwitterInput) -> JSONResponse:
-    """Fetch and return Twitter data from MongoDB connection.
-
-    :param: none. Two letter state abbreviation.
-    :return: str
-    """
+    """Fetch and return Twitter data from MongoDB connection."""
     try:
         doc = tm.get_tweet_by_state(twyuser.state)
         username = doc["username"]
@@ -252,13 +240,9 @@ class CountyOut(BaseModel):
             response_model=CountyOut,
             responses={404: {"model": Message}})
 async def get_county_data() -> JSONResponse:
-    """
-    Get all US county data and return it as a big fat json string. Respond with
-    404 if run into error.
-    - Retrieves county locations, cached for 1 hour.
-
-    :param: none.
-    :return: JSONResponse
+    """Get all US county data and return it as a big fat json string. Respond
+    with 404 if run into error.
+    - Cached for 1 hour.
     """
     try:
         data = read_county_data()
@@ -277,13 +261,8 @@ async def get_county_data() -> JSONResponse:
              response_model=CountyOut,
              responses={404: {"model": Message}})
 def post_county(county: CountyInput) -> JSONResponse:
-    """
-    Get all US county data and return it as a big fat json string. Respond with
-    404 if run into error.
-    - Retrieves county locations, cached for 1 hour.
-
-    :param: none.
-    :return: JSONResponse
+    """Get all US county data and return it as a big fat json string. Respond
+    with 404 if run into error.
     """
     try:
         data = read_county_stats(county.state, county.county)
@@ -325,8 +304,7 @@ class StateOutput(BaseModel):
 async def post_state(state: StateInput) -> JSONResponse:
     """Fetch state level data time series for a single state, ignoring the
     unattributed and out of state cases.
-
-    Input: two letter states code
+    - Cached for 1 hour
     """
 
     try:
@@ -367,9 +345,8 @@ class CountryOutput(BaseModel):
              response_model=CountryOutput,
              responses={404: {"model": Message}})
 async def get_country(country: CountryInput) -> JSONResponse:
-    """Fetch country level data time series for a single country
-
-    Input: Two letter country alpha2Code
+    """Fetch country level data time series for a single country.
+    - Cached for 1 hour
     """
     cc = country.alpha2Code.upper()
     try:
@@ -410,10 +387,7 @@ class StatsOutput(BaseModel):
             responses={404: {"model": Message}})
 async def get_stats() -> JSONResponse:
     """Get overall tested, confirmed, and deaths stats from the database
-    and return it as a json string. For the top bar.
-
-    :param: none.
-    :return: JSONResponse
+    and return it as a JSON string.
     """
     try:
         data = get_daily_stats()
@@ -430,10 +404,7 @@ async def get_stats() -> JSONResponse:
              responses={404: {"model": Message}})
 async def post_stats(stats: StatsInput) -> JSONResponse:
     """Get overall tested, confirmed, and deaths stats from the database
-    and return it as a json string. For the top bar.
-
-    :param: Stats
-    :return: JSONResponse
+    and return it as a JSON string.
     """
     try:
         data = get_daily_state_stats(stats.state)

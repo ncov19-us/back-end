@@ -3,7 +3,8 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![Version: v0.1.5](https://img.shields.io/badge/release-v0.1.5-blue)
 ![Python Version](https://img.shields.io/badge/python-v3.7-blue)
-![Build](https://img.shields.io/badge/build-passing-brightgreen)
+![Build](https://github.com/ncov19-us/back-end/workflows/Build/badge.svg?branch=staging&event=push)
+[![Coverage Status](https://coveralls.io/repos/github/ncov19-us/back-end/badge.svg?branch=coverall)](https://coveralls.io/github/ncov19-us/back-end?branch=coverall)
 [![CodeFactor](https://www.codefactor.io/repository/github/ncov19-us/back-end/badge)](https://www.codefactor.io/repository/github/ncov19-us/back-end) 
 
 #### Backend delpoyed at 👉 [Public API](https://api.ncov19.us/) <br>
@@ -30,15 +31,6 @@
 [API Doc Swagger](https://api.ncov19.us/docs)
 
 ## 2️⃣ Getting started
-
-To get the server running locally:
-
-1. Install `pipenv` via `conda` or `pip`
-2. Create virtual env. via `pipenv install`
-3. Activate virtual env. `pipenv shell`
-4. Run the app, `uvicorn api:app --reload`
-
-### TECH STACK 📚
 
 -    FastAPI
 -    PyMongo
