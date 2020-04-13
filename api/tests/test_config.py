@@ -3,12 +3,8 @@ import pytest
 from api import config
 from api.config import DataReadingError, DataValidationError
 
-<<<<<<< HEAD
-#####################################################################################
-=======
 
 ################################################################################
->>>>>>> ef9ad7b... style: chore:
 #                                 Testing logging
 ################################################################################
 # _logger = config.get_logger(logger_name="test")
@@ -108,13 +104,13 @@ def mock_config():
     return _config
 
 
-def test_default_config_production(mock_staging_true):
+def test_default_config_production(mock_staging_false):
     # pylint: disable=W0612,W0613
     _config = mock_config()
     assert _config.__class__.__name__ == "ProductionConfig"
 
 
-def test_default_config_development(mock_staging_false):
+def test_default_config_development(mock_staging_true):
     # pylint: disable=W0612,W0613
     _config = mock_config()
     assert _config.__class__.__name__ == "DevelopmentConfig"

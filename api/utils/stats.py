@@ -114,6 +114,7 @@ def get_daily_state_stats(state: str) -> Dict:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                 todays_tested = curr["totalTestResults"] - prev["totalTestResults"]
 >>>>>>> 8445ac2... han: fix stats for todaystested
@@ -121,6 +122,10 @@ def get_daily_state_stats(state: str) -> Dict:
                 todays_tested = curr["totalTestResults"] - \
                                 prev["totalTestResults"]
 >>>>>>> ef9ad7b... style: chore:
+=======
+                todays_tested = curr["totalTestResults"] - \
+                                prev["totalTestResults"]
+>>>>>>> 466358d... chore: updating master from staging (#45)
                 tested = curr["totalTestResults"]
                 todays_deaths = curr["deathIncrease"]
 =======

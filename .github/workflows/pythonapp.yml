@@ -1,14 +1,6 @@
 name: Build
 
-<<<<<<< HEAD
 on: [push, pull_request]
-=======
-on:
-    push:
-        branches: [ staging, master ]
-    pull_request:
-        branches: [ staging, master ]
->>>>>>> 7abaddc... feat: installed coveralls for coverall.io
 
 jobs:
   build:

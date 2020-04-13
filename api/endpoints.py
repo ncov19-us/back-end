@@ -276,8 +276,6 @@ def post_county(county: CountyInput) -> JSONResponse:
 
     return json_data
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 # @cached(cache=TTLCache(maxsize=1, ttl=3600))
 @router.post("/county", response_model=CountyOut, responses={404: {"model": Message}})
 def post_county_data() -> JSONResponse:
@@ -297,10 +295,6 @@ def post_county_data() -> JSONResponse:
                             detail=f"[Error] get '/county' API: {ex}")
 
     return json_data
-=======
->>>>>>> 04eca30... hursh: feat: added new post route for county
-=======
->>>>>>> 794626a... han: ingest.py script, ingested all county data 3.2k+ rows and all country data aside from the princesses
 
 ###############################################################################
 #

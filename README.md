@@ -1,7 +1,6 @@
 # [nCOV19.US](https://ncov19.us) API Documentation
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![Version: v0.1.5](https://img.shields.io/badge/release-v0.1.5-blue)
 ![Python Version](https://img.shields.io/badge/python-v3.7-blue)
@@ -9,36 +8,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/ncov19-us/back-end/badge.svg?branch=coverall)](https://coveralls.io/github/ncov19-us/back-end?branch=coverall)
 [![CodeFactor](https://www.codefactor.io/repository/github/ncov19-us/back-end/badge)](https://www.codefactor.io/repository/github/ncov19-us/back-end) 
 
-#### Backend delpoyed at 👉 [Public API](https://api.ncov19.us/) <br>
-
-
-## 1️⃣ Getting started
-
-To get the server running locally:
-
-1. Install `pipenv` via `conda` or `pip`
-2. Create virtual env. via `pipenv install`
-3. Activate virtual env. `pipenv shell`
-4. Run the app, `uvicorn api:app --reload`
-
-
-### TECH STACK 📚
-
--    FAST API
--    PyMongo
-
----
-
-## 2️⃣ Endpoints
-=======
-=======
-[![CodeFactor](https://www.codefactor.io/repository/github/ncov19-us/back-end/badge)](https://www.codefactor.io/repository/github/ncov19-us/back-end) 
-
->>>>>>> c678aa1... chore: updated README
 #### Backend delpoyed at 👉 [api.ncov19.us](https://api.ncov19.us) <br>
-
-## 1️⃣ Endpoints
->>>>>>> 63920e4... chore: updated README
 
 #### Main Routes
 
@@ -57,8 +27,7 @@ To get the server running locally:
 
 [API Doc Swagger](https://api.ncov19.us/docs)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 [API Doc Postman](https://explore.postman.com/api/3596/ncov19us-api)
 
 [API Doc ReDoc](https://covid19-us-api-staging.herokuapp.com/redoc)
@@ -69,40 +38,72 @@ To get the server running locally:
 [API Doc Swagger](https://api.ncov19.us/docs)
 =======
 ## 2️⃣ Getting started
-
-<<<<<<< HEAD
-To get the server running locally:
->>>>>>> 63920e4... chore: updated README
-
-1. Install `pipenv` via `conda` or `pip`
-2. Create virtual env. via `pipenv install`
-3. Activate virtual env. `pipenv shell`
-4. Run the app, `uvicorn api:APP --reload`
-
-### TECH STACK 📚
-
--    FAST API
 =======
+## 2️⃣ Getting started
+
 -    FastAPI
->>>>>>> 12ce435... feat: coverall badge attempt #12
 -    PyMongo
 
 ---
+>>>>>>> 466358d... chore: updating master from staging (#45)
 
 ## 4️⃣ Contributors
 
-### Project Leaders
+-    FastAPI
+-    PyMongo
+
+## 3️⃣ Contributors
 
 [<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/hurshd0)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hanchunglee/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://github.com/leehanchung)    **[Han Lee](https://github.com/hurshd0)**    |    Maintainer
 
 [<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/hurshd0)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hurshd/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hurshd0)    **[Hursh Desai](https://github.com/hurshd0)**    |    Maintainer
 
+=======
+### Project Leaders
+
+[<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/leehanchung)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hanchunglee/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hanchunglee)    **[Han Lee](https://github.com/leehanchung)**    |    Maintainer
+=======
+## 2️⃣ Tech Stack 📚 
+
+-    [FastAPI](https://fastapi.tiangolo.com/)
+-    [PyMongo](https://api.mongodb.com/python/current/)
+
+## 3️⃣ Contributors
+
+[<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/leehanchung)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hanchunglee/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hanchunglee)    **[Han Lee](https://github.com/leehanchung)**    |    Maintainer & Project Lead
+
+[<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/hurshd0)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hurshd/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hurshd0)    **[Hursh Desai](https://hurshdesai.com/)**    |    Maintainer & Project Lead
+
 ---
 
 
 ## 3️⃣ Contributing
+>>>>>>> 466358d... chore: updating master from staging (#45)
 
-When contributing to this repository, please read [CONTRUBTION](./CONTRIBUTION.md) guide.
+## 4️⃣ Contributing
+
+### Git Workflow 
+
+- Our commits use a style called **[semantic commits](https://seesparkbox.com/foundry/semantic_commit_messages)**. 
+- Pick a task to work on from the Github issues or Trello board, assign your name to it via the top right of the Trello card, and confirm that no one is already working on this task, or another task that is likely to cause merge issues with yours.
+
+```sh
+git clone https://github.com/ncov19-us/ncov19-vacc-dash-front-end.git
+git checkout staging
+git checkout -b <your-feature-branch>
+```
+Commit your work using semantic commits structure.
+
+When done:
+```sh
+git checkout staging
+git pull  # sync your local feature branch with origin/github
+git checkout <your-feature-branch>
+git rebase staging  # merge your branch w/ feature-branch
+git commit
+```
+
+Push your branch: `git push origin <your-feature-branch>`. Then open a pull request from your working branch into `staging` for review.
 
 Please note we have a [CODE OF CONDUCT](./CODE_OF_CONDUCT.md). Please follow it in all your interactions with the project.
 
