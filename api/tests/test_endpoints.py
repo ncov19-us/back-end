@@ -19,6 +19,9 @@ def test_app():
 #
 ################################################################################
 def test_get_root(test_app):
+    """If not rerouting, this should just have to be 200
+    TODO: Rerouting should have 307 but requests are getting blocked.
+    """
     response = test_app.get("/")
     assert response.status_code == 307
 
