@@ -9,8 +9,6 @@
 
 #### Backend delpoyed at 👉 [Public API](https://api.ncov19.us/) <br>
 
-#### Backend delpoyed at 👉 [api.ncov19.us](https://api.ncov19.us) <br>
-
 ## 1️⃣ Endpoints
 
 #### Main Routes
@@ -37,9 +35,7 @@
 
 ---
 
-## 4️⃣ Contributors
-
-### Project Leaders
+## 3️⃣ Contributors
 
 [<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/leehanchung)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hanchunglee/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hanchunglee)    **[Han Lee](https://github.com/leehanchung)**    |    Maintainer
 
@@ -48,9 +44,7 @@
 ---
 
 
-## 3️⃣ Contributing
-
-When contributing to this repository, please read [CONTRUBTION](./CONTRIBUTION.md) guide.
+## 4️⃣ Contributing
 
 Please note we have a [CODE OF CONDUCT](./CODE_OF_CONDUCT.md). Please follow it in all your interactions with the project.
 
