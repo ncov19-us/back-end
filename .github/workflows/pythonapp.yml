@@ -13,20 +13,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: STEP 1. Check out repo
     - uses: actions/checkout@v2
-    - name: Set up Python 3.7
+    #===============================================#
+    - name: STEP 2. Set up Python 3.7
       uses: actions/setup-python@v1
       with:
         python-version: 3.7
-    - name: Install pipenv dependencies
+    #===============================================#
+    - name: STEP 3. Install pipenv dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pipenv
         python -m pipenv install --dev --system
-    - name: Lint with pylint
+    #===============================================#
+    - name: STEP 4. Lint with pylint
       run: |
         pipenv run pylint --rcfile=.pylintrc api
-    - name: Test with pytest
+    #===============================================#
+    - name: STEP 5. Test with pytest
       env:
         MONGODB_CONNECTION_URI: ${{ secrets.MONGODB_CONNECTION_URI }}
         TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
@@ -41,8 +46,10 @@ jobs:
       run: |
         echo $MONGODB_CONNECTION_URI
         echo $TWITTER_CONSUMER_KEY
-        pytest      
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.COVERALL_TOKEN }}
+        coverage run --omit */.virtualenvs/* -m pytest api
+    #===============================================#
+    - name: STEP 6. Generate coverage reports
+      env:
+        COVERALL_REPO_TOKEN: ${{ secrets.COVERALL_REPO_TOKEN}}
+      run: |
+        coveralls

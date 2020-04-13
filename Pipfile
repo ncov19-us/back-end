@@ -23,6 +23,7 @@ black = "*"
 pylint = "*"
 pytest = "*"
 coverage = "*"
+coveralls = "*"
 
 [requires]
 python_version = "3.7"
