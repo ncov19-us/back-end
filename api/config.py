@@ -173,9 +173,12 @@ def get_config():
 
     For pytest, plesae use ProductionConfig
     """
-    STAGING = os.getenv("STAGING") or "True"
+    if os.getenv("STAGING"):
+        STAGING = os.getenv("STAGING")
+    else:
+        STAGING = "False"
 
-    if STAGING == "False":
+    if STAGING == "True":
         return DevelopmentConfig()
 
     return ProductionConfig()
