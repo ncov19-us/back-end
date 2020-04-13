@@ -1,10 +1,11 @@
 name: Python application
 
-on: 
+on:
     push:
-        [staging, master]
+        branches: [ staging, master ]
     pull_request:
-        [staging, master]
+        branches: [ staging, master ]
+  
   
 jobs:
   build:
