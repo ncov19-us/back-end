@@ -1,8 +1,7 @@
 import gc
-from typing import Any, Dict
+from typing import Dict
 import pandas as pd
-import pycountry
-from api.config import DataReadingError, DataValidationError
+from api.config import DataReadingError
 
 
 # Country dictionary
@@ -180,8 +179,8 @@ country_dict = {
 
 
 def parse_df(metric_type: str) -> pd.DataFrame:
-    """ Parse data in Johns Hopkins github csv file for the supported metric_type
-    and return the dataframe to people.
+    """ Parse data in Johns Hopkins github csv file for the supported
+    metric_type and return the dataframe to people.
 
     :param: :str: :metric_type: Currently only confirmed or death supported
     :return: :pd.DataFrame: dataframe of the queried data.
@@ -193,7 +192,10 @@ def parse_df(metric_type: str) -> pd.DataFrame:
     else:
         raise ValueError(f"{metric_type} metric type not supported")
 
-    url = f"https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_{metric_type}_global.csv"
+    url = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/" \
+          "master/csse_covid_19_data/csse_covid_19_time_series/" \
+          f"time_series_covid19_{metric_type}_global.csv"
+    df = pd.DataFrame()
     try:
         df = pd.read_csv(url)
     except:
@@ -213,6 +215,7 @@ def get_country_stats(country_alpha: str, metric_type: str) -> pd.DataFrame:
 
     country_alpha = country_alpha.upper()
     metric_type = metric_type.lower()
+    df = pd.DataFrame()
 
     try:
         df = parse_df(metric_type=metric_type)
@@ -234,7 +237,7 @@ def get_country_stats(country_alpha: str, metric_type: str) -> pd.DataFrame:
 
 
 def read_country_data(country_alpha: str) -> Dict:
-    """ Find both confirmed and deaths data from the Johns Hopkins github csv 
+    """ Find both confirmed and deaths data from the Johns Hopkins github csv
     file and returns to people.
 
     :param: :country_alpha: :str: country alpha2 code.
@@ -249,8 +252,3 @@ def read_country_data(country_alpha: str) -> Dict:
     # return convert_df_to_json(merge)
     # return pd.DataFrame.to_json(merge, orient="records")
     return pd.DataFrame.to_dict(merge, orient="records")
-
-
-if __name__ == "__main__":
-    df = read_country_data("KR")
-    print(df)

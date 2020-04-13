@@ -1,26 +1,17 @@
-# nCOV19.US API Documentation
+# [nCOV19.US API](https://api.ncov19.us/)
 
-#### Backend delpoyed at 👉 [Staging API](https://covid19-us-api-staging.herokuapp.com/) <br>
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![Version: v0.1.5](https://img.shields.io/badge/release-v0.1.5-blue)
+![Python Version](https://img.shields.io/badge/python-v3.7-blue)
+![Build](https://github.com/ncov19-us/back-end/workflows/Build/badge.svg?branch=staging&event=push)
+[![Coverage Status](https://coveralls.io/repos/github/ncov19-us/back-end/badge.svg?branch=coverall)](https://coveralls.io/github/ncov19-us/back-end?branch=coverall)
+[![CodeFactor](https://www.codefactor.io/repository/github/ncov19-us/back-end/badge)](https://www.codefactor.io/repository/github/ncov19-us/back-end) 
 
+#### Backend delpoyed at 👉 [Public API](https://api.ncov19.us/) <br>
 
-## 1️⃣ Getting started
+#### Backend delpoyed at 👉 [api.ncov19.us](https://api.ncov19.us) <br>
 
-To get the server running locally:
-
-1. Install `pipenv` via `conda` or `pip`
-2. Create virtual env. via `pipenv install`
-3. Activate virtual env. `pipenv shell`
-4. Run the app, `uvicorn api:APP --reload`
-
-
-### TECH STACK 📚
-
--    FAST API
--    PyMongo
-
----
-
-## 2️⃣ Endpoints
+## 1️⃣ Endpoints
 
 #### Main Routes
 
@@ -33,33 +24,31 @@ To get the server running locally:
 | POST    | `/twitter` | all users      | Fetch and return State specific official Twitter tweets |
 | GET    | `/country` | all users      | Fetch and return JHU CSSE Country level data as timeseries |
 
----
-
-## 3️⃣ Data Model
-
 ### Refer to API Documentation 📖
 
-[API Doc Postman](https://explore.postman.com/api/3596/ncov19us-api)
+[API Doc ReDoc](https://api.ncov19.us/redoc)
 
-[API Doc ReDoc](https://covid19-us-api-staging.herokuapp.com/redoc)
+[API Doc Swagger](https://api.ncov19.us/docs)
 
-[API Doc Swagger](https://covid19-us-api-staging.herokuapp.com/docs)
+## 2️⃣ Getting started
+
+-    FastAPI
+-    PyMongo
+
+---
+
+## 4️⃣ Contributors
+
+### Project Leaders
+
+[<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/leehanchung)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hanchunglee/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hanchunglee)    **[Han Lee](https://github.com/leehanchung)**    |    Maintainer
+
+[<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/hurshd0)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hurshd/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hurshd0)    **[Hursh Desai](https://github.com/hurshd0)**    |    Maintainer
+
+---
 
 
-
-## 3️⃣ Environment Variables
-
-In order for the app to function correctly, the user must set up their own environment variables.
-
-create a .env file that includes the following:
-
-  
-    *  MONGODB_CONNECTION_URI - optional development db for using functionality not available in SQLite
-    *  NEWS_API_KEY - set to "development" until ready for "production"
-    *  JWT_SECRET - you can generate this by using a python shell and running import random''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#\$%^&amp;*(-*=+)') for i in range(50)])
-
-    
-## Contributing
+## 3️⃣ Contributing
 
 When contributing to this repository, please read [CONTRUBTION](./CONTRIBUTION.md) guide.
 
