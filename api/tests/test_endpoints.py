@@ -22,8 +22,7 @@ def test_get_root_redirect(test_app):
     """
     response = test_app.get("/", allow_redirects=False)
     assert response.status_code == 307
-    assert response.headers["location"] == \
-        "https://documenter.getpostman.com/view/10962932/SzYevF7i"
+    assert response.headers["location"] == "/redoc"
 
 
 def test_other_root(test_app):
