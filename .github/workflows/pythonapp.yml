@@ -22,6 +22,7 @@ jobs:
       run: |
         pipenv run pylint --rcfile=.pylintrc api
     - name: Test with pytest
-      run: |
-        export MONGODB_CONNECTION_URI="Testing_mongodb"
+      run: |        
+        echo $MONGODB_CONNECTION_URI
+        echo $TWITTER_CONSUMER_KEY
         pytest
