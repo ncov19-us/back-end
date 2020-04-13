@@ -38,10 +38,7 @@ jobs:
         STATE_CONFIRMED: ${{ secrets.STATE_CONFIRMED }}
         STATE_DEATH: ${{ secrets.STATE_DEATH }}
         NYT_STATE: ${{ secrets.NYT_STATE }}
-      run: |
-        coverage run --omit */.virtualenvs/* -m pytest api
-    - name: STEP 6. Generate coverage reports
-      env:
         COVERALL_REPO_TOKEN: ${{ secrets.COVERALL_REPO_TOKEN}}
       run: |
+        coverage run --omit */.virtualenvs/* -m pytest api
         coveralls
