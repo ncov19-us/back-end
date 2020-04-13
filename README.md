@@ -1,6 +1,12 @@
-# [nCOV19.US](https://ncov19.us) API Documentation
+# [nCOV19.US API](https://api.ncov19.us/)
 
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![Version: v0.1.5](https://img.shields.io/badge/release-v0.1.5-blue)
+![Python Version](https://img.shields.io/badge/python-v3.7-blue)
+![Build](https://img.shields.io/badge/build-passing-brightgreen)
 [![CodeFactor](https://www.codefactor.io/repository/github/ncov19-us/back-end/badge)](https://www.codefactor.io/repository/github/ncov19-us/back-end) 
+
+#### Backend delpoyed at 👉 [Public API](https://api.ncov19.us/) <br>
 
 #### Backend delpoyed at 👉 [api.ncov19.us](https://api.ncov19.us) <br>
 
@@ -30,11 +36,11 @@ To get the server running locally:
 1. Install `pipenv` via `conda` or `pip`
 2. Create virtual env. via `pipenv install`
 3. Activate virtual env. `pipenv shell`
-4. Run the app, `uvicorn api:APP --reload`
+4. Run the app, `uvicorn api:app --reload`
 
 ### TECH STACK 📚
 
--    FAST API
+-    FastAPI
 -    PyMongo
 
 ---
@@ -43,7 +49,7 @@ To get the server running locally:
 
 ### Project Leaders
 
-[<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/hurshd0)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hanchunglee/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://github.com/leehanchung)    **[Han Lee](https://github.com/hurshd0)**    |    Maintainer
+[<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/leehanchung)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hanchunglee/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hanchunglee)    **[Han Lee](https://github.com/leehanchung)**    |    Maintainer
 
 [<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/hurshd0)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hurshd/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hurshd0)    **[Hursh Desai](https://github.com/hurshd0)**    |    Maintainer
 
