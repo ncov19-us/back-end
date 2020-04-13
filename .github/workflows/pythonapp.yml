@@ -44,8 +44,6 @@ jobs:
         STATE_DEATH: ${{ secrets.STATE_DEATH }}
         NYT_STATE: ${{ secrets.NYT_STATE }}
       run: |
-        echo $MONGODB_CONNECTION_URI
-        echo $TWITTER_CONSUMER_KEY
         coverage run --omit */.virtualenvs/* -m pytest api
     #===============================================#
     - name: STEP 6. Generate coverage reports
