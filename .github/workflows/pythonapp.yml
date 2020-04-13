@@ -41,4 +41,8 @@ jobs:
       run: |
         echo $MONGODB_CONNECTION_URI
         echo $TWITTER_CONSUMER_KEY
-        pytest
+        pytest      
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.COVERALL_TOKEN }}
