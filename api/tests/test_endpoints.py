@@ -18,18 +18,9 @@ def test_app():
 #                   Test root endpoint
 #
 ################################################################################
-def test_ping(test_app):
-    response = test_app.get("/")
-    assert response.status_code == 200
-
-
 def test_get_root(test_app):
     response = test_app.get("/")
-    assert response.status_code == 200
-    assert response.json() == {
-        "success": True,
-        "message": f"ncov19.us API, Version {api.__version__}, Status OK."
-    }
+    assert response.status_code == 307
 
 
 def test_other_root(test_app):

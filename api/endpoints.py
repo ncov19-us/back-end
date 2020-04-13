@@ -4,7 +4,7 @@ from datetime import datetime
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, RedirectResponse
 from cachetools import cached, TTLCache
 
 import api
@@ -46,19 +46,22 @@ class RootOutput(BaseModel):
     message: str
 
 
-@router.get("/", response_model=RootOutput)
-def root() -> JSONResponse:
-    """Root URL, reporting version and status.
+@router.get("/")#, response_model=RootOutput)
+async def root() -> JSONResponse:
+    """Root URL, redirect to postman API doc
     """
-    _logger.info("Endpoint: / --- GET")
-    root_output = JSONResponse(
-        status_code=200,
-        content={
-            "success": True,
-            "message": f"ncov19.us API, Version {api.__version__}, Status OK.",
-        },
-    )
-    return root_output
+    # _logger.info("Endpoint: / --- GET")
+    # root_output = JSONResponse(
+    #     status_code=200,
+    #     content={
+    #         "success": True,
+    #         "message": f"ncov19.us API, Version {api.__version__}, Status OK.",
+    #     },
+    # )
+    # url = "https://explore.postman.com/api/3596/ncov19us-api"
+    url = "https://documenter.getpostman.com/view/10962932/SzYevF7i"
+    response = RedirectResponse(url=url)
+    return response
 
 
 ###############################################################################
