@@ -4,7 +4,7 @@
 ![Version: v0.1.5](https://img.shields.io/badge/release-v0.1.5-blue)
 ![Python Version](https://img.shields.io/badge/python-v3.7-blue)
 ![Build](https://img.shields.io/badge/build-passing-brightgreen)
-![CodeFactor](https://www.codefactor.io/Content/badges/A.svg)
+[![CodeFactor](https://www.codefactor.io/repository/github/ncov19-us/back-end/badge)](https://www.codefactor.io/repository/github/ncov19-us/back-end) 
 
 #### Backend delpoyed at 👉 [Public API](https://api.ncov19.us/) <br>
 

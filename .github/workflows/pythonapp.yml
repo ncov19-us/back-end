@@ -17,6 +17,7 @@ jobs:
       run: |
         pip install pipenv
         pipenv install --dev
+        pipenv shell
     - name: Lint with pylint
       run: |
         pip install pylint
