@@ -28,22 +28,43 @@
 
 [API Doc Swagger](https://api.ncov19.us/docs)
 
-## 2️⃣ Getting started
+## 2️⃣ Tech Stack 📚 
 
--    FastAPI
--    PyMongo
-
----
+-    [FastAPI](https://fastapi.tiangolo.com/)
+-    [PyMongo](https://api.mongodb.com/python/current/)
 
 ## 3️⃣ Contributors
 
-[<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/leehanchung)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hanchunglee/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hanchunglee)    **[Han Lee](https://github.com/leehanchung)**    |    Maintainer
+[<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/leehanchung)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hanchunglee/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hanchunglee)    **[Han Lee](https://github.com/leehanchung)**    |    Maintainer & Project Lead
 
-[<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/hurshd0)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hurshd/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hurshd0)    **[Hursh Desai](https://github.com/hurshd0)**    |    Maintainer
+[<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/hurshd0)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hurshd/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hurshd0)    **[Hursh Desai](https://hurshdesai.com/)**    |    Maintainer & Project Lead
 
 ---
 
 ## 4️⃣ Contributing
+
+### Git Workflow 
+
+- Our commits use a style called **[semantic commits](https://seesparkbox.com/foundry/semantic_commit_messages)**. 
+- Pick a task to work on from the Github issues or Trello board, assign your name to it via the top right of the Trello card, and confirm that no one is already working on this task, or another task that is likely to cause merge issues with yours.
+
+```sh
+git clone https://github.com/ncov19-us/ncov19-vacc-dash-front-end.git
+git checkout staging
+git checkout -b <your-feature-branch>
+```
+Commit your work using semantic commits structure.
+
+When done:
+```sh
+git checkout staging
+git pull  # sync your local feature branch with origin/github
+git checkout <your-feature-branch>
+git rebase staging  # merge your branch w/ feature-branch
+git commit
+```
+
+Push your branch: `git push origin <your-feature-branch>`. Then open a pull request from your working branch into `staging` for review.
 
 Please note we have a [CODE OF CONDUCT](./CODE_OF_CONDUCT.md). Please follow it in all your interactions with the project.
 
