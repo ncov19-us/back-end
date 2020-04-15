@@ -35,7 +35,9 @@ def read_county_stats(state: str, county: str) -> Dict:
         # used data source 2 for new death number
         deaths = deaths[deaths['Province_State'] == reverse_states_map[state]]
         deaths = deaths[deaths['Admin2'] == county]
-        deaths = deaths.iloc[:, 12:].diff(axis=1).iloc[:, -1].values[0]
+        # 4/15/20: force cast into int before diff as pd sometimes read as float and
+        # throws nan.
+        deaths = deaths.iloc[:, 12:].astype('int32').diff(axis=1).iloc[:, -1].values[0]
 
         df = df[df["state_name"] == reverse_states_map[state]]
         # df = df.query(f"county_name == '{county}'")
