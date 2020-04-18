@@ -1,57 +1,69 @@
 from typing import Dict
 import pandas as pd
+import zipcodes
 from api.config import DataReadingError, DataValidationError
 from api.config import app_config
 from api.utils import reverse_states_map
 
 
-def read_county_data() -> pd.DataFrame:
-    """Read county data from COUNTY_URL, lower all county and state names.
-    Also change spaces to underscores for Pydantic to do type enforcement.
-
-    :return: :Dict: COUNTY_URL as a python dictionary/json file.
+def read_county_stats_zip_ny(zipcode: str) -> Dict:
+    """Return stats for New York State zip_codes
     """
-    df = pd.read_csv(app_config.COUNTY_URL)
-    df.columns = map(str.lower, df.columns)
-    df.columns = df.columns.str.replace(" ", "_")
-    df = pd.DataFrame.to_dict(df, orient="records")
-    return df
 
-
-def read_county_stats_zip(state: str, county: str) -> Dict:
+    zip_info = zipcodes.matching(str(zipcode))[0]
+    county = zip_info['county'].rsplit(' ', 1)[0]
+    state = zip_info['state']
 
     try:
-        df = pd.read_csv(app_config.COUNTY_URL)
         deaths = pd.read_csv(app_config.STATE_DEATH)
+        confirmed_df = pd.read_csv(app_config.STATE_CONFIRMED)
     except:
         raise DataReadingError(
             f"Data reading error State: {state}, and County: {county}."
         )
 
     try:
-        df.columns = map(str.lower, df.columns)
-        df.columns = df.columns.str.replace(" ", "_")
+        confirmed_df = confirmed_df[confirmed_df['Province_State'] ==\
+                                    reverse_states_map[state]]
+        confirmed_df = confirmed_df[confirmed_df['Admin2'] == county]
+
+        confirmed = confirmed_df.iloc[:, -1]
+        new_confirmed = confirmed_df.iloc[:, 12:].astype('int32').\
+                                     diff(axis=1).iloc[:, -1].values[0]
 
         # used data source 2 for new death number
         deaths = deaths[deaths['Province_State'] == reverse_states_map[state]]
         deaths = deaths[deaths['Admin2'] == county]
         # 4/15/20: force cast into int before diff as pd sometimes read as
         # float and throws nan.
-        deaths = deaths.iloc[:, 12:].astype('int32').\
-                                     diff(axis=1).iloc[:, -1].values[0]
+        death = deaths.iloc[:, -1]
+        new_death = deaths.iloc[:, 12:].astype('int32').\
+                                        diff(axis=1).iloc[:, -1].values[0]
+        try:
+            fatality_rate = int(death) / int(confirmed)
+        except:                             # pylint: disable=W0702
+            fatality_rate = 0
 
-        df = df[df["state_name"] == reverse_states_map[state]]
-        # df = df.query(f"county_name == '{county}'")
-        df = df[df["county_name"] == county]
-        df.new_death.iloc[0] = deaths
-        df = pd.DataFrame.to_dict(df, orient="records")
-        if len(df) == 0:
-            raise DataValidationError("county.py len(df) == 0")
+        data = {
+            "county_name": county,
+            "state_name": reverse_states_map[state],
+            "confirmed": int(confirmed),
+            "new": int(new_confirmed),
+            "death": int(death),
+            "new_death": int(new_death),
+            "fatality_rate": f"{fatality_rate}%",
+            "latitude": float(zip_info['lat']),
+            "longitude": float(zip_info['long']),
+            "last_update": str("2020-04-17 19:50 EDT"),
+        }
+        print(data)
+        # data = json.dumps(data)
+        # print(data)
     except:
         raise DataValidationError(
             f"Can't find State: {state}, and County: {county} combination."
         )
-    return df
+    return data
 
 
 if __name__ == "__main__":

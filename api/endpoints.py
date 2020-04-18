@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from starlette.responses import JSONResponse, RedirectResponse
 from cachetools import cached, TTLCache
-from uszipcode import SearchEngine
+import zipcodes
 
 from api.config import app_config
 from api.config import get_logger
@@ -19,7 +19,7 @@ from api.utils import read_county_data
 from api.utils import read_country_data
 from api.utils import read_county_stats
 from api.utils import read_states
-from api.utils import read_county_stats_zip
+from api.utils import read_county_stats_zip_ny
 from api.config import DataReadingError
 
 # Starts the FastAPI Router to be used by the FastAPI app.
@@ -422,52 +422,42 @@ async def post_stats(stats: StatsInput) -> JSONResponse:
 #
 ################################################################################
 class ZIPInput(BaseModel):
-    zip_code: int = 10001
-
+    zip_code: str = "70030"
 
 class ZIPStats(BaseModel):
+    county_name: str = "St. Charles"
+    state_name: str = "Louisiana"
     confirmed: int
-    todays_confirmed: int
-    deaths: int
-    todays_deaths: int
-
+    new: int
+    death: int
+    new_death: int
+    fatality_rate: str = "5.5%"
+    latitude: float
+    longitude: float
+    last_update: str = "2020-04-17 19:50 EDT"
 
 class ZIPOutput(BaseModel):
     success: bool
     message: ZIPStats
-
-# class County(BaseModel):
-#     county_name: str = "New York"
-#     state_name: str = "New York"
-#     confirmed: int
-#     new: int
-#     death: int
-#     new_death: int
-#     fatality_rate: str = "1.2%"
-#     latitude: float
-#     longitude: float
-#     last_update: str = "2020-03-30 22:53 EDT"
-
-
-# class CountyOut(BaseModel):
-#     success: bool
-#     message: List[County]
 
 
 @router.post("/zip",
              response_model=ZIPOutput,
              responses={404: {"model": Message}})
 def post_zip(zip_code: ZIPInput) -> JSONResponse:
-    """Get shit, post shit
+    """Returns county stats for the zip code input.
     """
-    zip_search = SearchEngine(simple_zipcode=True)
 
     try:
-        search = zip_search.by_zipcode(zip_code.zip_code)
-        search = eval(search)
-        county = search['county']
-        state = search['state']
-        data = read_county_stats_zip(state, county)
+        zip_info = zipcodes.matching(zip_code.zip_code)[0]
+        county = zip_info['county'].rsplit(' ', 1)[0]
+        state = zip_info['state']
+        if state == "NY":
+            print('NY')
+            data = read_county_stats_zip_ny(zip_code.zip_code)
+        else:
+            print("not NY")
+            data = read_county_stats(state, county)[0]
         json_data = {"success": True, "message": data}
         del data
         gc.collect()
