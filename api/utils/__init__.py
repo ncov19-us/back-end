@@ -7,3 +7,4 @@ from .country import read_country_data
 from .county_mongo import StateMongo
 from .county import read_county_stats
 from .state import read_states
+from .zip import read_county_stats_zip
