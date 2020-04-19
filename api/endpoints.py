@@ -450,6 +450,12 @@ def post_zip(zip_code: ZIPInput) -> JSONResponse:
 
     try:
         zip_info = zipcodes.matching(zip_code.zip_code)[0]
+    except Exception as ex:
+        _logger.warning(f"Endpoint: /zip --- POST --- {ex}")
+        raise HTTPException(status_code=422,
+                            detail=f"[Error] get '/zip' API: {ex}")
+
+    try:
         county = zip_info['county'].rsplit(' ', 1)[0]
         state = zip_info['state']
         if state == "NY":

@@ -2,8 +2,12 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 import api
 import api.endpoints
+from api.exception_handlers import data_reading_exception_handler
+from api.exception_handlers import data_validation_exception_handler
 from api.config import get_logger
 from api.config import app_config
+from api.config import DataReadingError, DataValidationError
+
 
 
 _logger = get_logger(logger_name=__name__)
@@ -35,6 +39,11 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    app.add_exception_handler(DataReadingError,
+                              data_reading_exception_handler)
+    app.add_exception_handler(DataValidationError,
+                              data_validation_exception_handler)
 
     _logger.info("FastAPI instance created")
 

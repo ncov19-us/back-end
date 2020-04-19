@@ -357,42 +357,46 @@ def test_post_zip(test_app):
 
 def test_post_zip_validation(test_app):
     """Unprocessable entity"""
-    response = test_app.post("/county")
+    response = test_app.post("/zip")
     assert response.status_code == 422
 
-    # TODO: /county post has no input validation, so still return 200
+    # TODO: /zip post has no input validation, so still return 200
     payload = {'testing': 'validation'}
-    response = test_app.post("/county", data=json.dumps(payload))
+    response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
 
-    # TODO: /county post has no input validation, so still return 200
+    # TODO: /zip post has no input validation, so still return 200
     payload = {'testing': 'validation', 'this': 'shouldnt work'}
-    response = test_app.post("/county", data=json.dumps(payload))
+    response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
 
 
 def test_post_zip_not_found(test_app):
-    """data not found"""
+    """invalid zip codes"""
 
     payload = {'zip_code': '33333'}
     response = test_app.post("/zip", data=json.dumps(payload))
-    assert response.status_code == 404
+    assert response.status_code == 422
 
     payload = {'zip_code': '90000'}
     response = test_app.post("/zip", data=json.dumps(payload))
-    assert response.status_code == 404
+    assert response.status_code == 422
 
     payload = {'zip_code': '20000'}
     response = test_app.post("/zip", data=json.dumps(payload))
-    assert response.status_code == 404
+    assert response.status_code == 422
 
     payload = {'zip_code': '72200'}
     response = test_app.post("/zip", data=json.dumps(payload))
-    assert response.status_code == 404
+    assert response.status_code == 422
 
     payload = {'zip_code': '57400'}
     response = test_app.post("/zip", data=json.dumps(payload))
-    assert response.status_code == 404
+    assert response.status_code == 422
+
+    payload = {'zip_code': '123456'}
+    response = test_app.post("/zip", data=json.dumps(payload))
+    assert response.status_code == 422
 
 
 def test_other_zip(test_app):
