@@ -6,6 +6,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from starlette.responses import JSONResponse, RedirectResponse
 from cachetools import cached, TTLCache
+import zipcodes
 
 from api.config import app_config
 from api.config import get_logger
@@ -18,8 +19,8 @@ from api.utils import read_county_data
 from api.utils import read_country_data
 from api.utils import read_county_stats
 from api.utils import read_states
+from api.utils import read_county_stats_zip_ny
 from api.config import DataReadingError
-
 
 # Starts the FastAPI Router to be used by the FastAPI app.
 router = APIRouter()
@@ -432,4 +433,62 @@ async def post_stats(stats: StatsInput) -> JSONResponse:
         _logger.warning(f"Endpoint: /stats --- POST --- {ex}")
         raise HTTPException(status_code=404,
                             detail=f"[Error] post /stats API: {ex}")
+    return json_data
+
+###############################################################################
+#
+# ZIP Endpoint
+#
+################################################################################
+class ZIPInput(BaseModel):
+    zip_code: str = "70030"
+
+class ZIPStats(BaseModel):
+    county_name: str = "St. Charles"
+    state_name: str = "Louisiana"
+    confirmed: int
+    new: int
+    death: int
+    new_death: int
+    fatality_rate: str = "5.5%"
+    latitude: float
+    longitude: float
+    last_update: str = "2020-04-17 19:50 EDT"
+
+class ZIPOutput(BaseModel):
+    success: bool
+    message: ZIPStats
+
+
+@router.post("/zip",
+             response_model=ZIPOutput,
+             responses={404: {"model": Message}})
+def post_zip(zip_code: ZIPInput) -> JSONResponse:
+    """Returns county stats for the zip code input.
+    """
+
+    try:
+        zip_info = zipcodes.matching(zip_code.zip_code)[0]
+    except Exception as ex:
+        _logger.warning(f"Endpoint: /zip --- POST --- {ex}")
+        raise HTTPException(status_code=422,
+                            detail=f"[Error] get '/zip' API: {ex}")
+
+    try:
+        county = zip_info['county'].rsplit(' ', 1)[0]
+        state = zip_info['state']
+        if state == "NY":
+            print('NY')
+            data = read_county_stats_zip_ny(zip_code.zip_code)
+        else:
+            print("not NY")
+            data = read_county_stats(state, county)[0]
+        json_data = {"success": True, "message": data}
+        del data
+        gc.collect()
+    except Exception as ex:
+        _logger.warning(f"Endpoint: /zip --- POST --- {ex}")
+        raise HTTPException(status_code=404,
+                            detail=f"[Error] get '/zip' API: {ex}")
+
     return json_data
