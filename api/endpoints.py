@@ -19,6 +19,7 @@ from api.utils import read_county_data
 from api.utils import read_country_data
 from api.utils import read_county_stats
 from api.utils import read_states
+from api.utils import read_county_stats_zip_ny
 from api.config import DataReadingError
 
 # Starts the FastAPI Router to be used by the FastAPI app.
@@ -455,6 +456,7 @@ def post_zip(zip_code: ZIPInput) -> JSONResponse:
         raise HTTPException(status_code=422,
                             detail=f"[Error] POST '/zip' {message}")
 
+
     try:
         county = zip_info['county'].rsplit(' ', 1)[0]
         state = zip_info['state']
@@ -465,6 +467,7 @@ def post_zip(zip_code: ZIPInput) -> JSONResponse:
                 county = "New York"
             data = read_county_stats(state, county)[0]
         else:
+
             data = read_county_stats(state, county)[0]
         json_data = {"success": True, "message": data}
         del data

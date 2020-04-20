@@ -32,6 +32,7 @@ def read_county_stats(state: str, county: str) -> Dict:
         df.columns = map(str.lower, df.columns)
         df.columns = df.columns.str.replace(" ", "_")
 
+
         # # used data source 2 for new death number
         # deaths = deaths[deaths['Province_State'] == reverse_states_map[state]]
         # deaths = deaths[deaths['Admin2'] == county]
