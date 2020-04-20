@@ -451,18 +451,23 @@ def post_zip(zip_code: ZIPInput) -> JSONResponse:
     try:
         zip_info = zipcodes.matching(zip_code.zip_code)[0]
     except Exception as ex:
-        _logger.warning(f"Endpoint: /zip --- POST --- {ex}")
+        message = f"ZIP code {zip_code.zip_code} not found in US Zipcode database."
+        _logger.warning(f"Endpoint: /zip --- POST --- {message}")
         raise HTTPException(status_code=422,
-                            detail=f"[Error] get '/zip' API: {ex}")
+                            detail=f"[Error] POST '/zip' {message}")
+
 
     try:
         county = zip_info['county'].rsplit(' ', 1)[0]
         state = zip_info['state']
+        _logger.info(f"State: {state}, County: {county}")
         if state == "NY":
-            print('NY')
-            data = read_county_stats_zip_ny(zip_code.zip_code)
+            nyc_counties = ["Bronx", "Kings", "Queens", "Richmond"]
+            if county in  nyc_counties:
+                county = "New York"
+            data = read_county_stats(state, county)[0]
         else:
-            print("not NY")
+
             data = read_county_stats(state, county)[0]
         json_data = {"success": True, "message": data}
         del data
