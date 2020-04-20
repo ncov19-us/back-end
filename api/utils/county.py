@@ -22,7 +22,7 @@ def read_county_stats(state: str, county: str) -> Dict:
 
     try:
         df = pd.read_csv(app_config.COUNTY_URL)
-        deaths = pd.read_csv(app_config.STATE_DEATH)
+        #deaths = pd.read_csv(app_config.STATE_DEATH)
     except:
         raise DataReadingError(
             f"Data reading error State: {state}, and County: {county}."
@@ -41,9 +41,8 @@ def read_county_stats(state: str, county: str) -> Dict:
                                      diff(axis=1).iloc[:, -1].values[0]
 
         df = df[df["state_name"] == reverse_states_map[state]]
-        # df = df.query(f"county_name == '{county}'")
         df = df[df["county_name"] == county]
-        df.new_death.iloc[0] = deaths
+        # df.new_death.iloc[0] = deaths
         df = pd.DataFrame.to_dict(df, orient="records")
         if len(df) == 0:
             raise DataValidationError("county.py len(df) == 0")

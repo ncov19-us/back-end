@@ -27,46 +27,10 @@
 
 [API Doc Swagger](https://api.ncov19.us/docs)
 
-
-[API Doc Postman](https://explore.postman.com/api/3596/ncov19us-api)
-
-[API Doc ReDoc](https://covid19-us-api-staging.herokuapp.com/redoc)
-=======
-[API Doc ReDoc](https://api.ncov19.us/redoc)
->>>>>>> 0813a59... refactor: change Aaron to standard feat: adding basic test
-
-[API Doc Swagger](https://api.ncov19.us/docs)
-=======
-## 2️⃣ Getting started
-=======
-## 2️⃣ Getting started
-
--    FastAPI
--    PyMongo
-
----
->>>>>>> 466358d... chore: updating master from staging (#45)
-
-## 4️⃣ Contributors
-
--    FastAPI
--    PyMongo
-
-## 3️⃣ Contributors
-
-[<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/hurshd0)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hanchunglee/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://github.com/leehanchung)    **[Han Lee](https://github.com/hurshd0)**    |    Maintainer
-
-[<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/hurshd0)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hurshd/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hurshd0)    **[Hursh Desai](https://github.com/hurshd0)**    |    Maintainer
-
-=======
-### Project Leaders
-
-[<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/leehanchung)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hanchunglee/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hanchunglee)    **[Han Lee](https://github.com/leehanchung)**    |    Maintainer
-=======
 ## 2️⃣ Tech Stack 📚 
-
 -    [FastAPI](https://fastapi.tiangolo.com/)
 -    [PyMongo](https://api.mongodb.com/python/current/)
+
 
 ## 3️⃣ Contributors
 
@@ -75,10 +39,6 @@
 [<img src="https://github.com/favicon.ico" width="20"> ](https://github.com/hurshd0)    [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="20"> ](https://www.linkedin.com/in/hurshd/)    [<img src="https://twitter.com/favicon.ico" width="20">](https://twitter.com/hurshd0)    **[Hursh Desai](https://hurshdesai.com/)**    |    Maintainer & Project Lead
 
 ---
-
-
-## 3️⃣ Contributing
->>>>>>> 466358d... chore: updating master from staging (#45)
 
 ## 4️⃣ Contributing
 
