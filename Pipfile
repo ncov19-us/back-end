@@ -17,6 +17,7 @@ mongoengine = "*"
 beautifulsoup4 = "*"
 lxml = "*"
 uvloop = "*"
+zipcodes = "*"
 
 [dev-packages]
 black = "*"

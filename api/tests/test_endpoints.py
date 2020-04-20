@@ -1,4 +1,6 @@
 # pylint: disable=redefined-outer-name
+
+import time
 import json
 import random
 import pytest
@@ -289,4 +291,121 @@ def test_other_stats(test_app):
     assert response.status_code == 405
 
     response = test_app.delete("/stats")
+    assert response.status_code == 405
+
+
+###############################################################################
+#
+#                   Test county data endpoints
+#
+################################################################################
+def test_post_ny_zip(test_app):
+    """Test problematic zip codes:
+    10004 -> Manhattan (New York County), NY
+    10302 -> Staten Island (Richmond County), NY
+    10458 -> Bronx, NY
+    """
+    payload = {'zip_code': '10004'}
+    response = test_app.post("/zip", data=json.dumps(payload))
+    time.sleep(2)
+    assert response.status_code == 200
+    data = response.json()['message']
+    assert data['state_name'] == "New York"
+    assert data['county_name'] == "New York"
+
+    payload = {"zip_code": "10312"}
+    response = test_app.post("/zip", data=json.dumps(payload))
+    assert response.status_code == 200
+    data = response.json()['message']
+    assert data['state_name'] == "New York"
+    assert data['county_name'] == "Richmond"
+
+    payload = {'zip_code': '10458'}
+    response = test_app.post("/zip", data=json.dumps(payload))
+    assert response.status_code == 200
+    data = response.json()['message']
+    assert data['state_name'] == "New York"
+    assert data['county_name'] == "Bronx"
+
+def test_post_zip(test_app):
+    """Test problematic zip codes:
+    63163 -> Saint Louis, MO
+    70030 -> St. Charles, LA
+    70341 -> Assumption Parish, LA
+    """
+    payload = {'zip_code': '63163'}
+    response = test_app.post("/zip", data=json.dumps(payload))
+    assert response.status_code == 200
+    data = response.json()['message']
+    assert data['state_name'] == "Missouri"
+    assert data['county_name'] == "St. Louis"
+
+    payload = {'zip_code': '70030'}
+    response = test_app.post("/zip", data=json.dumps(payload))
+    assert response.status_code == 200
+    data = response.json()['message']
+    assert data['state_name'] == "Louisiana"
+    assert data['county_name'] == "St. Charles"
+
+    payload = {'zip_code': '70341'}
+    response = test_app.post("/zip", data=json.dumps(payload))
+    assert response.status_code == 200
+    data = response.json()['message']
+    assert data['state_name'] == "Louisiana"
+    assert data['county_name'] == "Assumption"
+
+
+def test_post_zip_validation(test_app):
+    """Unprocessable entity"""
+    response = test_app.post("/zip")
+    assert response.status_code == 422
+
+    # TODO: /zip post has no input validation, so still return 200
+    payload = {'testing': 'validation'}
+    response = test_app.post("/zip", data=json.dumps(payload))
+    assert response.status_code == 200
+
+    # TODO: /zip post has no input validation, so still return 200
+    payload = {'testing': 'validation', 'this': 'shouldnt work'}
+    response = test_app.post("/zip", data=json.dumps(payload))
+    assert response.status_code == 200
+
+
+def test_post_zip_not_found(test_app):
+    """invalid zip codes"""
+
+    payload = {'zip_code': '33333'}
+    response = test_app.post("/zip", data=json.dumps(payload))
+    assert response.status_code == 422
+
+    payload = {'zip_code': '90000'}
+    response = test_app.post("/zip", data=json.dumps(payload))
+    assert response.status_code == 422
+
+    payload = {'zip_code': '20000'}
+    response = test_app.post("/zip", data=json.dumps(payload))
+    assert response.status_code == 422
+
+    payload = {'zip_code': '72200'}
+    response = test_app.post("/zip", data=json.dumps(payload))
+    assert response.status_code == 422
+
+    payload = {'zip_code': '57400'}
+    response = test_app.post("/zip", data=json.dumps(payload))
+    assert response.status_code == 422
+
+    payload = {'zip_code': '123456'}
+    response = test_app.post("/zip", data=json.dumps(payload))
+    assert response.status_code == 422
+
+
+def test_other_zip(test_app):
+    """Methods not allowed"""
+    response = test_app.put("/zip")
+    assert response.status_code == 405
+
+    response = test_app.patch("/zip")
+    assert response.status_code == 405
+
+    response = test_app.delete("/zip")
     assert response.status_code == 405
