@@ -11,7 +11,7 @@ async def data_reading_exception_handler(
 
     return JSONResponse(
         status_code=422,
-        content={"message": f"[ERROR] {request} -- {exc.name}"},
+        content={"message": f"[ERROR] {request.method} -- {exc}"},
     )
 
 
@@ -19,7 +19,9 @@ async def data_validation_exception_handler(
                 request: Request,
                 exc: DataValidationError,
             ) -> JSONResponse:
+    # this will hang, so just print out method directly for info
+    # body = await request.body()
     return JSONResponse(
         status_code=422,
-        content={"message": f"[ERROR] {request} -- {exc.name}"},
+        content={"message": f"[ERROR] {request.method} -- {exc}"},
     )
