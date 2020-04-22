@@ -20,6 +20,10 @@ def read_county_data() -> pd.DataFrame:
 
 def read_county_stats(state: str, county: str) -> Dict:
 
+    # 2020-04-22 patch Benton, WA
+    if (state == "WA") and (county in ['Benton', 'Franklin']):
+        county = "Benton and Franklin"
+
     try:
         df = pd.read_csv(app_config.COUNTY_URL)
         #deaths = pd.read_csv(app_config.STATE_DEATH)
