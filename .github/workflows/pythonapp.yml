@@ -1,10 +1,9 @@
 name: Build
 
 on:
-    push
-
+    push:
     pull_request:
-        branches: [ staging, master ]
+      branches: [ staging, master ]
 
 jobs:
   build:
