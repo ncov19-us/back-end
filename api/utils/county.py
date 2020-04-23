@@ -72,6 +72,7 @@ def wrangle_df(*, df: pd.DataFrame) -> pd.DataFrame:
 
 def read_county_stats(state: str, county: str) -> Dict:
 
+<<<<<<< HEAD
     # 2020-04-22 patch counties
     if (state == "WA") and (county in ['Benton', 'Franklin']):
         county = "Benton and Franklin"
@@ -79,6 +80,12 @@ def read_county_stats(state: str, county: str) -> Dict:
     if (state == "MA") and (county in ['Dukes', 'Nantucket']):
         county = "Dukes and Nantucket"
 
+=======
+    # 2020-04-22 patch Benton, WA
+    if (state == "WA") and (county in ['Benton', 'Franklin']):
+        county = "Benton and Franklin"
+
+>>>>>>> staging
     try:
         df = ingest_county_data(url=app_config.COUNTY_URL)
     except:

@@ -422,6 +422,13 @@ def test_post_zip(test_app):
     assert data['state_name'] == "Louisiana"
     assert data['county_name'] == "Assumption"
 
+    payload = {'zip_code': '99352'}
+    response = test_app.post("/zip", data=json.dumps(payload))
+    assert response.status_code == 200
+    data = response.json()['message']
+    assert data['state_name'] == "Washington"
+    assert data['county_name'] == "Benton and Franklin"
+
 
 def test_post_zip_data_source_adjustments(test_app):
     """Test problematic zip codes:
