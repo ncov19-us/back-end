@@ -457,6 +457,7 @@ def post_zip(zip_code: ZIPInput) -> JSONResponse:
         raise HTTPException(status_code=422,
                             detail=f"[Error] POST '/zip' {ex} {message}")
 
+
     try:
         county = zip_info['county'].rsplit(' ', 1)[0]
         state = zip_info['state']
