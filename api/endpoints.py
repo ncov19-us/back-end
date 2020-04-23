@@ -19,7 +19,7 @@ from api.utils import read_county_data
 from api.utils import read_country_data
 from api.utils import read_county_stats
 from api.utils import read_states
-from api.utils import read_county_stats_zip_ny
+# from api.utils import read_county_stats_zip_ny
 from api.config import DataReadingError
 
 # Starts the FastAPI Router to be used by the FastAPI app.
@@ -451,10 +451,11 @@ def post_zip(zip_code: ZIPInput) -> JSONResponse:
     try:
         zip_info = zipcodes.matching(zip_code.zip_code)[0]
     except Exception as ex:
-        message = f"ZIP code {zip_code.zip_code} not found in US Zipcode database."
-        _logger.warning(f"Endpoint: /zip --- POST --- {message}")
+        message = (f"ZIP code {zip_code.zip_code}"
+                    " not found in US Zipcode database.")
+        _logger.warning(f"Endpoint: /zip --- POST --- {ex} {message}")
         raise HTTPException(status_code=422,
-                            detail=f"[Error] POST '/zip' {message}")
+                            detail=f"[Error] POST '/zip' {ex} {message}")
 
 
     try:
@@ -467,7 +468,6 @@ def post_zip(zip_code: ZIPInput) -> JSONResponse:
                 county = "New York"
             data = read_county_stats(state, county)[0]
         else:
-
             data = read_county_stats(state, county)[0]
         json_data = {"success": True, "message": data}
         del data
