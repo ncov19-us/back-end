@@ -1,11 +1,47 @@
+import json
+from datetime import datetime
 from typing import Dict
 import pandas as pd
 from cachetools import cached, TTLCache
+from mongoengine import connect, disconnect
+from api.utils import County
 
 from api.config import DataReadingError, DataValidationError
 from api.config import app_config
 from api.utils import reverse_states_map
 
+
+def read_county_stats_mongo(state: str, county: str):
+    URI = app_config.MONGODB_CONNECTION_URI
+    connect(host=URI)
+    county = County.objects(state=state, county=county).get()
+    county = json.loads(county.to_json())
+
+    curr_confirmed = county['stats'][-1]['confirmed']
+    prev_confirmed = county['stats'][-2]['confirmed']
+    curr_death = county['stats'][-1]['deaths']
+    prev_death = county['stats'][-2]['deaths']
+    fatality_rate = (curr_death/curr_confirmed) if curr_confirmed != 0 else 0
+    last_update = county['stats'][-1]['last_updated']['$date']/1000
+
+    data = {
+        "county_name": county['county'],
+        "state_name": county['state'],
+        "confirmed": curr_confirmed,
+        "new": curr_confirmed - prev_confirmed,
+        "death": curr_death,
+        "new_death": curr_death - prev_death,
+        "fatality_rate": f"{fatality_rate:.2f}%",
+        "latitude": county['lat'],
+        "longitude": county['lon'],
+        "last_update": datetime.fromtimestamp(
+                            last_update
+                        ).isoformat().replace('T', ' ')[:-3] + ' UTC',
+    }
+
+    disconnect()
+
+    return data
 
 def read_county_data() -> pd.DataFrame:
     """Read county data from COUNTY_URL, lower all county and state names.

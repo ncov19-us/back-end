@@ -19,7 +19,6 @@ from api.utils import read_county_data
 from api.utils import read_country_data
 from api.utils import read_county_stats
 from api.utils import read_states
-# from api.utils import read_county_stats_zip_ny
 from api.config import DataReadingError
 
 # Starts the FastAPI Router to be used by the FastAPI app.
