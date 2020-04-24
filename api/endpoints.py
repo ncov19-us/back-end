@@ -19,8 +19,11 @@ from api.utils import read_county_data
 from api.utils import read_country_data
 from api.utils import read_county_stats
 from api.utils import read_states
+<<<<<<< HEAD
 
 # from api.utils import read_county_stats_zip_ny
+=======
+>>>>>>> feat: added fuction to read single county from dB
 from api.config import DataReadingError
 
 # Starts the FastAPI Router to be used by the FastAPI app.
