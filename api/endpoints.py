@@ -97,7 +97,8 @@ async def get_gnews() -> JSONResponse:
     except DataReadingError as ex:
         _logger.warning(f"Endpoint: /news --- GET --- {ex}")
         return JSONResponse(
-            status_code=404, content={"message": f"[Error] get /News API: {ex}"}
+            status_code=404,
+            content={"message": f"[Error] get /News API: {ex}"}
         )
 
     return json_data
