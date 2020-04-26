@@ -77,32 +77,32 @@ def test_other_news(test_app):
 ################################################################################
 def test_get_twitter(test_app):
     response = test_app.get("/twitter")
-    data = response.json()['message']
+    data = response.json()["message"]
     assert response.status_code == 200
-    assert data['username'] == "CDCgov"
-    assert data['full_name'] == "CDCgov"
-    assert len(data['tweets']) > 0
+    assert data["username"] == "CDCgov"
+    assert data["full_name"] == "CDCgov"
+    assert len(data["tweets"]) > 0
 
-    idx = random.randint(0, len(data['tweets']))
-    assert 'tweet_id' in data['tweets'][idx]
-    assert 'full_text' in data['tweets'][idx]
-    assert 'created_at' in data['tweets'][idx]
+    idx = random.randint(0, len(data["tweets"]))
+    assert "tweet_id" in data["tweets"][idx]
+    assert "full_text" in data["tweets"][idx]
+    assert "created_at" in data["tweets"][idx]
 
 
 def test_post_twitter(test_app):
-    payload = {'state': 'TX'}
+    payload = {"state": "TX"}
     response = test_app.post("/twitter", data=json.dumps(payload))
     assert response.status_code == 200
 
-    data = response.json()['message']
-    assert data['username'] == "TexasDSHS"
-    assert data['full_name'] == "Texas DSHS"
-    assert len(data['tweets']) > 0
+    data = response.json()["message"]
+    assert data["username"] == "TexasDSHS"
+    assert data["full_name"] == "Texas DSHS"
+    assert len(data["tweets"]) > 0
 
-    idx = random.randint(0, len(data['tweets']))
-    assert 'tweet_id' in data['tweets'][idx]
-    assert 'full_text' in data['tweets'][idx]
-    assert 'created_at' in data['tweets'][idx]
+    idx = random.randint(0, len(data["tweets"]))
+    assert "tweet_id" in data["tweets"][idx]
+    assert "full_text" in data["tweets"][idx]
+    assert "created_at" in data["tweets"][idx]
 
 
 def test_post_twitter_validation(test_app):
@@ -111,7 +111,7 @@ def test_post_twitter_validation(test_app):
     assert response.status_code == 422
 
     # TODO: /twitter post has no input validation, so still return 200
-    payload = {'testing': 'validation'}
+    payload = {"testing": "validation"}
     response = test_app.post("/twitter", data=json.dumps(payload))
     assert response.status_code == 200
 
@@ -120,22 +120,22 @@ def test_post_twitter_not_found(test_app):
     """data not found"""
 
     # /twitter post endpoint has state input field, this should return 404
-    payload = {'state': 'validation'}
+    payload = {"state": "validation"}
     response = test_app.post("/twitter", data=json.dumps(payload))
     assert response.status_code == 404
 
     # /twitter post endpoint takes state abbreviations capitalized, expect 404
-    payload = {'state': 'California'}
+    payload = {"state": "California"}
     response = test_app.post("/twitter", data=json.dumps(payload))
     assert response.status_code == 404
 
     # /twitter post endpoint takes state abbreviations capitalized, expect 404
-    payload = {'state': 'maine'}
+    payload = {"state": "maine"}
     response = test_app.post("/twitter", data=json.dumps(payload))
     assert response.status_code == 404
 
     # /twitter post endpoint takes state abbreviations capitalized, expect 404
-    payload = {'state': 'mi'}
+    payload = {"state": "mi"}
     response = test_app.post("/twitter", data=json.dumps(payload))
     assert response.status_code == 404
 
@@ -168,12 +168,12 @@ def test_post_county_validation(test_app):
     assert response.status_code == 422
 
     # TODO: /county post has no input validation, so still return 200
-    payload = {'testing': 'validation'}
+    payload = {"testing": "validation"}
     response = test_app.post("/county", data=json.dumps(payload))
     assert response.status_code == 200
 
     # TODO: /county post has no input validation, so still return 200
-    payload = {'testing': 'validation', 'this': 'shouldnt work'}
+    payload = {"testing": "validation", "this": "shouldnt work"}
     response = test_app.post("/county", data=json.dumps(payload))
     assert response.status_code == 200
 
@@ -181,23 +181,23 @@ def test_post_county_validation(test_app):
 def test_post_county_not_found(test_app):
     """data not found"""
 
-    payload = {'state': 'validation', 'county': 'shouldnt work'}
+    payload = {"state": "validation", "county": "shouldnt work"}
     response = test_app.post("/county", data=json.dumps(payload))
     assert response.status_code == 404
 
-    payload = {'state': 'CA', 'county': 'shouldnt work'}
+    payload = {"state": "CA", "county": "shouldnt work"}
     response = test_app.post("/county", data=json.dumps(payload))
     assert response.status_code == 404
 
-    payload = {'state': 'shouldnt work', 'county': 'orange'}
+    payload = {"state": "shouldnt work", "county": "orange"}
     response = test_app.post("/county", data=json.dumps(payload))
     assert response.status_code == 404
 
-    payload = {'state': 'CA', 'county': 'orange'}
+    payload = {"state": "CA", "county": "orange"}
     response = test_app.post("/county", data=json.dumps(payload))
     assert response.status_code == 404
 
-    payload = {'state': 'ca', 'county': 'Orange'}
+    payload = {"state": "ca", "county": "Orange"}
     response = test_app.post("/county", data=json.dumps(payload))
     assert response.status_code == 404
 
@@ -307,31 +307,31 @@ def test_post_ny_zip(test_app):
     11203 -> Brooklyn (Kings County), NY
     11361 -> Queens (Queens County), NY
     """
-    payload = {'zip_code': '10004'}
+    payload = {"zip_code": "10004"}
     response = test_app.post("/zip", data=json.dumps(payload))
     time.sleep(2)
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "New York"
-    assert data['county_name'] == "New York"
+    data = response.json()["message"]
+    assert data["state_name"] == "New York"
+    assert data["county_name"] == "New York"
 
     payload = {"zip_code": "10312"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "New York"
+    data = response.json()["message"]
+    assert data["state_name"] == "New York"
     # TODO: add Richmond county
     # assert data['county_name'] == "Richmond"
-    assert data['county_name'] == "New York"
+    assert data["county_name"] == "New York"
 
-    payload = {'zip_code': '10458'}
+    payload = {"zip_code": "10458"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "New York"
+    data = response.json()["message"]
+    assert data["state_name"] == "New York"
     # TODO: add Bronx county
     # assert data['county_name'] == "Bronx"
-    assert data['county_name'] == "New York"
+    assert data["county_name"] == "New York"
 
 
 def test_post_nyc_borough_zip(test_app):
@@ -342,49 +342,49 @@ def test_post_nyc_borough_zip(test_app):
     11203 -> Brooklyn (Kings County), NY
     11361 -> Queens (Queens County), NY
     """
-    payload = {'zip_code': '10004'}
+    payload = {"zip_code": "10004"}
     response = test_app.post("/zip", data=json.dumps(payload))
     time.sleep(2)
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "New York"
-    assert data['county_name'] == "New York"
+    data = response.json()["message"]
+    assert data["state_name"] == "New York"
+    assert data["county_name"] == "New York"
 
     payload = {"zip_code": "10312"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "New York"
+    data = response.json()["message"]
+    assert data["state_name"] == "New York"
     # TODO: add Richmond county
     # assert data['county_name'] == "Richmond"
-    assert data['county_name'] == "New York"
+    assert data["county_name"] == "New York"
 
-    payload = {'zip_code': '10458'}
+    payload = {"zip_code": "10458"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "New York"
+    data = response.json()["message"]
+    assert data["state_name"] == "New York"
     # TODO: add Bronx county
     # assert data['county_name'] == "Bronx"
-    assert data['county_name'] == "New York"
+    assert data["county_name"] == "New York"
 
-    payload = {'zip_code': '11203'}
+    payload = {"zip_code": "11203"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "New York"
+    data = response.json()["message"]
+    assert data["state_name"] == "New York"
     # TODO: add Brooklyn/Kings county
     # assert data['county_name'] == "Brooklyn"
-    assert data['county_name'] == "New York"
+    assert data["county_name"] == "New York"
 
-    payload = {'zip_code': '11361'}
+    payload = {"zip_code": "11361"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "New York"
+    data = response.json()["message"]
+    assert data["state_name"] == "New York"
     # TODO: add Queens/Queens county
     # assert data['county_name'] == "Queens"
-    assert data['county_name'] == "New York"
+    assert data["county_name"] == "New York"
 
 
 def test_post_zip(test_app):
@@ -394,40 +394,40 @@ def test_post_zip(test_app):
     70030 -> St. Charles, LA
     70341 -> Assumption Parish, LA
     """
-    payload = {'zip_code': '04098'}
+    payload = {"zip_code": "04098"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "Maine"
-    assert data['county_name'] == "Cumberland"
+    data = response.json()["message"]
+    assert data["state_name"] == "Maine"
+    assert data["county_name"] == "Cumberland"
 
-    payload = {'zip_code': '63163'}
+    payload = {"zip_code": "63163"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "Missouri"
-    assert data['county_name'] == "St. Louis"
+    data = response.json()["message"]
+    assert data["state_name"] == "Missouri"
+    assert data["county_name"] == "St. Louis"
 
-    payload = {'zip_code': '70030'}
+    payload = {"zip_code": "70030"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "Louisiana"
-    assert data['county_name'] == "St. Charles"
+    data = response.json()["message"]
+    assert data["state_name"] == "Louisiana"
+    assert data["county_name"] == "St. Charles"
 
-    payload = {'zip_code': '70341'}
+    payload = {"zip_code": "70341"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "Louisiana"
-    assert data['county_name'] == "Assumption"
+    data = response.json()["message"]
+    assert data["state_name"] == "Louisiana"
+    assert data["county_name"] == "Assumption"
 
-    payload = {'zip_code': '99352'}
+    payload = {"zip_code": "99352"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "Washington"
-    assert data['county_name'] == "Benton and Franklin"
+    data = response.json()["message"]
+    assert data["state_name"] == "Washington"
+    assert data["county_name"] == "Benton and Franklin"
 
 
 def test_post_zip_data_source_adjustments(test_app):
@@ -440,54 +440,74 @@ def test_post_zip_data_source_adjustments(test_app):
     99326 -> Franklin County, WA (Benton and Franklin in data source)
     99352 -> Benton County, WA (Benton and Franklin in data source)
     """
-    payload = {'zip_code': '02552'}
+    payload = {"zip_code": "02552"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "Massachusetts"
-    assert data['county_name'] == "Dukes and Nantucket"
+    data = response.json()["message"]
+    assert data["state_name"] == "Massachusetts"
+    assert data["county_name"] == "Dukes and Nantucket"
 
-    payload = {'zip_code': '02584'}
+    payload = {"zip_code": "02584"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "Massachusetts"
-    assert data['county_name'] == "Dukes and Nantucket"
+    data = response.json()["message"]
+    assert data["state_name"] == "Massachusetts"
+    assert data["county_name"] == "Dukes and Nantucket"
 
-    payload = {'zip_code': '48212'}
+    payload = {"zip_code": "48212"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "Michigan"
-    assert data['county_name'] == "Wayne"
+    data = response.json()["message"]
+    assert data["state_name"] == "Michigan"
+    assert data["county_name"] == "Wayne"
 
-    payload = {'zip_code': '77003'}
+    payload = {"zip_code": "77003"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "Texas"
-    assert data['county_name'] == "Harris"
+    data = response.json()["message"]
+    assert data["state_name"] == "Texas"
+    assert data["county_name"] == "Harris"
 
-    payload = {'zip_code': '75847'}
+    payload = {"zip_code": "75847"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "Texas"
-    assert data['county_name'] == "Houston"
+    data = response.json()["message"]
+    assert data["state_name"] == "Texas"
+    assert data["county_name"] == "Houston"
 
-    payload = {'zip_code': '99326'}
+    payload = {"zip_code": "99326"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "Washington"
-    assert data['county_name'] == "Benton and Franklin"
+    data = response.json()["message"]
+    assert data["state_name"] == "Washington"
+    assert data["county_name"] == "Benton and Franklin"
 
-    payload = {'zip_code': '99352'}
+    payload = {"zip_code": "99352"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
-    data = response.json()['message']
-    assert data['state_name'] == "Washington"
-    assert data['county_name'] == "Benton and Franklin"
+    data = response.json()["message"]
+    assert data["state_name"] == "Washington"
+    assert data["county_name"] == "Benton and Franklin"
+
+
+def test_post_zip_us_districs_and_territories(test_app):
+    """
+    20037 -> Washington DC
+    00601 -> Puerto Rico, Puerto Rico
+    96910 -> Guam, Guam
+    96950 -> Northern Mariana Islands, Northern Mariana Islands
+    00801 -> St. Thomas, US Virgin Islands
+    00830 -> St. John, US Virgin Islands
+    00820 -> St. Croix, US Virgin Islands (City - Christiansted)
+    00840 -> , US Virgin Islands (City - Frederiksted)
+    00850 -> , US Virgin Islands (City - Kingshill)
+    """
+    payload = {"zip_code": "20037"}
+    response = test_app.post("/zip", data=json.dumps(payload))
+    assert response.status_code == 200
+    data = response.json()["message"]
+    assert data["state_name"] == "District of Columbia"
+    assert data["county_name"] == "District of Columbia"
 
 
 def test_post_zip_validation(test_app):
@@ -496,12 +516,12 @@ def test_post_zip_validation(test_app):
     assert response.status_code == 422
 
     # TODO: /zip post has no input validation, so still return 200
-    payload = {'testing': 'validation'}
+    payload = {"testing": "validation"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
 
     # TODO: /zip post has no input validation, so still return 200
-    payload = {'testing': 'validation', 'this': 'shouldnt work'}
+    payload = {"testing": "validation", "this": "shouldnt work"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 200
 
@@ -509,31 +529,31 @@ def test_post_zip_validation(test_app):
 def test_post_zip_not_found(test_app):
     """invalid zip codes"""
 
-    payload = {'zip_code': '33333'}
+    payload = {"zip_code": "33333"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 422
 
-    payload = {'zip_code': '90000'}
+    payload = {"zip_code": "90000"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 422
 
-    payload = {'zip_code': '20000'}
+    payload = {"zip_code": "20000"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 422
 
-    payload = {'zip_code': '72200'}
+    payload = {"zip_code": "72200"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 422
 
-    payload = {'zip_code': '75874'}
+    payload = {"zip_code": "75874"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 422
 
-    payload = {'zip_code': '57400'}
+    payload = {"zip_code": "57400"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 422
 
-    payload = {'zip_code': '123456'}
+    payload = {"zip_code": "123456"}
     response = test_app.post("/zip", data=json.dumps(payload))
     assert response.status_code == 422
 
