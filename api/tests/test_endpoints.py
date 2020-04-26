@@ -499,15 +499,60 @@ def test_post_zip_us_districs_and_territories(test_app):
     00801 -> St. Thomas, US Virgin Islands
     00830 -> St. John, US Virgin Islands
     00820 -> St. Croix, US Virgin Islands (City - Christiansted)
-    00840 -> , US Virgin Islands (City - Frederiksted)
-    00850 -> , US Virgin Islands (City - Kingshill)
+    00840 -> St. Croix, US Virgin Islands (City - Frederiksted)
+    00850 -> St. Croix, US Virgin Islands (City - Kingshill)
     """
-    payload = {"zip_code": "20037"}
-    response = test_app.post("/zip", data=json.dumps(payload))
-    assert response.status_code == 200
-    data = response.json()["message"]
-    assert data["state_name"] == "District of Columbia"
-    assert data["county_name"] == "District of Columbia"
+
+    expected_data = [
+        {
+            "zip_code": "20037",
+            "state_name": "District of Columbia",
+            "county_name": "District of Columbia",
+        },
+        {
+            "zip_code": "00601",
+            "state_name": "Puerto Rico",
+            "county_name": "Puerto Rico",
+        },
+        {"zip_code": "96910", "state_name": "Guam", "county_name": "Guam"},
+        {
+            "zip_code": "96950",
+            "state_name": "Northern Mariana Islands",
+            "county_name": "Northern Mariana Islands",
+        },
+        {
+            "zip_code": "00801",
+            "state_name": "St. Thomas",
+            "county_name": "US Virgin Islands",
+        },
+        {
+            "zip_code": "00830",
+            "state_name": "St. John",
+            "county_name": "US Virgin Islands",
+        },
+        {
+            "zip_code": "00820",
+            "state_name": "St. Croix",
+            "county_name": "US Virgin Islands",
+        },
+        {
+            "zip_code": "00840",
+            "state_name": "St. Croix",
+            "county_name": "US Virgin Islands",
+        },
+        {
+            "zip_code": "00850",
+            "state_name": "St. Croix",
+            "county_name": "US Virgin Islands",
+        },
+    ]
+    for data in expected_data:
+        payload = {"zip_code": data["zip_code"]}
+        response = test_app.post("/zip", data=json.dumps(payload))
+        assert response.status_code == 200
+        data = response.json()["message"]
+        assert data["state_name"] == data["state_name"]
+        assert data["county_name"] == data["county_name"]
 
 
 def test_post_zip_validation(test_app):

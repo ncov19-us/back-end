@@ -99,7 +99,9 @@ def read_county_stats(state: str, county: str) -> Dict:
         full_state_name = reverse_states_map[state]
         df = df[df["state_name"] == full_state_name]
         if len(df) == 0:
-            raise DataValidationError(f"No records found for {full_state_name} in our database.")
+            raise DataValidationError(
+                f"No records found for {full_state_name} in our database."
+            )
     except:
         raise DataReadingError(f"Can't find {full_state_name} in our database.")
 
@@ -110,7 +112,9 @@ def read_county_stats(state: str, county: str) -> Dict:
         else:
             df = df[df["county_name"] == county]
         if len(df) == 0:
-            raise DataValidationError(f"No records found for {full_state_name} in our database.")
+            raise DataValidationError(
+                f"No records found for {full_state_name} in our database."
+            )
     except:
         raise DataValidationError(
             f"Can't find State: {full_state_name}, and County: {county} combination."
