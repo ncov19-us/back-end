@@ -97,7 +97,8 @@ async def get_gnews() -> JSONResponse:
     except DataReadingError as ex:
         _logger.warning(f"Endpoint: /news --- GET --- {ex}")
         return JSONResponse(
-            status_code=404, content={"message": f"[Error] get /News API: {ex}"}
+            status_code=404,
+            content={"message": f"[Error] get /News API: {ex}"}
         )
 
     return json_data
@@ -121,7 +122,8 @@ async def post_gnews(news: NewsInput) -> JSONResponse:
     except DataReadingError as ex:
         _logger.warning(f"Endpoint: /news --- POST --- {ex}")
         return JSONResponse(
-            status_code=404, content={"message": f"[Error] post /News API: {ex}"}
+            status_code=404,
+            content={"message": f"[Error] post /News API: {ex}"}
         )
 
     return json_data
@@ -182,7 +184,8 @@ async def get_twitter() -> JSONResponse:
         gc.collect()
     except Exception as ex:
         _logger.warning(f"Endpoint: /twitter --- GET --- {ex}")
-        raise HTTPException(status_code=404, detail=f"[Error] get /twitter API: {ex}")
+        raise HTTPException(status_code=404,
+                            detail=f"[Error] get /twitter API: {ex}")
 
     return json_data
 
@@ -215,7 +218,8 @@ async def post_twitter(twyuser: TwitterInput) -> JSONResponse:
         gc.collect()
     except Exception as ex:
         _logger.warning(f"Endpoint: /twitter --- POST --- {ex}")
-        raise HTTPException(status_code=404, detail=f"[Error] post /twitter API: {ex}")
+        raise HTTPException(status_code=404,
+                            detail=f"[Error] post /twitter API: {ex}")
 
     return json_data
 
@@ -289,7 +293,8 @@ def post_county(county: CountyInput) -> JSONResponse:
         gc.collect()
     except Exception as ex:
         _logger.warning(f"Endpoint: /county --- POST --- {ex}")
-        raise HTTPException(status_code=404, detail=f"[Error] get '/county' API: {ex}")
+        raise HTTPException(status_code=404,
+                            detail=f"[Error] get '/county' API: {ex}")
 
     return json_data
 
@@ -333,7 +338,8 @@ async def post_state(state: StateInput) -> JSONResponse:
         gc.collect()
     except Exception as ex:
         _logger.warning(f"Endpoint: /state --- POST --- {ex}")
-        raise HTTPException(status_code=404, detail=f"[Error] get /country API: {ex}")
+        raise HTTPException(status_code=404,
+                            detail=f"[Error] get /country API: {ex}")
 
     return json_data
 
@@ -374,7 +380,8 @@ async def get_country(country: CountryInput) -> JSONResponse:
         json_data = {"success": True, "message": data}
     except Exception as ex:
         _logger.warning(f"Endpoint: /country --- GET --- {ex}")
-        raise HTTPException(status_code=404, detail=f"[Error] get /country API: {ex}")
+        raise HTTPException(status_code=404,
+                            detail=f"[Error] get /country API: {ex}")
 
     return json_data
 
@@ -416,7 +423,8 @@ async def get_stats() -> JSONResponse:
         json_data = {"success": True, "message": data}
     except Exception as ex:
         _logger.warning(f"Endpoint: /stats --- GET --- {ex}")
-        raise HTTPException(status_code=404, detail=f"[Error] get /stats API: {ex}")
+        raise HTTPException(status_code=404,
+                            detail=f"[Error] get /stats API: {ex}")
     return json_data
 
 
@@ -434,7 +442,8 @@ async def post_stats(stats: StatsInput) -> JSONResponse:
         json_data = {"success": True, "message": data}
     except Exception as ex:
         _logger.warning(f"Endpoint: /stats --- POST --- {ex}")
-        raise HTTPException(status_code=404, detail=f"[Error] post /stats API: {ex}")
+        raise HTTPException(status_code=404,
+                            detail=f"[Error] post /stats API: {ex}")
     return json_data
 
 
@@ -506,6 +515,7 @@ def post_zip(zip_code: ZIPInput) -> JSONResponse:
         gc.collect()
     except Exception as ex:
         _logger.warning(f"Endpoint: /zip --- POST --- {ex}")
-        raise HTTPException(status_code=404, detail=f"[Error] get '/zip' API: {ex}")
+        raise HTTPException(status_code=404,
+                            detail=f"[Error] get '/zip' API: {ex}")
 
     return json_data
