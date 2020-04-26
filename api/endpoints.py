@@ -434,14 +434,20 @@ def post_zip(zip_code: ZIPInput) -> JSONResponse:
     try:
         county = zip_info["county"].rsplit(" ", 1)[0]
         state = zip_info["state"]
-        _logger.info(f"State: {state}, County: {county}")
+        city = zip_info["city"]
+        _logger.info(f"State: {state}, County: {county}, City: {city}")
         if state == "NY":
             nyc_counties = ["Bronx", "Kings", "Queens", "Richmond"]
             if county in nyc_counties:
                 county = "New York"
-            data = read_county_stats(state, county)[0]
-        else:
-            data = read_county_stats(state, county)[0]
+        elif state == "VI":
+            if city == "St Thomas":
+                county = "St. Thomas"
+            if city == "St John":
+                county = "St. John"
+            if city in ["Christiansted", "Frederiksted", "Kingshill"]:
+                county = "St. Croix"
+        data = read_county_stats(state, county)[0]
         json_data = {"success": True, "message": data}
         del data
         gc.collect()

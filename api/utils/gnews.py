@@ -1,8 +1,8 @@
 import gc
 from typing import Dict
 
-import pandas as pd
 import requests
+import pandas as pd
 
 from bs4 import BeautifulSoup
 from api.config import app_config
