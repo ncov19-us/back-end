@@ -8,9 +8,7 @@ from bs4 import BeautifulSoup
 from api.config import app_config
 
 
-def get_state_topic_google_news(state: str,
-                                topic: str,
-                                max_rows: int = 10) -> Dict:
+def get_state_topic_google_news(state: str, topic: str, max_rows: int = 10) -> Dict:
     """This function takes a US State name (string dtype) and a topic of
     interest (string dtype). The output is a pandas DataFrame with articles,
     urls, and publishing times for articles containing the state and topic
@@ -47,12 +45,16 @@ def get_state_topic_google_news(state: str,
         state_id_for_articles.append(state)
 
     df = pd.DataFrame(
+<<<<<<< HEAD
         [
             list_of_titles,
             list_of_article_links,
             list_of_pubdates,
             state_id_for_articles
         ]
+=======
+        [list_of_titles, list_of_article_links, list_of_pubdates, state_id_for_articles]
+>>>>>>> 8661e05... chore: merge conflict, fix: zip codes for territories, fix: zip code error response message (#62)
     ).T
     df.columns = ["title", "url", "published", "state"]
     df["source"] = df["title"].str.split("-").str[-1]
@@ -79,8 +81,7 @@ def get_us_news(max_rows: int = 50) -> Dict:
     df = pd.DataFrame(df[["title", "url", "publishedAt"]])
     df = df.rename(columns={"publishedAt": "published"})
     # Infer datetime
-    df["published"] = pd.to_datetime(df["published"],
-                                     infer_datetime_format=True)
+    df["published"] = pd.to_datetime(df["published"], infer_datetime_format=True)
     # Assuming timedelta of 5 hr based on what comparison between CNN and API.
     df["published"] = df["published"] - pd.Timedelta("5 hours")
 
