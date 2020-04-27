@@ -13,7 +13,6 @@ def test_county_mongo():
     assert isinstance(county_data['new_death'], int)
     assert isinstance(county_data['fatality_rate'], str)
     assert county_data['fatality_rate'][-1] == "%"
-
     assert isinstance(county_data['latitude'], float)
     assert isinstance(county_data['longitude'], float)
     assert isinstance(county_data['last_update'], str)
