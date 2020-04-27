@@ -1,7 +1,7 @@
 from api.utils import county
 
 
-def test_county():
+def test_county_mongo():
     county_data = county.read_county_stats_mongo("California", "Orange")
 
     assert county_data['county_name'] == "Orange"
@@ -13,7 +13,7 @@ def test_county():
     assert isinstance(county_data['new_death'], int)
     assert isinstance(county_data['fatality_rate'], str)
     assert county_data['fatality_rate'][-1] == "%"
-    
+
     assert isinstance(county_data['latitude'], float)
     assert isinstance(county_data['longitude'], float)
     assert isinstance(county_data['last_update'], str)
