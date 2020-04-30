@@ -9,7 +9,6 @@ from api.config import app_config
 from api.config import DataReadingError, DataValidationError
 
 
-
 _logger = get_logger(logger_name=__name__)
 
 
@@ -40,10 +39,10 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    app.add_exception_handler(DataReadingError,
-                              data_reading_exception_handler)
-    app.add_exception_handler(DataValidationError,
-                              data_validation_exception_handler)
+    app.add_exception_handler(DataReadingError, data_reading_exception_handler)
+    app.add_exception_handler(
+        DataValidationError, data_validation_exception_handler
+    )
 
     _logger.info("FastAPI instance created")
 

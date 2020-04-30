@@ -15,9 +15,9 @@ def read_states(state: str) -> Dict:
 
     try:
         data = pd.read_csv(app_config.NYT_STATE)
-        data = data[data['state'] == state]
-        data = data[['date', 'cases', 'deaths']]
-        data.columns = ['Date', 'Confirmed', 'Deaths']
+        data = data[data["state"] == state]
+        data = data[["date", "cases", "deaths"]]
+        data.columns = ["Date", "Confirmed", "Deaths"]
         data = data.fillna(0)
         dict_data = pd.DataFrame.to_dict(data, orient="records")
 
