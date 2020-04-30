@@ -5,9 +5,8 @@ from api.config import DataReadingError, DataValidationError
 
 
 async def data_reading_exception_handler(
-                request: Request,
-                exc: DataReadingError,
-            ) -> JSONResponse:
+    request: Request, exc: DataReadingError,
+) -> JSONResponse:
 
     return JSONResponse(
         status_code=422,
@@ -16,9 +15,8 @@ async def data_reading_exception_handler(
 
 
 async def data_validation_exception_handler(
-                request: Request,
-                exc: DataValidationError,
-            ) -> JSONResponse:
+    request: Request, exc: DataValidationError,
+) -> JSONResponse:
     # this will hang, so just print out method directly for info
     # body = await request.body()
     return JSONResponse(

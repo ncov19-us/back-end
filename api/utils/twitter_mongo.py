@@ -4,6 +4,7 @@ import pymongo
 from pymongo.errors import DuplicateKeyError
 from api.config import app_config
 
+
 class TwitterMongo:
     """Twiter Mongodb wrapper over PyMongo, that makes it easier to fetch and
     filter records
@@ -77,7 +78,7 @@ class TwitterMongo:
         if result is None:
             print(
                 f"Can't find username:{username} in",
-                f" the collection {self.collection_name}."
+                f" the collection {self.collection_name}.",
             )
         if verbose and result is not None:
             pprint.pprint(result)
@@ -96,8 +97,10 @@ class TwitterMongo:
             )
         result = self.collection.find_one({"state": state})
         if result is None:
-            print(f"Can't find state:{state} in ",
-                   "the collection {self.collection_name}.")
+            print(
+                f"Can't find state:{state} in ",
+                "the collection {self.collection_name}.",
+            )
         if verbose and result is not None:
             pprint.pprint(result)
             print(type(result))
