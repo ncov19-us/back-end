@@ -264,14 +264,9 @@ async def get_county_data() -> JSONResponse:
     except Exception as ex:
         _logger.warning(f"Endpoint: /county --- GET --- {ex}")
         raise HTTPException(
-<<<<<<< HEAD
                 status_code=404,
                 detail=f"[Error] get '/county' API: {ex}")
 
-=======
-            status_code=404, detail=f"[Error] get '/county' API: {ex}"
-        )
->>>>>>> 7e27e87... fix: post stats endpoint error
     return json_data
 
 

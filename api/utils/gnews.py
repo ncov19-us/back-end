@@ -47,16 +47,12 @@ def get_state_topic_google_news(
         state_id_for_articles.append(state)
 
     df = pd.DataFrame(
-<<<<<<< HEAD
         [
             list_of_titles,
             list_of_article_links,
             list_of_pubdates,
             state_id_for_articles,
         ]
-=======
-        [list_of_titles, list_of_article_links, list_of_pubdates, state_id_for_articles]
->>>>>>> 8661e05... chore: merge conflict, fix: zip codes for territories, fix: zip code error response message (#62)
     ).T
     df.columns = ["title", "url", "published", "state"]
     df["source"] = df["title"].str.split("-").str[-1]
