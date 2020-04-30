@@ -13,4 +13,4 @@ def test_app_headers(test_app=app):
         "[GNU GENERAL PUBLIC LICENSE]"
         "(https://github.com/ncov19-us/back-end/blob/master/LICENSE)"
     )
-    assert version == f'{api.__version__}'
+    assert version == f"{api.__version__}"

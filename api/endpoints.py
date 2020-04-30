@@ -27,11 +27,8 @@ from api.config import DataReadingError
 router = APIRouter()
 _logger = get_logger(logger_name=__name__)
 tm = TwitterMongo(
-        app_config.DB_NAME,
-        app_config.COLLECTION_TWITTER,
-        verbose=False,
+    app_config.DB_NAME, app_config.COLLECTION_TWITTER, verbose=False,
 )
-
 
 
 ###############################################################################
@@ -83,9 +80,7 @@ class NewsOut(BaseModel):
 
 
 @router.get(
-    "/news",
-    response_model=NewsOut,
-    responses={404: {"model": Message}},
+    "/news", response_model=NewsOut, responses={404: {"model": Message}},
 )
 async def get_gnews() -> JSONResponse:
     """Fetch US news from Google News API and return the results in JSON
@@ -98,17 +93,14 @@ async def get_gnews() -> JSONResponse:
     except DataReadingError as ex:
         _logger.warning(f"Endpoint: /news --- GET --- {ex}")
         return JSONResponse(
-            status_code=404,
-            content={"message": f"[Error] get /News API: {ex}"}
+            status_code=404, content={"message": f"[Error] get /News API: {ex}"}
         )
 
     return json_data
 
 
 @router.post(
-    "/news",
-    response_model=NewsOut,
-    responses={404: {"model": Message}},
+    "/news", response_model=NewsOut, responses={404: {"model": Message}},
 )
 async def post_gnews(news: NewsInput) -> JSONResponse:
     """Fetch specific state and topic news from Google News API and return the
@@ -123,7 +115,8 @@ async def post_gnews(news: NewsInput) -> JSONResponse:
     except DataReadingError as ex:
         _logger.warning(f"Endpoint: /news --- POST --- {ex}")
         return JSONResponse(
-            status_code=404, content={"message": f"[Error] post /News API: {ex}"}
+            status_code=404,
+            content={"message": f"[Error] post /News API: {ex}"},
         )
 
     return json_data
@@ -158,7 +151,7 @@ class TwitterOutput(BaseModel):
 @router.get(
     "/twitter",
     response_model=TwitterOutput,
-    responses={404: {"model": Message}}
+    responses={404: {"model": Message}},
 )
 async def get_twitter() -> JSONResponse:
     """Fetch and return Twitter data from MongoDB connection."""
@@ -184,7 +177,9 @@ async def get_twitter() -> JSONResponse:
         gc.collect()
     except Exception as ex:
         _logger.warning(f"Endpoint: /twitter --- GET --- {ex}")
-        raise HTTPException(status_code=404, detail=f"[Error] get /twitter API: {ex}")
+        raise HTTPException(
+            status_code=404, detail=f"[Error] get /twitter API: {ex}"
+        )
 
     return json_data
 
@@ -192,7 +187,7 @@ async def get_twitter() -> JSONResponse:
 @router.post(
     "/twitter",
     response_model=TwitterOutput,
-    responses={404: {"model": Message}}
+    responses={404: {"model": Message}},
 )
 async def post_twitter(twyuser: TwitterInput) -> JSONResponse:
     """Fetch and return Twitter data from MongoDB connection."""
@@ -216,7 +211,9 @@ async def post_twitter(twyuser: TwitterInput) -> JSONResponse:
         gc.collect()
     except Exception as ex:
         _logger.warning(f"Endpoint: /twitter --- POST --- {ex}")
-        raise HTTPException(status_code=404, detail=f"[Error] post /twitter API: {ex}")
+        raise HTTPException(
+            status_code=404, detail=f"[Error] post /twitter API: {ex}"
+        )
 
     return json_data
 
@@ -251,9 +248,7 @@ class CountyOut(BaseModel):
 
 @cached(cache=TTLCache(maxsize=1, ttl=3600))
 @router.get(
-    "/county",
-    response_model=CountyOut,
-    responses={404: {"model": Message}}
+    "/county", response_model=CountyOut, responses={404: {"model": Message}}
 )
 async def get_county_data() -> JSONResponse:
     """Get all US county data and return it as a big fat json string. Respond
@@ -268,15 +263,13 @@ async def get_county_data() -> JSONResponse:
     except Exception as ex:
         _logger.warning(f"Endpoint: /county --- GET --- {ex}")
         raise HTTPException(
-                status_code=404,
-                detail=f"[Error] get '/county' API: {ex}")
+            status_code=404, detail=f"[Error] get '/county' API: {ex}"
+        )
     return json_data
 
 
 @router.post(
-    "/county",
-    response_model=CountyOut,
-    responses={404: {"model": Message}}
+    "/county", response_model=CountyOut, responses={404: {"model": Message}}
 )
 def post_county(county: CountyInput) -> JSONResponse:
     """Get all US county data and return it as a big fat json string. Respond
@@ -289,7 +282,9 @@ def post_county(county: CountyInput) -> JSONResponse:
         gc.collect()
     except Exception as ex:
         _logger.warning(f"Endpoint: /county --- POST --- {ex}")
-        raise HTTPException(status_code=404, detail=f"[Error] get '/county' API: {ex}")
+        raise HTTPException(
+            status_code=404, detail=f"[Error] get '/county' API: {ex}"
+        )
 
     return json_data
 
@@ -316,9 +311,7 @@ class StateOutput(BaseModel):
 
 @cached(cache=TTLCache(maxsize=3, ttl=3600))
 @router.post(
-    "/state",
-    response_model=StateOutput,
-    responses={404: {"model": Message}}
+    "/state", response_model=StateOutput, responses={404: {"model": Message}}
 )
 async def post_state(state: StateInput) -> JSONResponse:
     """Fetch state level data time series for a single state, ignoring the
@@ -333,7 +326,9 @@ async def post_state(state: StateInput) -> JSONResponse:
         gc.collect()
     except Exception as ex:
         _logger.warning(f"Endpoint: /state --- POST --- {ex}")
-        raise HTTPException(status_code=404, detail=f"[Error] get /country API: {ex}")
+        raise HTTPException(
+            status_code=404, detail=f"[Error] get /country API: {ex}"
+        )
 
     return json_data
 
@@ -374,7 +369,9 @@ async def get_country(country: CountryInput) -> JSONResponse:
         json_data = {"success": True, "message": data}
     except Exception as ex:
         _logger.warning(f"Endpoint: /country --- GET --- {ex}")
-        raise HTTPException(status_code=404, detail=f"[Error] get /country API: {ex}")
+        raise HTTPException(
+            status_code=404, detail=f"[Error] get /country API: {ex}"
+        )
 
     return json_data
 
@@ -403,9 +400,7 @@ class StatsOutput(BaseModel):
 
 
 @router.get(
-    "/stats",
-    response_model=StatsOutput,
-    responses={404: {"model": Message}}
+    "/stats", response_model=StatsOutput, responses={404: {"model": Message}}
 )
 async def get_stats() -> JSONResponse:
     """Get overall tested, confirmed, and deaths stats from the database
@@ -416,14 +411,14 @@ async def get_stats() -> JSONResponse:
         json_data = {"success": True, "message": data}
     except Exception as ex:
         _logger.warning(f"Endpoint: /stats --- GET --- {ex}")
-        raise HTTPException(status_code=404, detail=f"[Error] get /stats API: {ex}")
+        raise HTTPException(
+            status_code=404, detail=f"[Error] get /stats API: {ex}"
+        )
     return json_data
 
 
 @router.post(
-    "/stats",
-    response_model=StatsOutput,
-    responses={404: {"model": Message}}
+    "/stats", response_model=StatsOutput, responses={404: {"model": Message}}
 )
 async def post_stats(stats: StatsInput) -> JSONResponse:
     """Get overall tested, confirmed, and deaths stats from the database
@@ -434,7 +429,9 @@ async def post_stats(stats: StatsInput) -> JSONResponse:
         json_data = {"success": True, "message": data}
     except Exception as ex:
         _logger.warning(f"Endpoint: /stats --- POST --- {ex}")
-        raise HTTPException(status_code=404, detail=f"[Error] post /stats API: {ex}")
+        raise HTTPException(
+            status_code=404, detail=f"[Error] post /stats API: {ex}"
+        )
     return json_data
 
 
@@ -466,9 +463,7 @@ class ZIPOutput(BaseModel):
 
 
 @router.post(
-    "/zip",
-    response_model=ZIPOutput,
-    responses={404: {"model": Message}}
+    "/zip", response_model=ZIPOutput, responses={404: {"model": Message}}
 )
 def post_zip(zip_code: ZIPInput) -> JSONResponse:
     """Returns county stats for the zip code input.
@@ -477,8 +472,9 @@ def post_zip(zip_code: ZIPInput) -> JSONResponse:
     try:
         zip_info = zipcodes.matching(zip_code.zip_code)[0]
     except Exception as ex:
-        message = (f"ZIP code {zip_code.zip_code}"
-                   " not found in US Zipcode database.")
+        message = (
+            f"ZIP code {zip_code.zip_code}" " not found in US Zipcode database."
+        )
         _logger.warning(f"Endpoint: /zip --- POST --- {ex} {message}")
         raise HTTPException(
             status_code=422, detail=f"[Error] POST '/zip' {ex} {message}"
@@ -506,6 +502,8 @@ def post_zip(zip_code: ZIPInput) -> JSONResponse:
         gc.collect()
     except Exception as ex:
         _logger.warning(f"Endpoint: /zip --- POST --- {ex}")
-        raise HTTPException(status_code=404, detail=f"[Error] get '/zip' API: {ex}")
+        raise HTTPException(
+            status_code=404, detail=f"[Error] get '/zip' API: {ex}"
+        )
 
     return json_data

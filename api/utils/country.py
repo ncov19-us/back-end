@@ -192,9 +192,11 @@ def parse_df(metric_type: str) -> pd.DataFrame:
     else:
         raise ValueError(f"{metric_type} metric type not supported")
 
-    url = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/" \
-          "master/csse_covid_19_data/csse_covid_19_time_series/" \
-          f"time_series_covid19_{metric_type}_global.csv"
+    url = (
+        "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/"
+        "master/csse_covid_19_data/csse_covid_19_time_series/"
+        f"time_series_covid19_{metric_type}_global.csv"
+    )
     df = pd.DataFrame()
     try:
         df = pd.read_csv(url)

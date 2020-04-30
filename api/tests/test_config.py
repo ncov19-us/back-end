@@ -86,12 +86,12 @@ def test_development_config():
 
 @pytest.fixture
 def mock_staging_true(monkeypatch):
-    monkeypatch.setenv('STAGING', "True")
+    monkeypatch.setenv("STAGING", "True")
 
 
 @pytest.fixture
 def mock_staging_false(monkeypatch):
-    monkeypatch.setenv('STAGING', "False")
+    monkeypatch.setenv("STAGING", "False")
 
 
 def mock_config():
