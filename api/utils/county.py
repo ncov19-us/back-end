@@ -95,10 +95,7 @@ def read_county_stats(state: str, county: str) -> Dict:
     territories = ["DC", "GU", "AS", "PR", "MP"]
 
     # Fetch state data
-<<<<<<< HEAD
     full_state_name = state
-=======
->>>>>>> 8661e05... chore: merge conflict, fix: zip codes for territories, fix: zip code error response message (#62)
     try:
         full_state_name = reverse_states_map[state]
         df = df[df["state_name"] == full_state_name]
@@ -112,14 +109,10 @@ def read_county_stats(state: str, county: str) -> Dict:
     # Now fetch county data
     try:
         if state in territories:
-<<<<<<< HEAD
             df = df.reset_index(drop=True)
             df.loc[0, "county_name"] = full_state_name
             # 2020-04-26 pandanmic
             # df["county_name"] == full_state_name
-=======
-            df["county_name"] = full_state_name
->>>>>>> 8661e05... chore: merge conflict, fix: zip codes for territories, fix: zip code error response message (#62)
         else:
             df = df[df["county_name"] == county]
         if len(df) == 0:
@@ -128,12 +121,8 @@ def read_county_stats(state: str, county: str) -> Dict:
             )
     except:
         raise DataValidationError(
-<<<<<<< HEAD
             f"Can't find State: {full_state_name},"
             f" and County: {county} combination."
-=======
-            f"Can't find State: {full_state_name}, and County: {county} combination."
->>>>>>> 8661e05... chore: merge conflict, fix: zip codes for territories, fix: zip code error response message (#62)
         )
     df = pd.DataFrame.to_dict(df, orient="records")
     return df

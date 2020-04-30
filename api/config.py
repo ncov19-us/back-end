@@ -57,6 +57,7 @@ def get_logger(*, logger_name):
 class DataReadingError(Exception):
     """DataReadingError exception used for sanity checking.
     """
+
     def __init__(self, *args):
         super(DataReadingError, self).__init__(*args)
         if args:
@@ -74,6 +75,7 @@ class DataReadingError(Exception):
 class DataValidationError(Exception):
     """DataValidationError exception used for sanity checking.
     """
+
     def __init__(self, *args):
         super(DataValidationError, self).__init__(*args)
         if args:
@@ -95,6 +97,7 @@ class Config:
     """
     Base config for Staging API
     """
+
     DEBUG = False
     TESTING = False
     CSRF_ENABLED = True
@@ -108,13 +111,17 @@ class Config:
     COLLECTION_TWITTER = "twitter"
 
     # JHU CSSE Daily Reports
-    BASE_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/" \
-               "master/csse_covid_19_data/csse_covid_19_daily_reports/"
+    BASE_URL = (
+        "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/"
+        "master/csse_covid_19_data/csse_covid_19_daily_reports/"
+    )
 
     # JHU CSSE time series reports
-    TIME_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/" \
-               "master/csse_covid_19_data/csse_covid_19_time_series/" \
-               "time_series_19-covid-Confirmed.csv"
+    TIME_URL = (
+        "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/"
+        "master/csse_covid_19_data/csse_covid_19_time_series/"
+        "time_series_19-covid-Confirmed.csv"
+    )
 
     # NEWS API
     NEWS_API_KEY = config("NEWS_API_KEY")
@@ -124,7 +131,7 @@ class Config:
 
     # CVTRACK
     CVTRACK_URL = "https://covidtracking.com/api/us/daily"
-    CVTRACK_STATES_URL = "https://covidtracking.com/api/states"
+    CVTRACK_STATES_URL = "https://covidtracking.com/api/v1/states/daily.json"
 
     TMP_URL = "https://coronavirus-19-api.herokuapp.com/countries/USA"
 
@@ -136,7 +143,6 @@ class Config:
 
     DB_NAME = "covid"
 
-
     INFO = dict(
         {
             "title": "ncov19.us API",
@@ -145,7 +151,7 @@ class Config:
                 "URL: https://github.com/ncov19-us/back-end | "
                 "[GNU GENERAL PUBLIC LICENSE]"
                 "(https://github.com/ncov19-us/back-end/blob/master/LICENSE)"
-                ),
+            ),
         }
     )
 
@@ -162,7 +168,6 @@ class DevelopmentConfig(Config):
     DEBUG = True
     TESTING = True
     DB_NAME = "covid-staging"
-
 
 
 def get_config():
