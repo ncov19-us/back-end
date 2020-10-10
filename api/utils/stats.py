@@ -47,7 +47,8 @@ def get_daily_stats() -> Dict:
         data = requests.get(url=app_config.CVTRACK_URL).json()
         curr = data[0]
         prev = data[1]
-        tested = curr["posNeg"]
+        # 2020-10-10 updated for new api schema
+        tested = curr["totalTestResults"]
         todays_tested = curr["totalTestResults"] - prev["totalTestResults"]
         confirmed = curr["positive"]
         todays_confirmed = curr["positive"] - prev["positive"]
@@ -68,6 +69,7 @@ def get_daily_stats() -> Dict:
         "deaths": deaths,
         "todays_deaths": todays_deaths,
     }
+    print(stats)
 
     ###################################################################
     #                     Sanity Check
